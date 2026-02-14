@@ -5,10 +5,11 @@ programs:
     summary: Inspiring the next generation through hands-on science education and competitions.
     items:
       - name: Science Demos
+        slug: science-demos
         description: Interactive science demonstrations brought directly to local K-12 classrooms, sparking curiosity and excitement about STEM fields.
       - name: Science Bowl
+        slug: science-bowl
         description: Annual regional science competition for middle and high school students, testing knowledge across multiple scientific disciplines.
-        link: "#/contact"
 
   - id: professional-development
     title: Professional Development
@@ -16,8 +17,10 @@ programs:
     summary: Building skills and connections for career growth and industry leadership.
     items:
       - name: Midwest Regional Symposium
+        slug: midwest-regional-symposium
         description: Our flagship annual conference bringing together professionals from across the Midwest for keynote talks, panel discussions, and networking opportunities.
       - name: Professional Development Workshops
+        slug: professional-development-workshops
         description: Quarterly hands-on workshops covering emerging technologies, leadership skills, and industry best practices.
 
   - id: social
@@ -26,8 +29,10 @@ programs:
     summary: Connecting members through social events and community engagement.
     items:
       - name: Photo Gallery
+        slug: photo-gallery
         description: Browse photos from our recent social events and community gatherings.
         link: "#/gallery"
       - name: Get in Touch
+        slug: get-in-touch
         description: Want to join an event or suggest an activity? Reach out to us!
-        link: "#/contact"
+        scrollTo: contact-section
