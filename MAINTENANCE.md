@@ -15,7 +15,7 @@ website-test/
 │   ├── data/                  # YAML data files (edit these to change data)
 │   │   ├── site.yaml          # Org name, navigation, socials, footer
 │   │   ├── board.yaml         # Executive board + founding members
-│   │   ├── programs.yaml      # Ongoing programs with images
+│   │   ├── programs.yaml      # Ongoing programs with images and items
 │   │   ├── news.yaml          # Chapter news / announcements
 │   │   ├── events.yaml        # Google Calendar API config
 │   │   ├── gallery.yaml       # Gallery photo entries
@@ -39,16 +39,28 @@ website-test/
 
 ## How the Website Works
 
-The site is a **single-page application** — the home page is the primary landing page and contains three inline sections:
+The site is a **single-page application**. The home page is the primary landing page and contains these inline sections:
 
 1. **Hero**: Full-screen background image with the chapter name and three buttons
 2. **About**: Organization information loaded from `about.md`
 3. **Ongoing Programs**: Horizontal program cards loaded from `programs.yaml`
 4. **Contact Us**: Google Form embed loaded from `contact.yaml`
 
-The **navigation bar** is always visible at the top. When you scroll down, it stays fixed ("floating"). Menu links for About, Programs, and Contact scroll to their section on the home page. Links like Chapter News, Events, Executive Board, and Gallery go to separate pages.
+### Navigation
 
-**"Parent Organization"** in the nav is bold and right-aligned, linking to the parent organization's website.
+The **navigation bar** is always visible at the top and stays fixed when scrolling.
+
+- **About**, **Programs**, and **Contact** menu links scroll to their section on the home page (even if you are on a different page — they will redirect you to the home page first, then scroll).
+- **Chapter News**, **Events**, **Executive Board**, and **Gallery** navigate to separate pages.
+- **"Parent Organization"** is bold and right-aligned, opening the parent org's website in a new tab.
+
+### Programs Dropdown Menu
+
+Hovering over **"Programs"** in the navigation reveals a dropdown showing the three program categories (e.g., K-12 Outreach, Professional Development, Social & Community). Hovering over a category shows a second-level dropdown listing the specific activities or events within that category. Clicking an activity opens its dedicated page.
+
+### Individual Program Pages
+
+Each program activity (e.g., "Science Bowl", "Midwest Regional Symposium") has its own page at a URL like `#/programs/science-bowl`. These pages are generated automatically from the `slug` field in `programs.yaml`. When you add a new item with a `slug`, a page is automatically created for it.
 
 ### Color Scheme
 
@@ -66,7 +78,7 @@ The **navigation bar** is always visible at the top. When you scroll down, it st
 ### Fonts
 
 - **Headlines and titles**: Times New Roman (serif)
-- **Body text, subheadlines, small text**: Arial (sans-serif)
+- **Body text, subheadlines, small text, navigation**: Arial (sans-serif)
 
 ---
 
@@ -79,7 +91,8 @@ The **navigation bar** is always visible at the top. When you scroll down, it st
 | Change the About section text        | `public/content/about.md`          |
 | Add/remove a board member            | `public/data/board.yaml`           |
 | Add a founding member                | `public/data/board.yaml` → `founding` |
-| Add/edit a program bucket            | `public/data/programs.yaml`        |
+| Add a new program category           | `public/data/programs.yaml`        |
+| Add an activity to a program         | `public/data/programs.yaml` → `items` |
 | Change a program image               | Replace file in `public/images/programs/` |
 | Post a news item                     | `public/data/news.yaml`            |
 | Add gallery photos                   | `public/data/gallery.yaml` + image file |
@@ -123,38 +136,83 @@ Join us by scrolling down to the contact form!
 
 ## Managing Ongoing Programs
 
-Edit `public/data/programs.yaml`. Programs appear as **horizontal cards with images** on the home page. Clicking a card expands it to reveal its activities.
+Edit `public/data/programs.yaml`. Programs appear as **horizontal cards with images** on the home page. Clicking a card expands it to show its activities. Each activity also appears in the navigation dropdown and gets its own dedicated page.
 
-### Adding a New Program Bucket
+### Understanding the Programs File
+
+Each program has these fields:
+
+```yaml
+programs:
+  - id: unique-id                 # A unique lowercase ID (no spaces)
+    title: Program Name           # Displayed in the card and nav dropdown
+    image: programs/my-image.jpg  # Image shown on the card
+    summary: Short description.   # Shown below the card title
+    items:                        # Activities within this program
+      - name: Activity Name       # Displayed in the card and nav sub-dropdown
+        slug: activity-name       # URL slug — creates page at #/programs/activity-name
+        description: Details...   # Shown on the activity's dedicated page
+```
+
+### Adding a New Program Category (Bucket)
 
 1. Add a representative image to `public/images/programs/` (recommended: landscape, ~800×500 pixels)
 2. Add a new entry in `programs.yaml`:
 
 ```yaml
 programs:
-  - id: unique-id          # lowercase, no spaces (e.g., "community-service")
-    title: Program Name
-    image: programs/my-image.jpg
-    summary: One-line description shown beneath the card title.
+  - id: community-service
+    title: Community Service
+    image: programs/community-service.jpg
+    summary: Giving back to our local community through volunteering.
     items:
-      - name: Activity Name
-        description: What this activity is about.
-        link: "#/contact"   # optional — adds a "Learn more" link
+      - name: Park Cleanup Day
+        slug: park-cleanup-day
+        description: Our annual park cleanup brings chapter members together to beautify local green spaces.
+```
+
+The new category will automatically appear:
+- On the home page as a horizontal card
+- In the "Programs" navigation dropdown
+- Each activity will get its own page at `#/programs/park-cleanup-day`
+
+### Adding an Activity to an Existing Program
+
+Find the program in `programs.yaml` and add a new item under `items:`:
+
+```yaml
+    items:
+      - name: New Activity Name
+        slug: new-activity-name
+        description: A detailed description of what this activity involves.
+```
+
+**Important**: The `slug` must be unique across all programs and should use lowercase letters and hyphens only (e.g., `science-bowl`, `park-cleanup-day`).
+
+### Special Item Types
+
+Instead of a `slug` (which creates a dedicated page), you can use these alternatives:
+
+- **`link`**: Links to another page (e.g., `link: "#/gallery"` links to the Gallery page)
+- **`scrollTo`**: Scrolls to a section on the home page (e.g., `scrollTo: contact-section`)
+
+Example:
+
+```yaml
+    items:
+      - name: Photo Gallery
+        slug: photo-gallery
+        description: Browse photos from our events.
+        link: "#/gallery"           # Links to Gallery page instead of creating its own page
+      - name: Get in Touch
+        slug: get-in-touch
+        description: Reach out to us!
+        scrollTo: contact-section   # Scrolls to Contact section on home page
 ```
 
 ### Changing a Program Image
 
 Replace the image file in `public/images/programs/`. Make sure the filename matches what's in `programs.yaml`.
-
-### Adding an Activity to an Existing Bucket
-
-Find the program bucket in `programs.yaml` and add a new item under `items:`:
-
-```yaml
-    items:
-      - name: New Activity
-        description: Description of the activity.
-```
 
 ### Removing a Program or Activity
 
@@ -344,9 +402,10 @@ Edit `public/data/site.yaml`.
 
 ### How Navigation Works
 
-- **About**, **Programs**, and **Contact** links scroll to their section on the home page (they use `scrollTo`)
-- **Chapter News**, **Events**, **Executive Board**, **Gallery** navigate to separate pages (they use `path`)
-- **Parent Organization** opens in a new browser tab (it has `external: true`)
+- **About**, **Programs**, and **Contact** menu links scroll to their section on the home page (they use `scrollTo`). If you're on another page, they redirect to the home page first, then scroll.
+- **Programs** has a hover dropdown showing program categories, each with a sub-dropdown of activities linking to their dedicated pages.
+- **Chapter News**, **Events**, **Executive Board**, **Gallery** navigate to separate pages (they use `path`).
+- **Parent Organization** opens in a new browser tab (it has `external: true`).
 
 ### Adding a Navigation Link
 

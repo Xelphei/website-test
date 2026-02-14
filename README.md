@@ -10,6 +10,8 @@ A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla Ja
 - Center-aligned menu links with bold, right-aligned "Parent Organization" external link
 - Smooth fade page transitions between all routes
 - Horizontal program cards with representative images (click to expand)
+- Programs mega-menu dropdown with category and activity sub-menus
+- Dedicated pages for each program activity (auto-generated from YAML data)
 - Chapter News page with responsive image card gallery
 - Events timeline pulled from Google Calendar, color-coded by category
 - Executive Board with LinkedIn/website links and founding members section
@@ -34,7 +36,7 @@ A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla Ja
 ## Typography
 
 - **Headlines / Titles**: Times New Roman (serif)
-- **Body / Subheadlines / Small text**: Arial (sans-serif)
+- **Body / Subheadlines / Small text / Navigation**: Arial (sans-serif)
 
 ## Getting Started
 
@@ -76,7 +78,7 @@ See **[MAINTENANCE.md](MAINTENANCE.md)** for a complete, beginner-friendly guide
 - Update the About section text
 - Add or remove Executive Board members (current, founding, previous)
 - Post Chapter News items
-- Add or modify Ongoing Programs with images
+- Add or modify Ongoing Programs with images and individual activity pages
 - Upload gallery photos
 - Change the hero background image or logo
 - Configure Google Calendar events and event categories

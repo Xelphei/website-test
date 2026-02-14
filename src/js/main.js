@@ -5,19 +5,24 @@ import { renderNews } from './pages/news.js';
 import { renderEvents } from './pages/events.js';
 import { renderBoard } from './pages/board.js';
 import { renderGallery } from './pages/gallery.js';
+import { renderProgramItem } from './pages/program-item.js';
 
 const BASE = import.meta.env.BASE_URL;
 
+let programsData = null;
+
 async function init() {
   const siteConfig = await loadYaml(`${BASE}data/site.yaml`);
+  programsData = await loadYaml(`${BASE}data/programs.yaml`);
 
   document.title = siteConfig.name;
 
   const app = document.getElementById('app');
-  app.innerHTML = buildLayout(siteConfig);
+  app.innerHTML = buildLayout(siteConfig, programsData);
 
   const contentEl = document.getElementById('page-content');
 
+  // Build routes: static + dynamic program item routes
   const routes = {
     '/': (el) => renderHome(el, BASE, siteConfig),
     '/news': (el) => renderNews(el, BASE),
@@ -34,6 +39,15 @@ async function init() {
     },
   };
 
+  // Add program item routes from programs.yaml
+  for (const program of programsData.programs) {
+    for (const item of program.items) {
+      if (item.slug && !item.link && !item.scrollTo) {
+        routes[`/programs/${item.slug}`] = (el) => renderProgramItem(el, BASE, item.slug);
+      }
+    }
+  }
+
   const router = new Router(routes);
   router.init(contentEl);
 
@@ -46,20 +60,25 @@ async function init() {
     });
   }
 
-  // Handle scrollTo nav links
+  // Handle scrollTo nav links and redirect old routes
   initScrollToLinks();
+  initLinkInterception();
 
   // Floating nav scroll behavior
   initFloatingNav();
 }
 
-function buildLayout(config) {
+function buildLayout(config, programs) {
   // Separate regular nav items from the Parent Organization link
   const regularNavItems = config.floatingNav.filter((item) => !item.external);
   const externalItem = config.floatingNav.find((item) => item.external);
 
   const regularLinks = regularNavItems
     .map((item) => {
+      // Programs gets a special dropdown wrapper
+      if (item.scrollTo === 'programs-section') {
+        return buildProgramsDropdown(item, programs);
+      }
       if (item.scrollTo) {
         return `<a href="#/" data-scroll-to="${item.scrollTo}" data-nav-link class="nav-link">${item.label}</a>`;
       }
@@ -71,17 +90,7 @@ function buildLayout(config) {
     ? `<a href="${externalItem.path}" target="_blank" rel="noopener noreferrer" class="nav-link-parent">${externalItem.label}</a>`
     : '';
 
-  const mobileNavLinks = config.floatingNav
-    .map((item) => {
-      if (item.external) {
-        return `<a href="${item.path}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 font-body font-bold text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>`;
-      }
-      if (item.scrollTo) {
-        return `<a href="#/" data-scroll-to="${item.scrollTo}" data-nav-link class="block px-4 py-2 font-body text-gray-200 hover:text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>`;
-      }
-      return `<a href="#${item.path}" data-nav-link class="block px-4 py-2 font-body text-gray-200 hover:text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>`;
-    })
-    .join('');
+  const mobileNavLinks = buildMobileNav(config, programs);
 
   const socialLinks = config.socials
     ? config.socials
@@ -98,7 +107,7 @@ function buildLayout(config) {
       <div class="nav-inner">
         <a href="#/" class="nav-logo">
           <img src="${BASE}images/logo.png" alt="${config.name}" class="h-8 w-8 object-contain" onerror="this.style.display='none'" />
-          <span class="font-heading text-white font-bold text-lg">OPC</span>
+          <span class="font-body text-white font-bold text-lg">OPC</span>
         </a>
         <div class="nav-center">
           ${regularLinks}
@@ -142,6 +151,82 @@ function buildLayout(config) {
   `;
 }
 
+function buildProgramsDropdown(navItem, programs) {
+  const bucketItems = programs.programs
+    .map((program) => {
+      const subItems = program.items
+        .map((item) => {
+          if (item.link) {
+            return `<a href="${item.link}" class="dropdown-sub-item">${item.name}</a>`;
+          }
+          if (item.scrollTo) {
+            return `<a href="#/" data-scroll-to="${item.scrollTo}" class="dropdown-sub-item">${item.name}</a>`;
+          }
+          return `<a href="#/programs/${item.slug}" class="dropdown-sub-item">${item.name}</a>`;
+        })
+        .join('');
+
+      return `
+        <div class="dropdown-bucket">
+          <div class="dropdown-bucket-label">${program.title}</div>
+          <div class="dropdown-sub-menu">
+            ${subItems}
+          </div>
+        </div>
+      `;
+    })
+    .join('');
+
+  return `
+    <div class="nav-dropdown-wrapper">
+      <a href="#/" data-scroll-to="${navItem.scrollTo}" data-nav-link class="nav-link">${navItem.label}</a>
+      <div class="nav-dropdown">
+        ${bucketItems}
+      </div>
+    </div>
+  `;
+}
+
+function buildMobileNav(config, programs) {
+  return config.floatingNav
+    .map((item) => {
+      if (item.external) {
+        return `<a href="${item.path}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 font-body font-bold text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>`;
+      }
+      if (item.scrollTo === 'programs-section') {
+        // Programs with sub-items in mobile
+        const subLinks = programs.programs
+          .map((program) => {
+            const items = program.items
+              .map((pi) => {
+                if (pi.link) {
+                  return `<a href="${pi.link}" class="block px-8 py-1 font-body text-xs text-gray-400 hover:text-white transition-colors">${pi.name}</a>`;
+                }
+                if (pi.scrollTo) {
+                  return `<a href="#/" data-scroll-to="${pi.scrollTo}" class="block px-8 py-1 font-body text-xs text-gray-400 hover:text-white transition-colors">${pi.name}</a>`;
+                }
+                return `<a href="#/programs/${pi.slug}" class="block px-8 py-1 font-body text-xs text-gray-400 hover:text-white transition-colors">${pi.name}</a>`;
+              })
+              .join('');
+            return `
+              <div class="block px-6 py-1 font-body text-sm text-gray-300">${program.title}</div>
+              ${items}
+            `;
+          })
+          .join('');
+        return `
+          <a href="#/" data-scroll-to="${item.scrollTo}" data-nav-link class="block px-4 py-2 font-body text-gray-200 hover:text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>
+          ${subLinks}
+        `;
+      }
+      if (item.scrollTo) {
+        return `<a href="#/" data-scroll-to="${item.scrollTo}" data-nav-link class="block px-4 py-2 font-body text-gray-200 hover:text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>`;
+      }
+      return `<a href="#${item.path}" data-nav-link class="block px-4 py-2 font-body text-gray-200 hover:text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>`;
+    })
+    .join('');
+}
+
 function initScrollToLinks() {
   document.addEventListener('click', (e) => {
     const link = e.target.closest('[data-scroll-to]');
@@ -157,13 +242,30 @@ function initScrollToLinks() {
     if (mobileMenu) mobileMenu.classList.add('hidden');
 
     if (isHome) {
-      // Already on home page, just scroll
       scrollToSection(targetId);
     } else {
-      // Navigate to home first, then scroll after render
       window.location.hash = '#/';
-      // Wait for route to render, then scroll
       setTimeout(() => scrollToSection(targetId), 400);
+    }
+  });
+}
+
+// Intercept clicks on old-style links like #/contact, #/about, #/programs
+// that now correspond to home page sections
+function initLinkInterception() {
+  const sectionMap = {
+    '#/contact': 'contact-section',
+    '#/about': 'about-section',
+    '#/programs': 'programs-section',
+  };
+
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash;
+    const sectionId = sectionMap[hash];
+    if (sectionId) {
+      // Redirect to home and scroll
+      window.location.hash = '#/';
+      setTimeout(() => scrollToSection(sectionId), 400);
     }
   });
 }
@@ -199,7 +301,6 @@ function initFloatingNav() {
     }
   });
 
-  // Initial state
   updateNavState();
 }
 

@@ -58,6 +58,87 @@
   }
 
   /* ============================================
+     Programs Mega-Menu Dropdown
+     ============================================ */
+  .nav-dropdown-wrapper {
+    @apply relative;
+  }
+
+  .nav-dropdown {
+    @apply absolute top-full left-1/2 hidden;
+    transform: translateX(-50%);
+    min-width: 200px;
+    padding-top: 0.5rem;
+    z-index: 100;
+  }
+
+  .nav-dropdown-wrapper:hover .nav-dropdown {
+    @apply block;
+  }
+
+  .nav-dropdown > .dropdown-bucket:first-child {
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+
+  .nav-dropdown > .dropdown-bucket:last-child {
+    border-radius: 0 0 0.5rem 0.5rem;
+  }
+
+  .dropdown-bucket {
+    @apply relative;
+    background: rgba(24, 66, 143, 0.98);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dropdown-bucket:last-child {
+    border-bottom: none;
+  }
+
+  .dropdown-bucket-label {
+    @apply px-4 py-3 text-gray-200 text-sm cursor-default;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .dropdown-bucket:hover .dropdown-bucket-label {
+    @apply text-white;
+    background: rgba(0, 194, 243, 0.15);
+  }
+
+  .dropdown-sub-menu {
+    @apply absolute top-0 left-full hidden;
+    min-width: 220px;
+    background: rgba(25, 34, 109, 0.98);
+    border-radius: 0 0.5rem 0.5rem 0;
+    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .dropdown-bucket:hover .dropdown-sub-menu {
+    @apply block;
+  }
+
+  .dropdown-sub-item {
+    @apply block px-4 py-2.5 text-gray-200 text-sm;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .dropdown-sub-item:first-child {
+    border-radius: 0 0.5rem 0 0;
+  }
+
+  .dropdown-sub-item:last-child {
+    border-radius: 0 0 0.5rem 0;
+  }
+
+  .dropdown-sub-item:hover {
+    @apply text-white;
+    background: rgba(0, 194, 243, 0.2);
+  }
+
+  /* ============================================
      Page Transitions
      ============================================ */
   .page-fade-out {

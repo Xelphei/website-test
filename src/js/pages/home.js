@@ -125,7 +125,13 @@ async function loadProgramsSection(base) {
                         <div class="program-expanded-item">
                           <h4 class="font-body font-semibold text-primary-dark">${escapeHtml(item.name)}</h4>
                           <p class="font-body text-gray-600 text-sm mt-1">${escapeHtml(item.description)}</p>
-                          ${item.link ? `<a href="${item.link}" class="font-body text-primary-cyan hover:text-primary-blue text-sm mt-1 inline-block">Learn more &rarr;</a>` : ''}
+                          ${item.link
+                            ? `<a href="${item.link}" class="font-body text-primary-cyan hover:text-primary-blue text-sm mt-1 inline-block">Learn more &rarr;</a>`
+                            : item.scrollTo
+                              ? `<a href="#/" data-scroll-to="${item.scrollTo}" class="font-body text-primary-cyan hover:text-primary-blue text-sm mt-1 inline-block">Learn more &rarr;</a>`
+                              : item.slug
+                                ? `<a href="#/programs/${item.slug}" class="font-body text-primary-cyan hover:text-primary-blue text-sm mt-1 inline-block" onclick="event.stopPropagation()">Learn more &rarr;</a>`
+                                : ''}
                         </div>
                       `
                         )
