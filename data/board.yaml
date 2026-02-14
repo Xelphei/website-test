@@ -3,16 +3,20 @@ current:
     title: President
     photo: board/jane-smith.jpg
     bio: Jane has over 15 years of experience in the field and is passionate about mentorship and professional development.
+    linkedin: https://linkedin.com/in/janesmith
+    website: https://janesmith.com
 
   - name: John Doe
     title: Vice President
     photo: board/john-doe.jpg
     bio: John brings strategic vision and operational expertise to the organization.
+    linkedin: https://linkedin.com/in/johndoe
 
   - name: Maria Garcia
     title: Treasurer
     photo: board/maria-garcia.jpg
     bio: Maria manages the organization's finances and ensures fiscal responsibility.
+    linkedin: https://linkedin.com/in/mariagarcia
 
   - name: David Chen
     title: Secretary
@@ -23,11 +27,30 @@ current:
     title: Director of Events
     photo: board/sarah-johnson.jpg
     bio: Sarah plans and coordinates all organizational events and conferences.
+    linkedin: https://linkedin.com/in/sarahjohnson
+    website: https://sarahjohnson.dev
 
   - name: Michael Brown
     title: Director of Membership
     photo: board/michael-brown.jpg
     bio: Michael oversees membership growth and engagement initiatives.
+    linkedin: https://linkedin.com/in/michaelbrown
+
+founding:
+  - name: Dr. Amanda Foster
+    photo: board/founding/amanda-foster.jpg
+    bio: Founding president who established the chapter and set the vision for community-driven professional development.
+    linkedin: https://linkedin.com/in/amandafoster
+    website: https://amandafoster.org
+
+  - name: Prof. Robert Martinez
+    photo: board/founding/robert-martinez.jpg
+    bio: Co-founder who built the chapter's educational outreach programs from the ground up.
+    linkedin: https://linkedin.com/in/robertmartinez
+
+  - name: Dr. William Chang
+    photo: board/founding/william-chang.jpg
+    bio: Co-founder who established industry partnerships and the annual symposium tradition.
 
 previous:
   year: 2024-2025
