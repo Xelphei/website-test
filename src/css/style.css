@@ -2,20 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  /* ============================================
-     Floating Navigation
-     ============================================ */
-  .floating-nav {
-    @apply fixed top-0 left-0 right-0 z-50;
-    background: rgba(17, 24, 39, 0.95);
-    backdrop-filter: blur(12px);
-    transform: translateY(-100%);
-    transition: transform 0.3s ease;
+@layer base {
+  body {
+    font-family: Arial, Helvetica, sans-serif;
   }
 
-  .floating-nav-visible {
-    transform: translateY(0);
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Times New Roman', Times, serif;
+  }
+}
+
+@layer components {
+  /* ============================================
+     Site Navigation
+     ============================================ */
+  .site-nav {
+    @apply fixed top-0 left-0 right-0 z-50;
+    background: rgba(24, 66, 143, 0.95);
+    backdrop-filter: blur(12px);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .site-nav.nav-scrolled {
+    background: rgba(24, 66, 143, 0.98);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-inner {
+    @apply max-w-7xl mx-auto px-4 py-3 flex items-center;
+  }
+
+  .nav-logo {
+    @apply flex items-center gap-2 flex-shrink-0;
+  }
+
+  .nav-center {
+    @apply hidden lg:flex items-center gap-5 text-sm flex-1 justify-center;
+  }
+
+  .nav-right {
+    @apply hidden lg:flex items-center flex-shrink-0 ml-4;
+  }
+
+  .nav-link {
+    @apply text-gray-200 hover:text-white transition-colors whitespace-nowrap;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.875rem;
+  }
+
+  .nav-link-parent {
+    @apply text-white hover:text-primary-cyan transition-colors whitespace-nowrap;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
   }
 
   /* ============================================
@@ -47,12 +86,12 @@
     height: 100vh;
     background-size: cover;
     background-position: center;
-    background-color: #1a1a2e;
+    background-color: #19226D;
   }
 
   .home-hero-overlay {
     @apply absolute inset-0;
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(24, 66, 143, 0.55);
   }
 
   .home-hero-content {
@@ -61,6 +100,7 @@
 
   .home-hero-title {
     @apply text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8;
+    font-family: 'Times New Roman', Times, serif;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease, transform 0.8s ease;
@@ -85,18 +125,21 @@
 
   .hero-button {
     @apply px-8 py-3 text-white font-semibold rounded-lg transition-all duration-300;
+    font-family: Arial, Helvetica, sans-serif;
     border: 2px solid white;
     background: transparent;
   }
 
   .hero-button:hover {
-    @apply bg-white scale-105;
-    color: #1e40af;
+    @apply scale-105;
+    background: white;
+    color: #18428F;
   }
 
   /* Scroll indicator */
   .scroll-indicator {
     @apply absolute bottom-8 left-1/2 text-white text-sm flex flex-col items-center gap-1;
+    font-family: Arial, Helvetica, sans-serif;
     transform: translateX(-50%);
     animation: bounceDown 2s ease infinite;
     opacity: 0;
@@ -113,10 +156,95 @@
   }
 
   /* ============================================
-     Program Buckets (Accordion)
+     Home Sections
+     ============================================ */
+  .home-section {
+    scroll-margin-top: 60px;
+  }
+
+  /* ============================================
+     Horizontal Program Cards
+     ============================================ */
+  .programs-horizontal {
+    @apply grid gap-6;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .programs-horizontal {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .program-card {
+    @apply rounded-xl overflow-hidden cursor-pointer transition-all duration-300;
+    background: white;
+    border: 2px solid #E2E1EE;
+  }
+
+  .program-card:hover {
+    border-color: #00C2F3;
+    box-shadow: 0 8px 24px rgba(24, 66, 143, 0.12);
+    transform: translateY(-4px);
+  }
+
+  .program-card.selected {
+    border-color: #18428F;
+    box-shadow: 0 8px 24px rgba(24, 66, 143, 0.2);
+  }
+
+  .program-card-image {
+    @apply relative aspect-[16/10] overflow-hidden;
+    background-color: #E2E1EE;
+  }
+
+  .program-card-image img {
+    @apply w-full h-full object-cover transition-transform duration-500;
+  }
+
+  .program-card:hover .program-card-image img {
+    transform: scale(1.05);
+  }
+
+  .program-card-overlay {
+    @apply absolute inset-0 flex flex-col justify-end p-4;
+    background: linear-gradient(to top, rgba(25, 34, 109, 0.85) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .program-card:hover .program-card-overlay {
+    opacity: 1;
+  }
+
+  .program-card-image-fallback {
+    @apply flex items-center justify-center h-full text-5xl font-bold;
+    font-family: 'Times New Roman', Times, serif;
+    color: #18428F;
+    background-color: #E2E1EE;
+  }
+
+  .program-card-body {
+    @apply p-4;
+  }
+
+  .program-card-expanded {
+    @apply px-4 pb-4 space-y-3;
+    border-top: 2px solid #E2E1EE;
+    padding-top: 1rem;
+  }
+
+  .program-expanded-item {
+    @apply pl-4;
+    border-left: 3px solid #00C2F3;
+  }
+
+  /* ============================================
+     Program Buckets (Accordion) — standalone page
      ============================================ */
   .program-bucket {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden;
+    @apply bg-white rounded-lg shadow-sm overflow-hidden;
+    border: 1px solid #E2E1EE;
   }
 
   .program-bucket-header {
@@ -125,7 +253,7 @@
   }
 
   .program-bucket-header:hover {
-    @apply bg-gray-50;
+    background-color: #F8F8F8;
   }
 
   .program-summary {
@@ -159,7 +287,8 @@
   }
 
   .program-item {
-    @apply border-l-4 border-primary-200 pl-4 py-2;
+    @apply pl-4 py-2;
+    border-left: 3px solid #00C2F3;
   }
 
   /* ============================================
@@ -183,15 +312,18 @@
   }
 
   .news-card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-shadow duration-300;
+    @apply bg-white rounded-lg shadow-sm overflow-hidden transition-shadow duration-300;
+    border: 1px solid #E2E1EE;
   }
 
   .news-card:hover {
     @apply shadow-lg;
+    border-color: #00C2F3;
   }
 
   .news-card-image {
-    @apply aspect-[4/3] bg-gray-100 overflow-hidden;
+    @apply aspect-[4/3] overflow-hidden;
+    background-color: #E2E1EE;
   }
 
   .news-card-image img {
@@ -204,7 +336,7 @@
   .timeline-container {
     @apply overflow-x-auto pb-4;
     scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 #f1f5f9;
+    scrollbar-color: #B64B28 #E2E1EE;
   }
 
   .timeline-container::-webkit-scrollbar {
@@ -212,11 +344,13 @@
   }
 
   .timeline-container::-webkit-scrollbar-track {
-    @apply bg-gray-100 rounded;
+    background: #E2E1EE;
+    border-radius: 3px;
   }
 
   .timeline-container::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 rounded;
+    background: #B64B28;
+    border-radius: 3px;
   }
 
   .timeline-track {
@@ -237,12 +371,14 @@
   }
 
   .timeline-card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-full;
+    @apply bg-white rounded-lg shadow-sm p-4 w-full;
+    border: 1px solid #E2E1EE;
     border-left: 4px solid var(--event-color);
   }
 
   .timeline-category {
     @apply text-xs font-semibold uppercase tracking-wide;
+    font-family: Arial, Helvetica, sans-serif;
     color: var(--event-color);
   }
 
@@ -250,7 +386,12 @@
      Board Link Icons
      ============================================ */
   .board-link-icon {
-    @apply text-gray-400 hover:text-primary-600 transition-colors;
+    color: #41434C;
+    transition: color 0.2s ease;
+  }
+
+  .board-link-icon:hover {
+    color: #18428F;
   }
 
   /* ============================================
@@ -288,7 +429,7 @@
 
   .masonry-overlay {
     @apply absolute inset-0 flex flex-col items-center justify-center p-4 text-center;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(25, 34, 109, 0.7);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -301,27 +442,39 @@
      Markdown Content (Prose)
      ============================================ */
   .prose h1 {
-    @apply text-3xl font-bold text-gray-900 mb-4 mt-8;
+    @apply text-3xl font-bold mb-4 mt-8;
+    font-family: 'Times New Roman', Times, serif;
+    color: #41434C;
   }
 
   .prose h2 {
-    @apply text-2xl font-semibold text-gray-800 mb-3 mt-6;
+    @apply text-2xl font-semibold mb-3 mt-6;
+    font-family: 'Times New Roman', Times, serif;
+    color: #18428F;
   }
 
   .prose h3 {
-    @apply text-xl font-semibold text-gray-700 mb-2 mt-4;
+    @apply text-xl font-semibold mb-2 mt-4;
+    font-family: 'Times New Roman', Times, serif;
+    color: #41434C;
   }
 
   .prose p {
-    @apply text-gray-600 leading-relaxed mb-4;
+    @apply leading-relaxed mb-4;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #41434C;
   }
 
   .prose ul {
-    @apply list-disc list-inside mb-4 text-gray-600;
+    @apply list-disc list-inside mb-4;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #41434C;
   }
 
   .prose ol {
-    @apply list-decimal list-inside mb-4 text-gray-600;
+    @apply list-decimal list-inside mb-4;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #41434C;
   }
 
   .prose li {
@@ -329,15 +482,23 @@
   }
 
   .prose a {
-    @apply text-primary-600 hover:text-primary-800 underline;
+    color: #00C2F3;
+    text-decoration: underline;
+  }
+
+  .prose a:hover {
+    color: #18428F;
   }
 
   .prose blockquote {
-    @apply border-l-4 border-primary-300 pl-4 italic text-gray-500 my-4;
+    @apply pl-4 italic my-4;
+    border-left: 4px solid #00C2F3;
+    color: #41434C;
   }
 
   .prose hr {
-    @apply my-8 border-gray-200;
+    @apply my-8;
+    border-color: #E2E1EE;
   }
 
   /* ============================================
@@ -354,6 +515,7 @@
 
   .lightbox-caption {
     @apply absolute bottom-8 left-0 right-0 text-center text-white text-lg;
+    font-family: Arial, Helvetica, sans-serif;
   }
 
   .lightbox-close {

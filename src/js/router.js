@@ -48,10 +48,10 @@ export class Router {
       const href = link.getAttribute('href');
       if (href === hash || (hash === '' && href === '#/')) {
         link.classList.add('text-white', 'font-semibold');
-        link.classList.remove('text-gray-300');
+        link.classList.remove('text-gray-200');
       } else {
         link.classList.remove('text-white', 'font-semibold');
-        link.classList.add('text-gray-300');
+        link.classList.add('text-gray-200');
       }
     });
   }

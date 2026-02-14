@@ -9,24 +9,25 @@ This guide explains how to update and maintain the Organization Professional Cha
 ```
 website-test/
 ├── public/
-│   ├── content/           # Markdown text content
-│   │   ├── home.md        # (kept for reference — no longer rendered on home page)
-│   │   └── about.md       # About page text
-│   ├── data/              # YAML data files (edit these to change data)
-│   │   ├── site.yaml      # Org name, navigation, socials, footer
-│   │   ├── board.yaml     # Executive board + founding members
-│   │   ├── programs.yaml  # Ongoing programs (K-12, PD, Social)
-│   │   ├── news.yaml      # Chapter news / announcements
-│   │   ├── events.yaml    # Google Calendar API config
-│   │   ├── gallery.yaml   # Gallery photo entries
-│   │   └── contact.yaml   # Google Form embed config
+│   ├── content/               # Markdown text content
+│   │   ├── home.md            # (kept for reference — not rendered)
+│   │   └── about.md           # About section text (shown on home page)
+│   ├── data/                  # YAML data files (edit these to change data)
+│   │   ├── site.yaml          # Org name, navigation, socials, footer
+│   │   ├── board.yaml         # Executive board + founding members
+│   │   ├── programs.yaml      # Ongoing programs with images
+│   │   ├── news.yaml          # Chapter news / announcements
+│   │   ├── events.yaml        # Google Calendar API config
+│   │   ├── gallery.yaml       # Gallery photo entries
+│   │   └── contact.yaml       # Google Form embed config
 │   └── images/
 │       ├── hero-bg.jpg        # Home page hero background image
 │       ├── logo.png           # Organization logo
 │       ├── board/             # Board member headshots
 │       ├── board/founding/    # Founding member photos
 │       ├── gallery/           # Gallery photos
-│       └── news/              # News article images
+│       ├── news/              # News article images
+│       └── programs/          # Program bucket images
 ├── src/
 │   ├── css/style.css          # Styles
 │   └── js/                    # Application code
@@ -36,16 +37,50 @@ website-test/
 
 ---
 
+## How the Website Works
+
+The site is a **single-page application** — the home page is the primary landing page and contains three inline sections:
+
+1. **Hero**: Full-screen background image with the chapter name and three buttons
+2. **About**: Organization information loaded from `about.md`
+3. **Ongoing Programs**: Horizontal program cards loaded from `programs.yaml`
+4. **Contact Us**: Google Form embed loaded from `contact.yaml`
+
+The **navigation bar** is always visible at the top. When you scroll down, it stays fixed ("floating"). Menu links for About, Programs, and Contact scroll to their section on the home page. Links like Chapter News, Events, Executive Board, and Gallery go to separate pages.
+
+**"Parent Organization"** in the nav is bold and right-aligned, linking to the parent organization's website.
+
+### Color Scheme
+
+| Role       | Color Name     | HEX Code |
+|------------|----------------|----------|
+| Primary    | Blue           | #18428F  |
+| Primary    | Cyan           | #00C2F3  |
+| Primary    | Dark Gray      | #41434C  |
+| Primary    | Orange         | #B64B28  |
+| Secondary  | Navy           | #19226D  |
+| Secondary  | Orange         | #F26524  |
+| Secondary  | Light (borders)| #E2E1EE  |
+| Secondary  | Off-white (bg) | #F8F8F8  |
+
+### Fonts
+
+- **Headlines and titles**: Times New Roman (serif)
+- **Body text, subheadlines, small text**: Arial (sans-serif)
+
+---
+
 ## Quick Reference: What to Edit
 
 | I want to...                        | Edit this file                      |
 |--------------------------------------|-------------------------------------|
 | Change the organization name         | `public/data/site.yaml` → `name`   |
 | Update navigation links              | `public/data/site.yaml` → `floatingNav` |
-| Change the About page text           | `public/content/about.md`          |
+| Change the About section text        | `public/content/about.md`          |
 | Add/remove a board member            | `public/data/board.yaml`           |
 | Add a founding member                | `public/data/board.yaml` → `founding` |
-| Add a program or activity            | `public/data/programs.yaml`        |
+| Add/edit a program bucket            | `public/data/programs.yaml`        |
+| Change a program image               | Replace file in `public/images/programs/` |
 | Post a news item                     | `public/data/news.yaml`            |
 | Add gallery photos                   | `public/data/gallery.yaml` + image file |
 | Change the hero background image     | Replace `public/images/hero-bg.jpg`|
@@ -54,12 +89,13 @@ website-test/
 | Configure contact form               | `public/data/contact.yaml`         |
 | Update social media links            | `public/data/site.yaml` → `socials`|
 | Change footer tagline                | `public/data/site.yaml` → `footer.tagline` |
+| Change the Parent Organization link  | `public/data/site.yaml` → `floatingNav` (last entry with `external: true`) |
 
 ---
 
-## Editing the About Page
+## Editing the About Section
 
-Edit `public/content/about.md`. This file uses Markdown:
+The About section appears on the home page. Edit `public/content/about.md`:
 
 ```markdown
 # About Us
@@ -72,7 +108,7 @@ We aim to...
 
 ## Membership
 
-Join us by [contacting us](#/contact).
+Join us by scrolling down to the contact form!
 ```
 
 ### Markdown Syntax Quick Reference
@@ -81,7 +117,48 @@ Join us by [contacting us](#/contact).
 - `- bullet point`
 - `1. numbered item`
 - `[link text](url)` for external links
-- `[link text](#/about)` for internal page links
+- `[link text](#/gallery)` for internal page links
+
+---
+
+## Managing Ongoing Programs
+
+Edit `public/data/programs.yaml`. Programs appear as **horizontal cards with images** on the home page. Clicking a card expands it to reveal its activities.
+
+### Adding a New Program Bucket
+
+1. Add a representative image to `public/images/programs/` (recommended: landscape, ~800×500 pixels)
+2. Add a new entry in `programs.yaml`:
+
+```yaml
+programs:
+  - id: unique-id          # lowercase, no spaces (e.g., "community-service")
+    title: Program Name
+    image: programs/my-image.jpg
+    summary: One-line description shown beneath the card title.
+    items:
+      - name: Activity Name
+        description: What this activity is about.
+        link: "#/contact"   # optional — adds a "Learn more" link
+```
+
+### Changing a Program Image
+
+Replace the image file in `public/images/programs/`. Make sure the filename matches what's in `programs.yaml`.
+
+### Adding an Activity to an Existing Bucket
+
+Find the program bucket in `programs.yaml` and add a new item under `items:`:
+
+```yaml
+    items:
+      - name: New Activity
+        description: Description of the activity.
+```
+
+### Removing a Program or Activity
+
+Delete the entire block for that program or item.
 
 ---
 
@@ -136,49 +213,14 @@ Delete the entire block for that person (from the `- name:` line to just before 
 
 ---
 
-## Managing Ongoing Programs
-
-Edit `public/data/programs.yaml`. Programs appear as expandable accordion cards.
-
-### Adding a New Program Bucket
-
-Add a new entry at the top level:
-
-```yaml
-programs:
-  - id: unique-id          # lowercase, no spaces (e.g., "community-service")
-    title: Program Name
-    summary: One-line description shown when hovering over the collapsed card.
-    items:
-      - name: Activity Name
-        description: What this activity is about.
-        link: "#/contact"   # optional — adds a "Learn more" link
-```
-
-### Adding an Activity to an Existing Bucket
-
-Find the program bucket and add a new item under `items:`:
-
-```yaml
-    items:
-      - name: New Activity
-        description: Description of the activity.
-```
-
-### Removing a Program or Activity
-
-Delete the entire block for that program or item.
-
----
-
 ## Posting Chapter News
 
-Edit `public/data/news.yaml`. News items display as image cards in a responsive grid.
+Edit `public/data/news.yaml`. News items display as image cards in a responsive grid on the Chapter News page.
 
 ### Adding a News Item
 
 1. Add an image to `public/images/news/` (recommended: landscape, ~800×600 pixels)
-2. Add an entry to `news.yaml` (newest items first):
+2. Add an entry to `news.yaml` (put newest items first):
 
 ```yaml
 newsItems:
@@ -210,7 +252,7 @@ photos:
     date: 2025-09-15
 ```
 
-Photos display in a staggered masonry layout. Hovering shows the caption overlay. Clicking opens a full-screen lightbox.
+Photos display in a staggered masonry layout. Hovering shows a caption overlay. Clicking opens a full-screen lightbox.
 
 ---
 
@@ -222,7 +264,7 @@ Replace the file `public/images/hero-bg.jpg` with your new image.
 - **Format**: JPEG for best compression
 - **Keep the same filename** (`hero-bg.jpg`) so no code changes are needed
 
-If the hero area looks too dark or too light, the overlay opacity can be adjusted in `src/css/style.css` — look for `.home-hero-overlay` and change the `rgba(0, 0, 0, 0.55)` value (higher = darker).
+If the hero area looks too dark or too light, the overlay opacity can be adjusted in `src/css/style.css` — look for `.home-hero-overlay` and change the `rgba(24, 66, 143, 0.55)` value (higher last number = darker).
 
 ---
 
@@ -230,14 +272,14 @@ If the hero area looks too dark or too light, the overlay opacity can be adjuste
 
 Events are pulled from Google Calendar. The event **title** determines its category color on the timeline. Add a tag in square brackets at the start of the event title:
 
-| Tag in Title       | Category    | Color  |
-|--------------------|-------------|--------|
-| `[Volunteer] ...`  | Volunteer   | Green  |
-| `[Meeting] ...`    | Meeting     | Blue   |
-| `[Social] ...`     | Social      | Amber  |
-| `[Workshop] ...`   | Workshop    | Purple |
-| `[Conference] ...` | Conference  | Red    |
-| *(no tag)*         | General     | Gray   |
+| Tag in Title       | Category    | Color         |
+|--------------------|-------------|---------------|
+| `[Volunteer] ...`  | Volunteer   | Blue (#18428F)|
+| `[Meeting] ...`    | Meeting     | Cyan (#00C2F3)|
+| `[Social] ...`     | Social      | Orange (#F26524)|
+| `[Workshop] ...`   | Workshop    | Navy (#19226D)|
+| `[Conference] ...` | Conference  | Burnt Orange (#B64B28)|
+| *(no tag)*         | General     | Dark Gray (#41434C)|
 
 **Example calendar event titles:**
 - `[Social] End-of-Year Holiday Party`
@@ -275,6 +317,8 @@ maxResults: 10
 
 ## Setting Up the Contact Form
 
+The contact form appears at the bottom of the home page.
+
 ### Step 1: Create a Google Form
 1. Go to [Google Forms](https://forms.google.com)
 2. Create your form with desired fields
@@ -294,31 +338,46 @@ description: Your description text here.
 
 ---
 
-## Updating Site Configuration
+## Updating Navigation
 
-Edit `public/data/site.yaml` to change:
+Edit `public/data/site.yaml`.
 
-- **Organization name**: `name` field (appears in nav, footer, hero)
-- **Hero buttons**: `heroSelections` array (the 3 buttons on the home page)
-- **Navigation links**: `floatingNav` array (all links in the floating nav bar)
-- **Social media links**: `socials` array
-- **Footer tagline**: `footer.tagline`
+### How Navigation Works
+
+- **About**, **Programs**, and **Contact** links scroll to their section on the home page (they use `scrollTo`)
+- **Chapter News**, **Events**, **Executive Board**, **Gallery** navigate to separate pages (they use `path`)
+- **Parent Organization** opens in a new browser tab (it has `external: true`)
 
 ### Adding a Navigation Link
 
-Add a new entry to the `floatingNav` array:
-
+For a link to a new separate page:
 ```yaml
 floatingNav:
   - label: New Page
     path: /new-page
 ```
 
-For external links (opens in a new tab):
+For a link that scrolls to a section on the home page:
+```yaml
+floatingNav:
+  - label: Section Name
+    scrollTo: section-element-id
+```
 
+For an external link (opens in a new tab):
 ```yaml
   - label: External Site
     path: https://example.com
+    external: true
+```
+
+### Changing the Parent Organization Link
+
+Find the last entry in `floatingNav` (with `external: true`) and change the `path` URL:
+
+```yaml
+  - label: Parent Organization
+    path: https://your-parent-org-url.org
     external: true
 ```
 
@@ -346,18 +405,3 @@ Open the URL shown in the terminal (usually `http://localhost:5173/website-test/
 npm run build
 ```
 The built site will be in the `dist/` folder.
-
----
-
-## How the Website Works (Overview)
-
-- **Home page**: Full-screen hero image with the chapter name and three buttons. A floating navigation bar appears when you scroll down (or immediately on other pages).
-- **About**: Renders the Markdown content from `about.md`.
-- **Ongoing Programs**: Accordion-style cards loaded from `programs.yaml`.
-- **Chapter News**: Gallery of image cards from `news.yaml`.
-- **Events**: Horizontal scrollable timeline of events from Google Calendar, color-coded by category.
-- **Executive Board**: Card grid of current members, founding members, and previous board list.
-- **Gallery**: Masonry photo grid with hover overlays and lightbox viewing.
-- **Contact**: Google Form embed.
-
-All page transitions use a smooth fade-out/fade-in animation.

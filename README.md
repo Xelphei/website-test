@@ -5,16 +5,36 @@ A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla Ja
 ## Features
 
 - Full-viewport hero landing page with fade-in animations
-- Floating navigation bar (appears on scroll on the home page, always visible on other pages)
+- **Single-page home** with inline About, Ongoing Programs, and Contact Us sections
+- Always-visible navigation bar that stays fixed when scrolling
+- Center-aligned menu links with bold, right-aligned "Parent Organization" external link
 - Smooth fade page transitions between all routes
-- Ongoing Programs page with accordion-style expandable cards
-- Chapter News gallery with responsive image cards
+- Horizontal program cards with representative images (click to expand)
+- Chapter News page with responsive image card gallery
 - Events timeline pulled from Google Calendar, color-coded by category
 - Executive Board with LinkedIn/website links and founding members section
 - Masonry photo gallery with hover overlays and lightbox
-- Contact page with embedded Google Form
+- Contact form via embedded Google Form
 - Fully responsive (mobile, tablet, desktop)
 - Automatic deployment via GitHub Actions
+
+## Color Scheme
+
+| Role       | Color     | HEX     |
+|------------|-----------|---------|
+| Primary    | Blue      | #18428F |
+| Primary    | Cyan      | #00C2F3 |
+| Primary    | Dark Gray | #41434C |
+| Primary    | Orange    | #B64B28 |
+| Secondary  | Navy      | #19226D |
+| Secondary  | Orange    | #F26524 |
+| Secondary  | Light     | #E2E1EE |
+| Secondary  | Off-white | #F8F8F8 |
+
+## Typography
+
+- **Headlines / Titles**: Times New Roman (serif)
+- **Body / Subheadlines / Small text**: Arial (sans-serif)
 
 ## Getting Started
 
@@ -53,15 +73,15 @@ The site deploys automatically to GitHub Pages when you push to the `main` branc
 
 See **[MAINTENANCE.md](MAINTENANCE.md)** for a complete, beginner-friendly guide on how to:
 
-- Update the About page text
+- Update the About section text
 - Add or remove Executive Board members (current, founding, previous)
 - Post Chapter News items
-- Add or modify Ongoing Programs
+- Add or modify Ongoing Programs with images
 - Upload gallery photos
 - Change the hero background image or logo
 - Configure Google Calendar events and event categories
 - Set up the contact form
-- Update navigation links and social media
+- Update navigation links, social media, and the Parent Organization link
 
 Most changes only require editing a YAML or Markdown file — no coding needed.
 

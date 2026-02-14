@@ -1,14 +1,14 @@
 import { loadYaml } from '../utils/yaml.js';
 
 const CATEGORY_PATTERNS = [
-  { regex: /\[Volunteer\]/i, category: 'Volunteer', color: '#16a34a' },
-  { regex: /\[Meeting\]/i, category: 'Meeting', color: '#2563eb' },
-  { regex: /\[Social\]/i, category: 'Social', color: '#d97706' },
-  { regex: /\[Workshop\]/i, category: 'Workshop', color: '#9333ea' },
-  { regex: /\[Conference\]/i, category: 'Conference', color: '#dc2626' },
+  { regex: /\[Volunteer\]/i, category: 'Volunteer', color: '#18428F' },
+  { regex: /\[Meeting\]/i, category: 'Meeting', color: '#00C2F3' },
+  { regex: /\[Social\]/i, category: 'Social', color: '#F26524' },
+  { regex: /\[Workshop\]/i, category: 'Workshop', color: '#19226D' },
+  { regex: /\[Conference\]/i, category: 'Conference', color: '#B64B28' },
 ];
 
-const DEFAULT_CATEGORY = { category: 'General', color: '#6b7280' };
+const DEFAULT_CATEGORY = { category: 'General', color: '#41434C' };
 
 function detectCategory(title) {
   for (const pattern of CATEGORY_PATTERNS) {
@@ -25,10 +25,10 @@ function stripCategoryTag(title) {
 
 export async function renderEvents(el, base) {
   el.innerHTML = `
-    <div class="max-w-6xl mx-auto px-4 py-12">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8">Upcoming Events</h1>
+    <div class="max-w-6xl mx-auto px-4 py-12" style="margin-top: 60px;">
+      <h1 class="font-heading text-3xl font-bold text-primary-dark mb-8">Upcoming Events</h1>
       <div id="events-list">
-        <div class="text-center py-8 text-gray-400">Loading events...</div>
+        <div class="text-center py-8 text-gray-400 font-body">Loading events...</div>
       </div>
     </div>
   `;
@@ -39,11 +39,11 @@ export async function renderEvents(el, base) {
 
     if (!config.apiKey || config.apiKey === 'YOUR_API_KEY') {
       listEl.innerHTML = `
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-          <p class="text-yellow-800 font-semibold mb-2">Calendar Not Configured</p>
-          <p class="text-yellow-600 text-sm">
+        <div class="rounded-lg p-6 text-center" style="background-color: #F8F8F8; border: 1px solid #E2E1EE;">
+          <p class="font-body text-primary-dark font-semibold mb-2">Calendar Not Configured</p>
+          <p class="font-body text-gray-500 text-sm">
             To display events, add your Google Calendar API key and Calendar ID to
-            <code class="bg-yellow-100 px-1 rounded">public/data/events.yaml</code>.
+            <code class="px-1 rounded" style="background-color: #E2E1EE;">public/data/events.yaml</code>.
             See MAINTENANCE.md for setup instructions.
           </p>
         </div>
@@ -54,7 +54,7 @@ export async function renderEvents(el, base) {
     await fetchEvents(config, listEl);
   } catch {
     document.getElementById('events-list').innerHTML =
-      '<p class="text-red-500">Failed to load events configuration.</p>';
+      '<p class="text-red-500 font-body">Failed to load events configuration.</p>';
   }
 }
 
@@ -71,7 +71,7 @@ async function fetchEvents(config, listEl) {
     if (!data.items || data.items.length === 0) {
       listEl.innerHTML = `
         <div class="text-center py-8">
-          <p class="text-gray-500">No upcoming events at this time. Check back soon!</p>
+          <p class="font-body text-gray-500">No upcoming events at this time. Check back soon!</p>
         </div>
       `;
       return;
@@ -108,9 +108,9 @@ async function fetchEvents(config, listEl) {
                   <div class="timeline-dot"></div>
                   <div class="timeline-card">
                     <span class="timeline-category">${escapeHtml(category)}</span>
-                    <h3 class="font-semibold text-gray-900 mt-1">${escapeHtml(cleanTitle)}</h3>
-                    <p class="text-sm text-gray-500 mt-1">${dateStr}</p>
-                    ${timeStr ? `<p class="text-sm text-gray-400">${timeStr}</p>` : ''}
+                    <h3 class="font-heading font-semibold text-primary-dark mt-1">${escapeHtml(cleanTitle)}</h3>
+                    <p class="font-body text-sm text-gray-500 mt-1">${dateStr}</p>
+                    ${timeStr ? `<p class="font-body text-sm text-gray-400">${timeStr}</p>` : ''}
                   </div>
                 </div>
               `;
@@ -118,13 +118,13 @@ async function fetchEvents(config, listEl) {
             .join('')}
         </div>
       </div>
-      <p class="text-center text-sm text-gray-400 mt-4">Scroll horizontally to see more events &rarr;</p>
+      <p class="text-center text-sm text-gray-400 mt-4 font-body">Scroll horizontally to see more events &rarr;</p>
     `;
   } catch {
     listEl.innerHTML = `
       <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-        <p class="text-red-800 font-semibold mb-2">Unable to Load Events</p>
-        <p class="text-red-600 text-sm">There was an error fetching events from Google Calendar. Please try again later.</p>
+        <p class="font-body text-red-800 font-semibold mb-2">Unable to Load Events</p>
+        <p class="font-body text-red-600 text-sm">There was an error fetching events from Google Calendar. Please try again later.</p>
       </div>
     `;
   }

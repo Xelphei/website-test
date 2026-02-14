@@ -1,6 +1,7 @@
 programs:
   - id: k12
     title: K-12 Outreach
+    image: programs/k12-outreach.jpg
     summary: Inspiring the next generation through hands-on science education and competitions.
     items:
       - name: Science Demos
@@ -11,6 +12,7 @@ programs:
 
   - id: professional-development
     title: Professional Development
+    image: programs/professional-dev.jpg
     summary: Building skills and connections for career growth and industry leadership.
     items:
       - name: Midwest Regional Symposium
@@ -20,6 +22,7 @@ programs:
 
   - id: social
     title: Social & Community
+    image: programs/social-community.jpg
     summary: Connecting members through social events and community engagement.
     items:
       - name: Photo Gallery

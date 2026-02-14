@@ -2,10 +2,10 @@ import { loadYaml } from '../utils/yaml.js';
 
 export async function renderBoard(el, base) {
   el.innerHTML = `
-    <div class="max-w-6xl mx-auto px-4 py-12">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Executive Board</h1>
+    <div class="max-w-6xl mx-auto px-4 py-12" style="margin-top: 60px;">
+      <h1 class="font-heading text-3xl font-bold text-primary-dark mb-6">Executive Board</h1>
       <div id="board-content">
-        <div class="text-center py-8 text-gray-400">Loading...</div>
+        <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
       </div>
     </div>
   `;
@@ -21,11 +21,11 @@ export async function renderBoard(el, base) {
     let foundingHtml = '';
     if (data.founding && data.founding.length > 0) {
       const foundingCards = data.founding
-        .map((member) => renderMemberCard(member, base, 'board/founding/'))
+        .map((member) => renderMemberCard(member, base))
         .join('');
       foundingHtml = `
         <div class="mt-12">
-          <h2 class="text-2xl font-semibold text-gray-800 mb-6">Founding Chapter Members</h2>
+          <h2 class="font-heading text-2xl font-semibold text-primary-blue mb-6">Founding Chapter Members</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             ${foundingCards}
           </div>
@@ -37,14 +37,14 @@ export async function renderBoard(el, base) {
     if (data.previous) {
       previousHtml = `
         <div class="mt-12">
-          <h2 class="text-2xl font-semibold text-gray-800 mb-4">Previous Executive Board (${escapeHtml(data.previous.year)})</h2>
-          <div class="bg-white rounded-lg shadow-sm border border-gray-200 divide-y">
+          <h2 class="font-heading text-2xl font-semibold text-primary-blue mb-4">Previous Executive Board (${escapeHtml(data.previous.year)})</h2>
+          <div class="bg-white rounded-lg shadow-sm divide-y" style="border: 1px solid #E2E1EE;">
             ${data.previous.members
               .map(
                 (member) => `
               <div class="px-4 py-3 flex items-center justify-between">
-                <span class="font-medium text-gray-800">${escapeHtml(member.name)}</span>
-                <span class="text-gray-500 text-sm">${escapeHtml(member.title)}</span>
+                <span class="font-body font-medium text-primary-dark">${escapeHtml(member.name)}</span>
+                <span class="font-body text-gray-500 text-sm">${escapeHtml(member.title)}</span>
               </div>
             `
               )
@@ -55,7 +55,7 @@ export async function renderBoard(el, base) {
     }
 
     contentEl.innerHTML = `
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Current Board</h2>
+      <h2 class="font-heading text-2xl font-semibold text-primary-blue mb-6">Current Board</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         ${currentHtml}
       </div>
@@ -64,7 +64,7 @@ export async function renderBoard(el, base) {
     `;
   } catch {
     document.getElementById('board-content').innerHTML =
-      '<p class="text-red-500">Failed to load board members.</p>';
+      '<p class="text-red-500 font-body">Failed to load board members.</p>';
   }
 }
 
@@ -82,27 +82,27 @@ function renderMemberCard(member, base) {
     : '';
 
   return `
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
-      <div class="aspect-square bg-gray-100 flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow" style="border: 1px solid #E2E1EE;">
+      <div class="aspect-square flex items-center justify-center" style="background-color: #E2E1EE;">
         <img
           src="${base}images/${member.photo}"
           alt="${escapeHtml(member.name)}"
           class="w-full h-full object-cover"
-          onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400 text-6xl font-light\\'>${member.name.charAt(0)}</div>'"
+          onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-6xl font-light font-heading\\' style=\\'color: #18428F;\\'>${member.name.charAt(0)}</div>'"
         />
       </div>
       <div class="p-4">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="font-semibold text-gray-900">${escapeHtml(member.name)}</h3>
-            ${member.title ? `<p class="text-primary-600 text-sm font-medium">${escapeHtml(member.title)}</p>` : ''}
+            <h3 class="font-heading font-semibold text-primary-dark">${escapeHtml(member.name)}</h3>
+            ${member.title ? `<p class="font-body text-sm font-medium" style="color: #00C2F3;">${escapeHtml(member.title)}</p>` : ''}
           </div>
           <div class="flex gap-2">
             ${linkedinIcon}
             ${websiteIcon}
           </div>
         </div>
-        ${member.bio ? `<p class="text-gray-500 text-sm mt-2">${escapeHtml(member.bio)}</p>` : ''}
+        ${member.bio ? `<p class="font-body text-gray-500 text-sm mt-2">${escapeHtml(member.bio)}</p>` : ''}
       </div>
     </div>
   `;

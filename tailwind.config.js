@@ -5,19 +5,24 @@ export default {
     './src/**/*.{js,html}',
   ],
   theme: {
+    fontFamily: {
+      heading: ['"Times New Roman"', 'Times', 'serif'],
+      body: ['Arial', 'Helvetica', 'sans-serif'],
+    },
     extend: {
       colors: {
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          DEFAULT: '#18428F',
+          blue: '#18428F',
+          cyan: '#00C2F3',
+          dark: '#41434C',
+          orange: '#B64B28',
+        },
+        secondary: {
+          navy: '#19226D',
+          orange: '#F26524',
+          light: '#E2E1EE',
+          off: '#F8F8F8',
         },
       },
     },

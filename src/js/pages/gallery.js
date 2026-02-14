@@ -2,10 +2,10 @@ import { loadYaml } from '../utils/yaml.js';
 
 export async function renderGallery(el, base) {
   el.innerHTML = `
-    <div class="max-w-6xl mx-auto px-4 py-12">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Photo Gallery</h1>
+    <div class="max-w-6xl mx-auto px-4 py-12" style="margin-top: 60px;">
+      <h1 class="font-heading text-3xl font-bold text-primary-dark mb-6">Photo Gallery</h1>
       <div id="gallery-content">
-        <div class="text-center py-8 text-gray-400">Loading...</div>
+        <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
       </div>
     </div>
   `;
@@ -16,7 +16,7 @@ export async function renderGallery(el, base) {
 
     if (!data.photos || data.photos.length === 0) {
       contentEl.innerHTML =
-        '<p class="text-gray-500 text-center py-8">No photos available yet.</p>';
+        '<p class="font-body text-gray-500 text-center py-8">No photos available yet.</p>';
       return;
     }
 
@@ -32,8 +32,8 @@ export async function renderGallery(el, base) {
               onerror="this.style.display='none'"
             />
             <div class="masonry-overlay">
-              <p class="text-white text-sm font-medium">${escapeHtml(photo.caption)}</p>
-              ${photo.date ? `<p class="text-gray-300 text-xs mt-1">${photo.date}</p>` : ''}
+              <p class="text-white text-sm font-medium font-body">${escapeHtml(photo.caption)}</p>
+              ${photo.date ? `<p class="text-gray-300 text-xs mt-1 font-body">${photo.date}</p>` : ''}
             </div>
           </div>
         `
@@ -51,7 +51,7 @@ export async function renderGallery(el, base) {
     });
   } catch {
     document.getElementById('gallery-content').innerHTML =
-      '<p class="text-red-500">Failed to load gallery.</p>';
+      '<p class="text-red-500 font-body">Failed to load gallery.</p>';
   }
 }
 
