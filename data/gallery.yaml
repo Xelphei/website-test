@@ -1,0 +1,24 @@
+photos:
+  - path: gallery/annual-conference-2025.jpg
+    caption: Annual Conference 2025
+    date: 2025-09-15
+
+  - path: gallery/networking-event.jpg
+    caption: Spring Networking Event
+    date: 2025-04-20
+
+  - path: gallery/awards-ceremony.jpg
+    caption: Awards Ceremony 2025
+    date: 2025-06-10
+
+  - path: gallery/workshop-session.jpg
+    caption: Professional Development Workshop
+    date: 2025-03-08
+
+  - path: gallery/volunteer-day.jpg
+    caption: Community Volunteer Day
+    date: 2025-05-12
+
+  - path: gallery/holiday-celebration.jpg
+    caption: Holiday Celebration 2024
+    date: 2024-12-14

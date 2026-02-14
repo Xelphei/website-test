@@ -1,0 +1,33 @@
+name: Professional Organization
+description: A nonprofit professional organization dedicated to advancing our field and supporting our members.
+
+nav:
+  - label: Home
+    path: /
+  - label: About
+    path: /about
+  - label: Awards
+    path: /awards
+  - label: Events
+    path: /events
+  - label: Board
+    path: /board
+  - label: Gallery
+    path: /gallery
+  - label: Contact
+    path: /contact
+
+socials:
+  - platform: LinkedIn
+    url: https://linkedin.com/company/your-org
+  - platform: Twitter
+    url: https://twitter.com/your-org
+  - platform: Instagram
+    url: https://instagram.com/your-org
+
+footer:
+  tagline: Advancing professionals through community, education, and recognition.
+
+contact:
+  email: info@yourorg.org
+  phone: (555) 123-4567

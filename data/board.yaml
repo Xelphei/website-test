@@ -1,0 +1,42 @@
+current:
+  - name: Jane Smith
+    title: President
+    photo: board/jane-smith.jpg
+    bio: Jane has over 15 years of experience in the field and is passionate about mentorship and professional development.
+
+  - name: John Doe
+    title: Vice President
+    photo: board/john-doe.jpg
+    bio: John brings strategic vision and operational expertise to the organization.
+
+  - name: Maria Garcia
+    title: Treasurer
+    photo: board/maria-garcia.jpg
+    bio: Maria manages the organization's finances and ensures fiscal responsibility.
+
+  - name: David Chen
+    title: Secretary
+    photo: board/david-chen.jpg
+    bio: David keeps our records organized and ensures transparent communication.
+
+  - name: Sarah Johnson
+    title: Director of Events
+    photo: board/sarah-johnson.jpg
+    bio: Sarah plans and coordinates all organizational events and conferences.
+
+  - name: Michael Brown
+    title: Director of Membership
+    photo: board/michael-brown.jpg
+    bio: Michael oversees membership growth and engagement initiatives.
+
+previous:
+  year: 2024-2025
+  members:
+    - name: Robert Wilson
+      title: President
+    - name: Emily Davis
+      title: Vice President
+    - name: James Taylor
+      title: Treasurer
+    - name: Lisa Anderson
+      title: Secretary
