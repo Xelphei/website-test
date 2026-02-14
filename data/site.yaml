@@ -3,19 +3,19 @@ description: A nonprofit professional chapter dedicated to advancing our field a
 
 heroSelections:
   - label: Our Mission
-    path: /about
+    scrollTo: about-section
   - label: Ongoing Programs
-    path: /programs
+    scrollTo: programs-section
   - label: Get Involved
-    path: /contact
+    scrollTo: contact-section
 
 floatingNav:
   - label: Home
     path: /
   - label: About
-    path: /about
-  - label: Ongoing Programs
-    path: /programs
+    scrollTo: about-section
+  - label: Programs
+    scrollTo: programs-section
   - label: Chapter News
     path: /news
   - label: Events
@@ -25,7 +25,7 @@ floatingNav:
   - label: Gallery
     path: /gallery
   - label: Contact
-    path: /contact
+    scrollTo: contact-section
   - label: Parent Organization
     path: https://parentorg.org
     external: true
