@@ -2,9 +2,11 @@ import { loadYaml } from '../utils/yaml.js';
 
 export async function renderGallery(el, base) {
   el.innerHTML = `
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Photo Gallery</h1>
-    <div id="gallery-content">
-      <div class="text-center py-8 text-gray-400">Loading...</div>
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold text-gray-900 mb-6">Photo Gallery</h1>
+      <div id="gallery-content">
+        <div class="text-center py-8 text-gray-400">Loading...</div>
+      </div>
     </div>
   `;
 
@@ -19,21 +21,20 @@ export async function renderGallery(el, base) {
     }
 
     contentEl.innerHTML = `
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="masonry-grid">
         ${data.photos
           .map(
             (photo, i) => `
-          <div class="group cursor-pointer" data-gallery-index="${i}">
-            <div class="aspect-[4/3] bg-gray-100 rounded-lg overflow-hidden">
-              <img
-                src="${base}images/${photo.path}"
-                alt="${escapeHtml(photo.caption)}"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center h-full text-gray-400 text-sm p-4 text-center\\'>${escapeHtml(photo.caption)}</div>'"
-              />
+          <div class="masonry-item cursor-pointer" data-gallery-index="${i}">
+            <img
+              src="${base}images/${photo.path}"
+              alt="${escapeHtml(photo.caption)}"
+              onerror="this.style.display='none'"
+            />
+            <div class="masonry-overlay">
+              <p class="text-white text-sm font-medium">${escapeHtml(photo.caption)}</p>
+              ${photo.date ? `<p class="text-gray-300 text-xs mt-1">${photo.date}</p>` : ''}
             </div>
-            <p class="text-sm text-gray-600 mt-2">${escapeHtml(photo.caption)}</p>
-            ${photo.date ? `<p class="text-xs text-gray-400">${photo.date}</p>` : ''}
           </div>
         `
           )

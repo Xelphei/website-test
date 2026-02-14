@@ -2,6 +2,7 @@ export class Router {
   constructor(routes) {
     this.routes = routes;
     this.contentEl = null;
+    this.isTransitioning = false;
   }
 
   init(contentEl) {
@@ -10,35 +11,56 @@ export class Router {
     this.resolve();
   }
 
-  resolve() {
+  async resolve() {
+    if (this.isTransitioning) return;
+    this.isTransitioning = true;
+
     const hash = window.location.hash || '#/';
     const path = hash.replace('#', '') || '/';
     const route = this.routes[path] || this.routes['/404'];
 
-    // Update active nav state
-    document.querySelectorAll('[data-nav-link]').forEach((link) => {
-      const href = link.getAttribute('href');
-      if (href === hash || (hash === '' && href === '#/')) {
-        link.classList.add('text-primary-600', 'font-semibold');
-        link.classList.remove('text-gray-600');
-      } else {
-        link.classList.remove('text-primary-600', 'font-semibold');
-        link.classList.add('text-gray-600');
-      }
-    });
+    // Fade out current content
+    this.contentEl.classList.add('page-fade-out');
+    await new Promise((r) => setTimeout(r, 300));
 
-    // Close mobile menu on navigation
-    const mobileMenu = document.getElementById('mobile-menu');
-    if (mobileMenu) {
-      mobileMenu.classList.add('hidden');
-    }
+    this.updateNavState(hash);
+    this.closeMobileMenu();
 
     if (route) {
-      route(this.contentEl);
+      await route(this.contentEl);
     }
+
+    // Fade in new content
+    this.contentEl.classList.remove('page-fade-out');
+    this.contentEl.classList.add('page-fade-in');
+
+    await new Promise((r) => setTimeout(r, 300));
+    this.contentEl.classList.remove('page-fade-in');
+
+    this.isTransitioning = false;
 
     // Scroll to top on page change
     window.scrollTo(0, 0);
+  }
+
+  updateNavState(hash) {
+    document.querySelectorAll('[data-nav-link]').forEach((link) => {
+      const href = link.getAttribute('href');
+      if (href === hash || (hash === '' && href === '#/')) {
+        link.classList.add('text-white', 'font-semibold');
+        link.classList.remove('text-gray-300');
+      } else {
+        link.classList.remove('text-white', 'font-semibold');
+        link.classList.add('text-gray-300');
+      }
+    });
+  }
+
+  closeMobileMenu() {
+    const mobileMenu = document.getElementById('floating-mobile-menu');
+    if (mobileMenu) {
+      mobileMenu.classList.add('hidden');
+    }
   }
 
   navigate(path) {

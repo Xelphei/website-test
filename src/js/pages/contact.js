@@ -2,9 +2,11 @@ import { loadYaml } from '../utils/yaml.js';
 
 export async function renderContact(el, base, siteConfig) {
   el.innerHTML = `
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Contact Us</h1>
-    <div id="contact-content">
-      <div class="text-center py-8 text-gray-400">Loading...</div>
+    <div class="max-w-4xl mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold text-gray-900 mb-6">Contact Us</h1>
+      <div id="contact-content">
+        <div class="text-center py-8 text-gray-400">Loading...</div>
+      </div>
     </div>
   `;
 
@@ -12,19 +14,9 @@ export async function renderContact(el, base, siteConfig) {
     const config = await loadYaml(`${base}data/contact.yaml`);
     const contentEl = document.getElementById('contact-content');
 
-    const contactInfo =
-      siteConfig.contact?.email || siteConfig.contact?.phone
-        ? `
-      <div class="bg-gray-50 rounded-lg p-6 mb-8">
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">Get in Touch</h2>
-        ${config.description ? `<p class="text-gray-600 mb-4">${escapeHtml(config.description)}</p>` : ''}
-        <div class="flex flex-col sm:flex-row gap-4 text-gray-600">
-          ${siteConfig.contact?.email ? `<div class="flex items-center gap-2"><span class="font-medium">Email:</span> <a href="mailto:${siteConfig.contact.email}" class="text-primary-600 hover:text-primary-800">${siteConfig.contact.email}</a></div>` : ''}
-          ${siteConfig.contact?.phone ? `<div class="flex items-center gap-2"><span class="font-medium">Phone:</span> ${siteConfig.contact.phone}</div>` : ''}
-        </div>
-      </div>
-    `
-        : '';
+    const descriptionHtml = config.description
+      ? `<p class="text-gray-600 mb-8">${escapeHtml(config.description)}</p>`
+      : '';
 
     const formSection =
       config.embedUrl && !config.embedUrl.includes('YOUR_FORM_ID')
@@ -53,7 +45,7 @@ export async function renderContact(el, base, siteConfig) {
       </div>
     `;
 
-    contentEl.innerHTML = contactInfo + formSection;
+    contentEl.innerHTML = descriptionHtml + formSection;
   } catch {
     document.getElementById('contact-content').innerHTML =
       '<p class="text-red-500">Failed to load contact information.</p>';

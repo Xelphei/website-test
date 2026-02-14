@@ -1,10 +1,35 @@
 import { loadYaml } from '../utils/yaml.js';
 
+const CATEGORY_PATTERNS = [
+  { regex: /\[Volunteer\]/i, category: 'Volunteer', color: '#16a34a' },
+  { regex: /\[Meeting\]/i, category: 'Meeting', color: '#2563eb' },
+  { regex: /\[Social\]/i, category: 'Social', color: '#d97706' },
+  { regex: /\[Workshop\]/i, category: 'Workshop', color: '#9333ea' },
+  { regex: /\[Conference\]/i, category: 'Conference', color: '#dc2626' },
+];
+
+const DEFAULT_CATEGORY = { category: 'General', color: '#6b7280' };
+
+function detectCategory(title) {
+  for (const pattern of CATEGORY_PATTERNS) {
+    if (pattern.regex.test(title)) {
+      return { category: pattern.category, color: pattern.color };
+    }
+  }
+  return DEFAULT_CATEGORY;
+}
+
+function stripCategoryTag(title) {
+  return title.replace(/\[(Volunteer|Meeting|Social|Workshop|Conference)\]\s*/i, '');
+}
+
 export async function renderEvents(el, base) {
   el.innerHTML = `
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">Upcoming Events</h1>
-    <div id="events-list">
-      <div class="text-center py-8 text-gray-400">Loading events...</div>
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <h1 class="text-3xl font-bold text-gray-900 mb-8">Upcoming Events</h1>
+      <div id="events-list">
+        <div class="text-center py-8 text-gray-400">Loading events...</div>
+      </div>
     </div>
   `;
 
@@ -39,10 +64,7 @@ async function fetchEvents(config, listEl) {
 
   try {
     const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`API returned ${response.status}`);
 
     const data = await response.json();
 
@@ -55,45 +77,50 @@ async function fetchEvents(config, listEl) {
       return;
     }
 
-    listEl.innerHTML = data.items
-      .map((event) => {
-        const start = event.start.dateTime || event.start.date;
-        const end = event.end.dateTime || event.end.date;
-        const isAllDay = !event.start.dateTime;
+    const events = data.items.slice(0, 10);
 
-        const startDate = new Date(start);
-        const dateStr = startDate.toLocaleDateString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        });
+    listEl.innerHTML = `
+      <div class="timeline-container">
+        <div class="timeline-track">
+          ${events
+            .map((event) => {
+              const title = event.summary || 'Untitled Event';
+              const { category, color } = detectCategory(title);
+              const cleanTitle = stripCategoryTag(title);
 
-        let timeStr = '';
-        if (!isAllDay) {
-          const endDate = new Date(end);
-          timeStr = `${startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
-        }
+              const start = event.start.dateTime || event.start.date;
+              const startDate = new Date(start);
+              const dateStr = startDate.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              });
 
-        return `
-          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4 hover:shadow-md transition-shadow">
-            <div class="flex flex-col sm:flex-row sm:items-start gap-4">
-              <div class="flex-shrink-0 bg-primary-50 text-primary-700 rounded-lg p-3 text-center min-w-[80px]">
-                <div class="text-2xl font-bold">${startDate.getDate()}</div>
-                <div class="text-sm uppercase">${startDate.toLocaleDateString('en-US', { month: 'short' })}</div>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-semibold text-gray-900">${escapeHtml(event.summary || 'Untitled Event')}</h3>
-                <p class="text-sm text-gray-500 mt-1">${dateStr}${timeStr ? ` &middot; ${timeStr}` : ' &middot; All Day'}</p>
-                ${event.location ? `<p class="text-sm text-gray-500 mt-1">${escapeHtml(event.location)}</p>` : ''}
-                ${event.description ? `<p class="text-gray-600 mt-2 text-sm">${escapeHtml(event.description)}</p>` : ''}
-              </div>
-            </div>
-          </div>
-        `;
-      })
-      .join('');
-  } catch (err) {
+              let timeStr = '';
+              if (event.start.dateTime) {
+                const end = event.end.dateTime;
+                const endDate = new Date(end);
+                timeStr = `${startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+              }
+
+              return `
+                <div class="timeline-event" style="--event-color: ${color}">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <span class="timeline-category">${escapeHtml(category)}</span>
+                    <h3 class="font-semibold text-gray-900 mt-1">${escapeHtml(cleanTitle)}</h3>
+                    <p class="text-sm text-gray-500 mt-1">${dateStr}</p>
+                    ${timeStr ? `<p class="text-sm text-gray-400">${timeStr}</p>` : ''}
+                  </div>
+                </div>
+              `;
+            })
+            .join('')}
+        </div>
+      </div>
+      <p class="text-center text-sm text-gray-400 mt-4">Scroll horizontally to see more events &rarr;</p>
+    `;
+  } catch {
     listEl.innerHTML = `
       <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
         <p class="text-red-800 font-semibold mb-2">Unable to Load Events</p>

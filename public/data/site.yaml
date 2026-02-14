@@ -1,21 +1,34 @@
-name: Professional Organization
-description: A nonprofit professional organization dedicated to advancing our field and supporting our members.
+name: Organization Professional Chapter
+description: A nonprofit professional chapter dedicated to advancing our field and supporting our members.
 
-nav:
+heroSelections:
+  - label: Our Mission
+    path: /about
+  - label: Ongoing Programs
+    path: /programs
+  - label: Get Involved
+    path: /contact
+
+floatingNav:
   - label: Home
     path: /
   - label: About
     path: /about
-  - label: Awards
-    path: /awards
+  - label: Ongoing Programs
+    path: /programs
+  - label: Chapter News
+    path: /news
   - label: Events
     path: /events
-  - label: Board
+  - label: Executive Board
     path: /board
   - label: Gallery
     path: /gallery
   - label: Contact
     path: /contact
+  - label: Parent Organization
+    path: https://parentorg.org
+    external: true
 
 socials:
   - platform: LinkedIn
@@ -27,7 +40,3 @@ socials:
 
 footer:
   tagline: Advancing professionals through community, education, and recognition.
-
-contact:
-  email: info@yourorg.org
-  phone: (555) 123-4567

@@ -1,0 +1,30 @@
+newsItems:
+  - image: news/chapter-award.jpg
+    title: Chapter Receives Regional Excellence Award
+    description: Our chapter was recognized for outstanding contributions to professional development and community engagement at the national conference.
+    date: 2025-11-15
+
+  - image: news/symposium-recap.jpg
+    title: Midwest Regional Symposium Highlights
+    description: Over 200 professionals gathered for our annual symposium featuring keynote speakers, workshops, and networking events.
+    date: 2025-09-20
+
+  - image: news/science-bowl-winners.jpg
+    title: Science Bowl Regional Champions
+    description: Congratulations to Lincoln High School for winning the regional Science Bowl competition sponsored by our chapter.
+    date: 2025-04-10
+
+  - image: news/community-service.jpg
+    title: Spring Community Service Day
+    description: Chapter members volunteered over 500 hours during our annual community service day, supporting local STEM education initiatives.
+    date: 2025-03-22
+
+  - image: news/new-members.jpg
+    title: Welcome New Chapter Members
+    description: We are excited to welcome 15 new members who joined during our fall membership drive.
+    date: 2025-01-08
+
+  - image: news/workshop-series.jpg
+    title: Professional Workshop Series Launch
+    description: Our new quarterly workshop series kicks off with sessions on emerging technologies and leadership development.
+    date: 2024-10-05
