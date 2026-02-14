@@ -1,0 +1,8 @@
+# Google Form Embed Configuration
+# To set up:
+# 1. Create a Google Form at https://forms.google.com
+# 2. Click "Send" > embed icon (<>)
+# 3. Copy the src URL from the iframe code
+# 4. Paste it below
+embedUrl: https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true
+description: Have a question or want to get involved? Fill out the form below and we'll get back to you.

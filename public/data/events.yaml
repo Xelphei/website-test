@@ -1,0 +1,10 @@
+# Google Calendar API Configuration
+# To set up:
+# 1. Go to https://console.cloud.google.com/
+# 2. Create a project and enable the Google Calendar API
+# 3. Create an API key (restrict it to Google Calendar API)
+# 4. Make your Google Calendar public
+# 5. Copy the Calendar ID from Calendar Settings
+calendarId: YOUR_CALENDAR_ID@group.calendar.google.com
+apiKey: YOUR_API_KEY
+maxResults: 10
