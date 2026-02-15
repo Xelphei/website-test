@@ -212,14 +212,14 @@
   }
 
   .hero-bar-button:hover {
-    filter: brightness(1.15);
+    filter: brightness(1.25) saturate(0.6);
     transform: translateY(-3px) scale(1.04);
   }
 
   .hero-bar-button-inner {
     display: inline-flex;
     align-items: center;
-    transition: background 0.3s ease, -webkit-text-fill-color 0.3s ease, -webkit-text-stroke 0.3s ease;
+    transition: background 0.3s ease, -webkit-text-fill-color 0.3s ease;
   }
 
   .hero-bar-button:hover .hero-bar-button-inner {
@@ -228,8 +228,6 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.85);
-    paint-order: stroke fill;
     animation: gradientShift 2s linear infinite;
   }
 
@@ -623,14 +621,14 @@
     position: relative;
     min-width: max-content;
     gap: 1.5rem;
-    padding: 28px 0.5rem 0.75rem; /* top space for dot row + connecting line */
+    padding: 40px 0.5rem 0.75rem; /* top space for dot row + connecting line + hover room */
   }
 
   /* Horizontal connecting line through the dots */
   .timeline-track::before {
     content: '';
     position: absolute;
-    top: 13px; /* vertically center the line through 16px dots at top: 5px → 5+8=13 */
+    top: 25px; /* vertically center the line through the dots */
     left: 0;
     right: 0;
     height: 2px;
@@ -655,7 +653,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     z-index: 2;
     position: absolute;
-    top: -22px; /* sits on the connecting line above the card */
+    top: -10px; /* sits on the connecting line above the card */
   }
 
   .timeline-event:hover .timeline-dot {

@@ -113,7 +113,7 @@ The **navigation bar** is always visible at the top and stays fixed when scrolli
 
 ### Hero Button Bar
 
-The hero has three colored buttons at the bottom. Buttons keep their background color on hover, grow slightly, show an animated gradient text effect with a white outline for readability, and a right arrow slides in.
+The hero has three colored buttons at the bottom. On hover, buttons grow slightly, the background lightens and desaturates to make the animated gradient text and right arrow stand out.
 - **Our Mission** (Blue) — scrolls to the About section
 - **Programs** (Cyan) — navigates to Programs page
 - **Get Involved** (Orange) — navigates to Contact page
