@@ -1,6 +1,6 @@
 # Website Maintenance Guide
 
-This guide explains how to update and maintain the Organization Professional Chapter website. You do **not** need to be a programmer to make most changes — just edit the YAML or Markdown files described below, push to the `main` branch, and the site will deploy automatically.
+This guide explains how to update and maintain the Organization Professional Chapter website. You do **not** need to be a programmer to make most changes — just edit the YAML files described below, push to the `main` branch, and the site will deploy automatically.
 
 ---
 
@@ -9,29 +9,25 @@ This guide explains how to update and maintain the Organization Professional Cha
 ```
 website-test/
 ├── public/
-│   ├── content/               # Markdown text content
-│   │   ├── home.md            # (kept for reference — not rendered)
-│   │   └── about.md           # Legacy about text (no longer used on home page)
+│   ├── content/               # Markdown text content (legacy)
 │   ├── data/                  # YAML data files (edit these to change data)
-│   │   ├── site.yaml          # Org name, navigation, socials, footer
+│   │   ├── site.yaml          # Org name, navigation, hero buttons, socials, footer
 │   │   ├── board.yaml         # Executive board + founding members
 │   │   ├── programs.yaml      # Ongoing programs with images and items
-│   │   ├── about.yaml         # About section subsections (5 cards with images)
-│   │   ├── partners.yaml      # Partner/sponsor organizations
+│   │   ├── about.yaml         # About section (5 subsections with theme colors)
+│   │   ├── partners.yaml      # Partner/sponsor organizations (names only)
 │   │   ├── news.yaml          # Chapter news / announcements
 │   │   ├── events.yaml        # Google Calendar non-sensitive config
 │   │   ├── gallery.yaml       # Gallery photo entries
-│   │   └── contact.yaml       # Contact form description
+│   │   └── contact.yaml       # Contact form description text
 │   └── images/
 │       ├── hero-bg.jpg        # Home page hero background image
 │       ├── logo.png           # Organization logo
-│       ├── about/             # About section subsection images (circle-cropped)
 │       ├── board/             # Board member headshots
 │       ├── board/founding/    # Founding member photos
 │       ├── gallery/           # Gallery photos
 │       ├── news/              # News article images
-│       ├── partners/          # Partner/sponsor logos
-│       └── programs/          # Program category images
+│       └── programs/          # Program category images (displayed as circles)
 ├── src/
 │   ├── css/style.css          # Styles
 │   └── js/                    # Application code
@@ -45,13 +41,15 @@ website-test/
 
 ## Secrets Setup (.env File)
 
-API keys and sensitive URLs are stored in a `.env` file that is **not committed to Git**. You must create this file locally.
+API keys and sensitive URLs are stored in a `.env` file that is **not committed to Git**. You must create this file locally for development, and configure GitHub repository secrets for deployment.
 
 ### Step 1: Create .env from Template
 
 ```bash
 cp .env.example .env
 ```
+
+**Important:** The `.env` file must be a **file** at the project root, not a folder. If you see a `.env/` folder, delete it and create a `.env` file instead.
 
 ### Step 2: Fill in Your Secrets
 
@@ -63,48 +61,64 @@ VITE_GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 VITE_GOOGLE_FORM_EMBED_URL=https://docs.google.com/forms/d/e/actual-form-id/viewform?embedded=true
 ```
 
-### For Deployment
+**Important for the form URL:** Use only the `src` URL from the Google Form embed code, **not** the full `<iframe>` tag. For example:
+- Correct: `https://docs.google.com/forms/d/e/1FAIpQL.../viewform?embedded=true`
+- Wrong: `<iframe src="https://docs.google.com/forms/d/e/1FAIpQL.../viewform?embedded=true" ...></iframe>`
 
-Make sure these environment variables are also set in your deployment environment (e.g., GitHub Actions secrets, Netlify environment variables, etc.).
+### Step 3: Configure GitHub Repository Secrets (for Deployment)
+
+Since the `.env` file is not committed, the deployed site needs secrets configured in GitHub:
+
+1. Go to your repository on GitHub
+2. Navigate to **Settings** > **Secrets and variables** > **Actions**
+3. Click **New repository secret** for each:
+   - `VITE_GOOGLE_CALENDAR_API_KEY` — your Google Calendar API key
+   - `VITE_GOOGLE_CALENDAR_ID` — your Google Calendar ID
+   - `VITE_GOOGLE_FORM_EMBED_URL` — your Google Form embed src URL
+
+The GitHub Actions workflow automatically injects these secrets as environment variables during the build.
 
 ---
 
 ## How the Website Works
 
-The site is a **single-page application**. The home page is the primary landing page and contains these inline sections:
+The site is a **single-page application**. The home page contains these sections:
 
-1. **Hero**: Half-screen background image with the chapter name and a colored button bar at the bottom
-2. **About**: Five alternating subsections with circle-cropped images, loaded from `about.yaml`
-3. **Our Partners**: Partner/sponsor logos loaded from `partners.yaml`
-4. **Contact Us**: Google Form embed (URL loaded from `.env` file)
+1. **Hero**: Half-screen background image with the chapter name and a colored button bar
+2. **About**: Five alternating subsections with colored circles and white text boxes
+3. **Our Partners**: Partner/sponsor names displayed in orange text
+
+Other pages are accessible via navigation:
+- **Programs** (`#/programs`) — dedicated page with alternating program cards
+- **Contact Us** (`#/contact`) — dedicated page with Google Form embed
+- **Chapter News**, **Events**, **Executive Board**, **Gallery** — separate pages
 
 ### Navigation
 
-The **navigation bar** is always visible at the top and stays fixed when scrolling. Hovering over links shows an animated gradient text effect.
+The **navigation bar** is always visible at the top and stays fixed when scrolling.
 
-- **About** and **Contact** menu links scroll to their section on the home page (even if you are on a different page — they will redirect you to the home page first, then scroll).
-- **Programs** navigates to a dedicated programs page showing all program categories.
-- **Chapter News**, **Events**, **Executive Board**, and **Gallery** navigate to separate pages.
-- **"Parent Organization"** is bold and right-aligned, opening the parent org's website in a new tab.
-
-### Programs Page
-
-The **Programs** link navigates to a dedicated page (`#/programs`) showing all program categories as vertical alternating cards with circle-cropped images. Clicking the "Programs" button on the hero triggers a circle-expand animation before navigating.
-
-### Programs Dropdown Menu
-
-Hovering over **"Programs"** in the navigation reveals a dropdown showing the three program categories (e.g., K-12 Outreach, Professional Development, Social & Community). Hovering over a category shows a second-level dropdown listing the specific activities or events within that category. Clicking an activity opens its dedicated page.
-
-### Individual Program Pages
-
-Each program activity (e.g., "Science Bowl", "Midwest Regional Symposium") has its own page at a URL like `#/programs/science-bowl`. These pages are generated automatically from the `slug` field in `programs.yaml`. When you add a new item with a `slug`, a page is automatically created for it.
+- **About** scrolls to the About section on the home page
+- **Programs** navigates to the dedicated Programs page (simple fade transition)
+- **Contact Us** navigates to the dedicated Contact page (simple fade transition)
+- **Chapter News**, **Events**, **Executive Board**, **Gallery** navigate to separate pages
+- **"Parent Organization"** opens the parent org's website in a new tab
 
 ### Hero Button Bar
 
-The hero section has three colored buttons at the bottom:
+The hero has three colored buttons at the bottom:
 - **Our Mission** (Blue) — scrolls to the About section
-- **Programs** (Cyan) — navigates to the Programs page with a circle-expand animation
-- **Get Involved** (Orange) — scrolls to the Contact section
+- **Programs** (Cyan) — navigates to Programs page with a circle-expand transition
+- **Get Involved** (Orange) — navigates to Contact page with a circle-expand transition
+
+When clicking Programs or Get Involved from the hero buttons, a transparent circle animation expands from the button before navigating. When clicking from the nav menu, it uses a standard fade transition.
+
+### Google Calendar Auto-Sync
+
+The events page fetches events **live from the Google Calendar API** every time a user visits the Events page. This means:
+- **Events automatically appear** on the website as soon as you add them to the linked Google Calendar
+- **No manual update or code change is needed** — just add, edit, or delete events in Google Calendar
+- The website always shows the most current upcoming events (up to the `maxResults` limit set in `events.yaml`)
+- Events are fetched in real-time, so there may be a brief loading delay while the API responds
 
 ### Color Scheme
 
@@ -133,9 +147,8 @@ The hero section has three colored buttons at the bottom:
 | Change the organization name         | `public/data/site.yaml` → `name`   |
 | Update navigation links              | `public/data/site.yaml` → `floatingNav` |
 | Change an About subsection           | `public/data/about.yaml`           |
-| Add/change About subsection images   | Add image to `public/images/about/` + update `about.yaml` |
+| Change an About circle color         | `public/data/about.yaml` → `color` |
 | Add/remove a partner                 | `public/data/partners.yaml`        |
-| Add a partner logo                   | Add image to `public/images/partners/` + update `partners.yaml` |
 | Add/remove a board member            | `public/data/board.yaml`           |
 | Add a founding member                | `public/data/board.yaml` → `founding` |
 | Add a new program category           | `public/data/programs.yaml`        |
@@ -145,8 +158,8 @@ The hero section has three colored buttons at the bottom:
 | Add gallery photos                   | `public/data/gallery.yaml` + image file |
 | Change the hero background image     | Replace `public/images/hero-bg.jpg`|
 | Change the logo                      | Replace `public/images/logo.png`   |
-| Configure events calendar            | Set `VITE_GOOGLE_CALENDAR_*` in `.env` |
-| Configure contact form               | Set `VITE_GOOGLE_FORM_EMBED_URL` in `.env` |
+| Configure events calendar            | Set `VITE_GOOGLE_CALENDAR_*` in `.env` + GitHub secrets |
+| Configure contact form               | Set `VITE_GOOGLE_FORM_EMBED_URL` in `.env` + GitHub secrets |
 | Update social media links            | `public/data/site.yaml` → `socials`|
 | Change footer tagline                | `public/data/site.yaml` → `footer.tagline` |
 | Change the Parent Organization link  | `public/data/site.yaml` → `floatingNav` (last entry with `external: true`) |
@@ -155,7 +168,7 @@ The hero section has three colored buttons at the bottom:
 
 ## Editing the About Section
 
-The About section on the home page now displays **five subsections** with alternating image/text layout, loaded from `public/data/about.yaml`.
+The About section on the home page displays **five subsections** with colored circles and white text boxes in an alternating layout.
 
 ### About YAML Structure
 
@@ -163,86 +176,85 @@ The About section on the home page now displays **five subsections** with altern
 subsections:
   - title: About
     description: "General organization information..."
-    image: about/about.jpg
+    color: "#18428F"
   - title: Maximizing Potential
     description: "Career and professional growth..."
-    image: about/potential.jpg
+    color: "#00C2F3"
   - title: Networking
     description: "Connections and community..."
-    image: about/networking.jpg
+    color: "#B64B28"
   - title: Making a Difference
     subtitle: Volunteer and Outreach Activities
     description: "Volunteer work..."
-    image: about/difference.jpg
+    color: "#F26524"
   - title: "Research. Knowledge. Wisdom."
     description: "Research and knowledge sharing..."
-    image: about/research.jpg
+    color: "#19226D"
 ```
 
-### Adding/Editing a Subsection
+### Fields
 
-1. Add a square image (recommended: 400×400 pixels) to `public/images/about/`
-2. Edit the corresponding entry in `about.yaml`
-3. The `subtitle` field is optional — if present, it appears below the title in cyan
+- **title** — Section heading
+- **subtitle** (optional) — Appears below the title in cyan
+- **description** — Section body text
+- **color** — The fill color for the circle (use a HEX code from the color scheme)
 
-### Image Requirements
-
-About images are displayed as **circles** (circle-cropped), so use square images with the subject centered.
+Each subsection displays as a colored circle next to a white text box. Odd subsections show the circle on the left; even ones show it on the right.
 
 ---
 
 ## Managing Our Partners
 
-Edit `public/data/partners.yaml`. Partners appear with their logos in a row on the home page, between the About and Contact sections.
+Edit `public/data/partners.yaml`. Partner names appear in a large orange font on the home page, between the About and footer sections.
 
 ### Partners YAML Structure
 
 ```yaml
 intro: "This chapter is thankful for the support provided by our sponsors..."
 partners:
-  - name: Company Name
-    logo: partners/company-logo.png
-    url: https://company-website.com
+  - name: University A
+  - name: University B
+  - name: Organization A
+  - name: Company A
 ```
 
 ### Adding a Partner
 
-1. Add the partner's logo to `public/images/partners/` (recommended: PNG with transparent background, ~200px height)
-2. Add an entry to `partners.yaml`:
+Add a new entry with just the partner name:
 
 ```yaml
-  - name: New Partner
-    logo: partners/new-partner.png
-    url: https://new-partner.com    # optional — if provided, logo links to their site
+  - name: New Partner Name
 ```
 
 ### Removing a Partner
 
-Delete the entire block for that partner.
+Delete the line for that partner.
 
 ---
 
 ## Managing Ongoing Programs
 
-Edit `public/data/programs.yaml`. Programs now have their own dedicated page (`#/programs`) showing vertical alternating cards with circle-cropped images.
+Edit `public/data/programs.yaml`. Programs have their own dedicated page (`#/programs`) showing vertical alternating cards with circle-cropped images.
 
 ### Understanding the Programs File
-
-Each program has these fields:
 
 ```yaml
 programs:
   - id: unique-id                 # A unique lowercase ID (no spaces)
     title: Program Name           # Displayed in the card and nav dropdown
-    image: programs/my-image.jpg  # Image shown on the card (displayed as circle)
+    image: programs/my-image.jpg  # Image shown as a circle on the programs page
     summary: Short description.   # Shown below the card title
     items:                        # Activities within this program
-      - name: Activity Name       # Displayed in the card and nav sub-dropdown
+      - name: Activity Name       # Clickable link to the activity's page
         slug: activity-name       # URL slug — creates page at #/programs/activity-name
-        description: Details...   # Shown on the activity's dedicated page
+        description: Details...   # Shown below the activity name
 ```
 
-### Adding a New Program Category (Bucket)
+### How Program Items Work
+
+On the Programs page, each **item name is a clickable link** that navigates to the item's dedicated page. When hovering over the name, it shows an animated gradient color effect and a right arrow (`→`) slides in.
+
+### Adding a New Program Category
 
 1. Add a representative image to `public/images/programs/` (recommended: square, ~400×400 pixels for best circle cropping)
 2. Add a new entry in `programs.yaml`
@@ -254,8 +266,6 @@ The new category will automatically appear:
 
 ### Adding an Activity to an Existing Program
 
-Find the program in `programs.yaml` and add a new item under `items:`:
-
 ```yaml
     items:
       - name: New Activity Name
@@ -263,22 +273,12 @@ Find the program in `programs.yaml` and add a new item under `items:`:
         description: A detailed description of what this activity involves.
 ```
 
-**Important**: The `slug` must be unique across all programs and should use lowercase letters and hyphens only (e.g., `science-bowl`, `park-cleanup-day`).
+**Important**: The `slug` must be unique across all programs and should use lowercase letters and hyphens only.
 
 ### Special Item Types
 
-Instead of a `slug` (which creates a dedicated page), you can use these alternatives:
-
-- **`link`**: Links to another page (e.g., `link: "#/gallery"` links to the Gallery page)
-- **`scrollTo`**: Scrolls to a section on the home page (e.g., `scrollTo: contact-section`)
-
-### Changing a Program Image
-
-Replace the image file in `public/images/programs/`. Make sure the filename matches what's in `programs.yaml`. Images are displayed as circles, so square images work best.
-
-### Removing a Program or Activity
-
-Delete the entire block for that program or item.
+- **`link`**: Links to another page (e.g., `link: "#/gallery"`)
+- **`scrollTo`**: Scrolls to a section on the home page (e.g., `scrollTo: about-section`)
 
 ---
 
@@ -289,7 +289,7 @@ Edit `public/data/board.yaml`.
 ### Adding a Current Board Member
 
 1. Add a headshot photo to `public/images/board/` (recommended: 400×400 pixels, square)
-2. Add an entry under `current:` in `board.yaml`:
+2. Add an entry under `current:`:
 
 ```yaml
 current:
@@ -301,46 +301,11 @@ current:
     website: https://their-website.com             # optional
 ```
 
-### Adding a Founding Chapter Member
-
-1. Add a photo to `public/images/board/founding/`
-2. Add an entry under `founding:` in `board.yaml`:
-
-```yaml
-founding:
-  - name: Dr. Full Name
-    photo: board/founding/filename.jpg
-    bio: Description of their founding role.
-    linkedin: https://linkedin.com/in/username    # optional
-    website: https://example.com                   # optional
-```
-
-### Updating Previous Boards
-
-Edit the `previous:` section:
-
-```yaml
-previous:
-  year: 2024-2025
-  members:
-    - name: Full Name
-      title: Board Title
-```
-
-### Removing a Board Member
-
-Delete the entire block for that person (from the `- name:` line to just before the next `- name:` or the next section).
-
 ---
 
 ## Posting Chapter News
 
-Edit `public/data/news.yaml`. News items display as image cards in a responsive grid on the Chapter News page.
-
-### Adding a News Item
-
-1. Add an image to `public/images/news/` (recommended: landscape, ~800×600 pixels)
-2. Add an entry to `news.yaml` (put newest items first):
+Edit `public/data/news.yaml`. Add newest items first:
 
 ```yaml
 newsItems:
@@ -350,20 +315,11 @@ newsItems:
     date: 2025-12-01
 ```
 
-### Removing a News Item
-
-Delete the entire block (from `- image:` to just before the next `- image:` or end of file).
-
 ---
 
 ## Updating the Gallery
 
-Edit `public/data/gallery.yaml`.
-
-### Adding Gallery Photos
-
-1. Add the photo to `public/images/gallery/` (recommended: max ~1MB each)
-2. Add a new entry to `gallery.yaml`:
+Edit `public/data/gallery.yaml`:
 
 ```yaml
 photos:
@@ -372,25 +328,17 @@ photos:
     date: 2025-09-15
 ```
 
-Photos display in a staggered masonry layout. Hovering shows a caption overlay. Clicking opens a full-screen lightbox.
-
 ---
 
 ## Changing the Hero Background Image
 
-Replace the file `public/images/hero-bg.jpg` with your new image.
-
-- **Recommended size**: 1920×1080 pixels or larger
-- **Format**: JPEG for best compression
-- **Keep the same filename** (`hero-bg.jpg`) so no code changes are needed
-
-If the hero area looks too dark or too light, the overlay opacity can be adjusted in `src/css/style.css` — look for `.home-hero-overlay` and change the `rgba(24, 66, 143, 0.55)` value (higher last number = darker).
+Replace `public/images/hero-bg.jpg`. Keep the same filename. Recommended: 1920×1080 pixels or larger, JPEG format.
 
 ---
 
 ## Event Categories
 
-Events are pulled from Google Calendar. The event **title** determines its category color on the timeline. Add a tag in square brackets at the start of the event title:
+Events are pulled live from Google Calendar. Add a tag in the event title:
 
 | Tag in Title       | Category    | Color         |
 |--------------------|-------------|---------------|
@@ -400,11 +348,6 @@ Events are pulled from Google Calendar. The event **title** determines its categ
 | `[Workshop] ...`   | Workshop    | Navy (#19226D)|
 | `[Conference] ...` | Conference  | Burnt Orange (#B64B28)|
 | *(no tag)*         | General     | Dark Gray (#41434C)|
-
-**Example calendar event titles:**
-- `[Social] End-of-Year Holiday Party`
-- `[Meeting] Monthly Board Meeting`
-- `[Volunteer] Science Demo at Lincoln Elementary`
 
 The tag is automatically removed from the displayed title.
 
@@ -426,17 +369,22 @@ The tag is automatically removed from the displayed title.
 4. Copy the **Calendar ID** from the "Integrate calendar" section
 
 ### Step 3: Update Configuration
-Add to your `.env` file:
+
+**For local development**, add to your `.env` file:
 ```
 VITE_GOOGLE_CALENDAR_API_KEY=AIzaSy...your-api-key
 VITE_GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 ```
 
+**For deployment**, add the same values as GitHub repository secrets (see "Secrets Setup" section above).
+
+### How Calendar Sync Works
+
+Events sync **automatically in real-time**. The website fetches events directly from the Google Calendar API each time a user visits the Events page. There is no caching or manual sync step — any event you add, edit, or delete in Google Calendar will be reflected on the website immediately (or within seconds).
+
 ---
 
 ## Setting Up the Contact Form
-
-The contact form appears at the bottom of the home page.
 
 ### Step 1: Create a Google Form
 1. Go to [Google Forms](https://forms.google.com)
@@ -446,13 +394,16 @@ The contact form appears at the bottom of the home page.
 ### Step 2: Get the Embed URL
 1. Click **Send** in the form editor
 2. Click the embed icon (`<>`)
-3. Copy the `src` URL from the iframe code
+3. Copy **only the `src` URL** from the iframe code (not the full iframe tag)
 
 ### Step 3: Update Configuration
-Add to your `.env` file:
+
+**For local development**, add to your `.env` file:
 ```
 VITE_GOOGLE_FORM_EMBED_URL=https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true
 ```
+
+**For deployment**, add the same value as a GitHub repository secret.
 
 You can also update the description text in `public/data/contact.yaml`.
 
@@ -464,49 +415,10 @@ Edit `public/data/site.yaml`.
 
 ### How Navigation Works
 
-- **About** and **Contact** menu links scroll to their section on the home page (they use `scrollTo`). If you're on another page, they redirect to the home page first, then scroll.
-- **Programs** navigates to the dedicated programs page (uses `path: /programs`). It has a hover dropdown showing program categories.
-- **Chapter News**, **Events**, **Executive Board**, **Gallery** navigate to separate pages (they use `path`).
-- **Parent Organization** opens in a new browser tab (it has `external: true`).
-
-### Adding a Navigation Link
-
-For a link to a new separate page:
-```yaml
-floatingNav:
-  - label: New Page
-    path: /new-page
-```
-
-For a link that scrolls to a section on the home page:
-```yaml
-floatingNav:
-  - label: Section Name
-    scrollTo: section-element-id
-```
-
-For an external link (opens in a new tab):
-```yaml
-  - label: External Site
-    path: https://example.com
-    external: true
-```
-
-### Changing the Parent Organization Link
-
-Find the last entry in `floatingNav` (with `external: true`) and change the `path` URL:
-
-```yaml
-  - label: Parent Organization
-    path: https://your-parent-org-url.org
-    external: true
-```
-
----
-
-## Updating the Logo
-
-Replace `public/images/logo.png` with your new logo. Recommended: square image, at least 200×200 pixels. Keep the same filename.
+- **About** scrolls to the About section on the home page (uses `scrollTo`)
+- **Programs** and **Contact Us** navigate to their own pages (use `path`)
+- **Chapter News**, **Events**, **Executive Board**, **Gallery** navigate to separate pages
+- **Parent Organization** opens in a new browser tab (has `external: true`)
 
 ---
 
@@ -514,7 +426,15 @@ Replace `public/images/logo.png` with your new logo. Recommended: square image, 
 
 The site deploys automatically when you push to the `main` branch via GitHub Actions.
 
-**Important:** Make sure environment variables (`VITE_GOOGLE_CALENDAR_API_KEY`, `VITE_GOOGLE_CALENDAR_ID`, `VITE_GOOGLE_FORM_EMBED_URL`) are configured in your deployment environment (e.g., GitHub repository secrets used in the workflow).
+**Important:** You must configure GitHub repository secrets for the Google Calendar and Contact Form to work in the deployed site. See the "Secrets Setup" section for instructions.
+
+### Why Secrets Aren't Committed
+
+The `.env` file contains API keys that should not be publicly visible in the repository. Instead:
+- **Local development**: Use the `.env` file (automatically ignored by Git)
+- **GitHub Pages deployment**: Use GitHub repository secrets, which are injected during the build
+
+This keeps your API keys secure while still allowing the deployed site to function.
 
 ### Local Development
 ```bash

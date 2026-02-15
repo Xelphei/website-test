@@ -19,9 +19,15 @@ export class Router {
     const path = hash.replace('#', '') || '/';
     const route = this.routes[path] || this.routes['/404'];
 
-    // Fade out current content
-    this.contentEl.classList.add('page-fade-out');
-    await new Promise((r) => setTimeout(r, 300));
+    // Check if we should skip the fade transition (circle-expand was used)
+    const skipFade = window.__skipFadeTransition === true;
+    window.__skipFadeTransition = false;
+
+    if (!skipFade) {
+      // Normal fade out current content
+      this.contentEl.classList.add('page-fade-out');
+      await new Promise((r) => setTimeout(r, 300));
+    }
 
     this.updateNavState(hash);
     this.closeMobileMenu();
@@ -30,12 +36,16 @@ export class Router {
       await route(this.contentEl);
     }
 
-    // Fade in new content
-    this.contentEl.classList.remove('page-fade-out');
-    this.contentEl.classList.add('page-fade-in');
-
-    await new Promise((r) => setTimeout(r, 300));
-    this.contentEl.classList.remove('page-fade-in');
+    if (!skipFade) {
+      // Normal fade in new content
+      this.contentEl.classList.remove('page-fade-out');
+      this.contentEl.classList.add('page-fade-in');
+      await new Promise((r) => setTimeout(r, 300));
+      this.contentEl.classList.remove('page-fade-in');
+    } else {
+      // Ensure no fade classes linger
+      this.contentEl.classList.remove('page-fade-out', 'page-fade-in');
+    }
 
     this.isTransitioning = false;
 

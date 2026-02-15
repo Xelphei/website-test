@@ -45,19 +45,9 @@
   }
 
   .nav-link {
-    @apply text-gray-200 hover:text-white transition-all whitespace-nowrap;
+    @apply text-gray-200 hover:text-white transition-colors whitespace-nowrap;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.875rem;
-  }
-
-  .nav-link:hover {
-    background: linear-gradient(90deg, #18428F, #00C2F3, #B64B28, #F26524, #18428F);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradientShift 2s linear infinite;
-    transform: scale(1.05);
   }
 
   .nav-link-parent {
@@ -170,7 +160,7 @@
   }
 
   /* ============================================
-     Animated Gradient Text Hover
+     Animated Gradient Text Hover (for page links only)
      ============================================ */
   .gradient-text-hover {
     transition: transform 0.3s ease;
@@ -249,7 +239,7 @@
   }
 
   /* ============================================
-     Circle-Expand Page Transition
+     Circle-Expand Page Transition (transparent)
      ============================================ */
   .circle-expand-overlay {
     position: fixed;
@@ -258,6 +248,7 @@
     pointer-events: none;
     transform: scale(0);
     animation: circleExpand 0.5s ease-out forwards;
+    border: 3px solid rgba(0, 194, 243, 0.4);
   }
 
   @keyframes circleExpand {
@@ -266,56 +257,81 @@
   }
 
   /* ============================================
-     About Subsections (alternating layout)
+     About Section (color circles + white text box)
      ============================================ */
+  .about-section-container {
+    @apply w-full;
+  }
+
   .about-subsection {
-    @apply flex flex-col md:flex-row items-center gap-8 py-12;
+    @apply relative flex flex-col md:flex-row items-center;
+    min-height: 280px;
   }
 
   .about-subsection.reverse {
     @apply md:flex-row-reverse;
   }
 
-  .about-subsection-text {
-    @apply flex-1;
-  }
-
-  .about-subsection-image {
-    @apply flex-shrink-0;
-  }
-
-  .about-circle-image {
-    @apply rounded-full object-cover;
+  .about-subsection-circle {
+    @apply flex-shrink-0 rounded-full;
     width: 220px;
     height: 220px;
-    box-shadow: 0 8px 24px rgba(24, 66, 143, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 1;
   }
 
-  .about-subsection:nth-child(even) .about-subsection-image {
-    transform: translateY(-20px);
+  .about-subsection-text-box {
+    @apply bg-white py-8 px-8 md:px-12 flex-1;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    z-index: 2;
+    /* Overlap the circle slightly */
+    margin-left: -40px;
   }
 
-  .about-subsection:nth-child(odd) .about-subsection-image {
-    transform: translateY(20px);
+  .about-subsection.reverse .about-subsection-text-box {
+    margin-left: 0;
+    margin-right: -40px;
+  }
+
+  /* On mobile, stack vertically */
+  @media (max-width: 767px) {
+    .about-subsection-text-box {
+      margin-left: 0;
+      margin-top: -30px;
+    }
+
+    .about-subsection.reverse .about-subsection-text-box {
+      margin-right: 0;
+      margin-top: -30px;
+    }
+  }
+
+  /* Vertical offset for alternating sections */
+  .about-subsection:nth-child(even) .about-subsection-circle {
+    transform: translateY(-15px);
+  }
+
+  .about-subsection:nth-child(odd) .about-subsection-circle {
+    transform: translateY(15px);
   }
 
   /* ============================================
-     Our Partners Section
+     Our Partners Section (text names, no logos)
      ============================================ */
   .partners-grid {
-    @apply flex flex-wrap justify-center items-center gap-8 mt-8;
+    @apply flex flex-wrap justify-center items-center gap-6 md:gap-10 mt-8;
   }
 
-  .partner-logo {
-    @apply transition-opacity duration-300;
-    max-height: 80px;
-    max-width: 180px;
-    object-fit: contain;
-    opacity: 0.7;
+  .partner-name {
+    @apply font-semibold;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.35rem;
+    color: #F26524;
+    transition: color 0.2s ease;
   }
 
-  .partner-logo:hover {
-    opacity: 1;
+  .partner-name:hover {
+    color: #B64B28;
   }
 
   /* ============================================
@@ -344,13 +360,22 @@
     @apply flex-1;
   }
 
-  .program-page-item-link {
-    @apply inline-block font-semibold transition-all duration-300;
+  /* Program item name link with gradient + arrow on hover */
+  .program-item-name-link {
+    @apply inline-flex items-center font-semibold transition-all duration-300;
     font-family: Arial, Helvetica, sans-serif;
     color: #18428F;
   }
 
-  .program-page-item-link:hover {
+  .program-item-arrow {
+    display: inline-block;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-width 0.3s ease;
+  }
+
+  .program-item-name-link:hover {
     background: linear-gradient(90deg, #18428F, #00C2F3, #B64B28, #F26524, #18428F);
     background-size: 200% auto;
     -webkit-background-clip: text;
@@ -358,6 +383,11 @@
     background-clip: text;
     animation: gradientShift 2s linear infinite;
     transform: scale(1.05);
+  }
+
+  .program-item-name-link:hover .program-item-arrow {
+    opacity: 1;
+    max-width: 2em;
   }
 
   /* ============================================
@@ -368,7 +398,7 @@
   }
 
   /* ============================================
-     Horizontal Program Cards
+     Horizontal Program Cards (legacy — home page cards)
      ============================================ */
   .programs-horizontal {
     @apply grid gap-6;

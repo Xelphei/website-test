@@ -32,7 +32,7 @@ export async function renderProgramItem(el, base, slug) {
         <div class="text-center py-12">
           <h1 class="font-heading text-3xl font-bold text-primary-dark mb-4">Program Not Found</h1>
           <p class="font-body text-gray-500 mb-6">The program you're looking for doesn't exist.</p>
-          <a href="#/" data-scroll-to="programs-section" class="font-body text-primary-cyan hover:text-primary-blue underline">Back to Programs</a>
+          <a href="#/programs" class="font-body text-primary-cyan hover:text-primary-blue underline">Back to Programs</a>
         </div>
       `;
       return;
@@ -40,9 +40,9 @@ export async function renderProgramItem(el, base, slug) {
 
     contentEl.innerHTML = `
       <nav class="font-body text-sm text-gray-400 mb-6">
-        <a href="#/" data-scroll-to="programs-section" class="text-primary-cyan hover:text-primary-blue">Ongoing Programs</a>
+        <a href="#/programs" class="text-primary-cyan hover:text-primary-blue">Ongoing Programs</a>
         <span class="mx-2">/</span>
-        <a href="#/" data-scroll-to="programs-section" class="text-primary-cyan hover:text-primary-blue">${escapeHtml(foundProgram.title)}</a>
+        <a href="#/programs" class="text-primary-cyan hover:text-primary-blue">${escapeHtml(foundProgram.title)}</a>
         <span class="mx-2">/</span>
         <span class="text-primary-dark">${escapeHtml(foundItem.name)}</span>
       </nav>
@@ -53,7 +53,7 @@ export async function renderProgramItem(el, base, slug) {
       <div class="border-t pt-6 mt-8" style="border-color: #E2E1EE;">
         <p class="font-body text-gray-500 text-sm">
           This program is part of our <strong>${escapeHtml(foundProgram.title)}</strong> initiative.
-          <a href="#/" data-scroll-to="contact-section" class="text-primary-cyan hover:text-primary-blue underline ml-1">Contact us</a> to learn more or get involved.
+          <a href="#/contact" class="text-primary-cyan hover:text-primary-blue underline ml-1">Contact us</a> to learn more or get involved.
         </p>
       </div>
     `;

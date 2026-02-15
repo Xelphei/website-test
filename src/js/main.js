@@ -7,6 +7,7 @@ import { renderBoard } from './pages/board.js';
 import { renderGallery } from './pages/gallery.js';
 import { renderProgramItem } from './pages/program-item.js';
 import { renderPrograms } from './pages/programs.js';
+import { renderContact } from './pages/contact.js';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -31,6 +32,7 @@ async function init() {
     '/board': (el) => renderBoard(el, BASE),
     '/gallery': (el) => renderGallery(el, BASE),
     '/programs': (el) => renderPrograms(el, BASE),
+    '/contact': (el) => renderContact(el, BASE),
     '/404': (el) => {
       el.innerHTML = `
         <div class="text-center py-20">
@@ -252,11 +254,10 @@ function initScrollToLinks() {
   });
 }
 
-// Intercept clicks on old-style links like #/contact, #/about
+// Intercept clicks on old-style links like #/about
 // that now correspond to home page sections
 function initLinkInterception() {
   const sectionMap = {
-    '#/contact': 'contact-section',
     '#/about': 'about-section',
   };
 

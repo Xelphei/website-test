@@ -1,11 +1,11 @@
 import { loadYaml } from '../utils/yaml.js';
 
-export async function renderContact(el, base, siteConfig) {
+export async function renderContact(el, base) {
   el.innerHTML = `
-    <div class="max-w-4xl mx-auto px-4 py-12">
-      <h1 class="text-3xl font-bold text-gray-900 mb-6">Contact Us</h1>
+    <div class="max-w-4xl mx-auto px-4 py-16" style="margin-top: 60px;">
+      <h1 class="font-heading text-3xl font-bold text-primary-dark text-center mb-8">Contact Us</h1>
       <div id="contact-content">
-        <div class="text-center py-8 text-gray-400">Loading...</div>
+        <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
       </div>
     </div>
   `;
@@ -13,17 +13,20 @@ export async function renderContact(el, base, siteConfig) {
   try {
     const config = await loadYaml(`${base}data/contact.yaml`);
     const contentEl = document.getElementById('contact-content');
+    if (!contentEl) return;
+
+    const embedUrl = import.meta.env.VITE_GOOGLE_FORM_EMBED_URL;
 
     const descriptionHtml = config.description
-      ? `<p class="text-gray-600 mb-8">${escapeHtml(config.description)}</p>`
+      ? `<p class="font-body text-gray-600 mb-8 text-center">${escapeHtml(config.description)}</p>`
       : '';
 
     const formSection =
-      config.embedUrl && !config.embedUrl.includes('YOUR_FORM_ID')
+      embedUrl && !embedUrl.includes('YOUR_FORM_ID')
         ? `
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <iframe
-          src="${config.embedUrl}"
+          src="${embedUrl}"
           width="100%"
           height="800"
           frameborder="0"
@@ -35,11 +38,11 @@ export async function renderContact(el, base, siteConfig) {
       </div>
     `
         : `
-      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-        <p class="text-yellow-800 font-semibold mb-2">Contact Form Not Configured</p>
-        <p class="text-yellow-600 text-sm">
-          To display the contact form, add your Google Form embed URL to
-          <code class="bg-yellow-100 px-1 rounded">public/data/contact.yaml</code>.
+      <div class="border border-secondary-light rounded-lg p-6 text-center" style="background-color: #F8F8F8;">
+        <p class="font-body text-primary-dark font-semibold mb-2">Contact Form Not Configured</p>
+        <p class="font-body text-gray-500 text-sm">
+          To display the contact form, add your Google Form embed URL to your
+          <code class="bg-secondary-light px-1 rounded">.env</code> file.
           See MAINTENANCE.md for setup instructions.
         </p>
       </div>
@@ -47,8 +50,8 @@ export async function renderContact(el, base, siteConfig) {
 
     contentEl.innerHTML = descriptionHtml + formSection;
   } catch {
-    document.getElementById('contact-content').innerHTML =
-      '<p class="text-red-500">Failed to load contact information.</p>';
+    const contentEl = document.getElementById('contact-content');
+    if (contentEl) contentEl.innerHTML = '<p class="text-red-500 font-body">Failed to load contact information.</p>';
   }
 }
 

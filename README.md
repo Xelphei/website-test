@@ -1,24 +1,25 @@
 # Organization Professional Chapter — Website
 
-A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla JavaScript. Content is driven by YAML data files and Markdown, making it easy for non-developers to maintain.
+A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla JavaScript. Content is driven by YAML data files, making it easy for non-developers to maintain.
 
 ## Features
 
-- Full-viewport hero landing page with fade-in animations
-- **Single-page home** with inline About, Ongoing Programs, and Contact Us sections
-- Always-visible navigation bar that stays fixed when scrolling
-- Center-aligned menu links with bold, right-aligned "Parent Organization" external link
-- Smooth fade page transitions between all routes
-- Horizontal program cards with representative images (click to expand)
+- Half-viewport hero with animated title and colored button bar
+- **Home page** with alternating About subsections (colored circles + white text boxes) and Partners section
+- Dedicated **Programs page** with alternating vertical cards and circle-cropped images
+- Dedicated **Contact page** with embedded Google Form
+- Circle-expand page transitions from hero buttons
+- Animated gradient text hover effect on program item links
 - Programs mega-menu dropdown with category and activity sub-menus
 - Dedicated pages for each program activity (auto-generated from YAML data)
 - Chapter News page with responsive image card gallery
-- Events timeline pulled from Google Calendar, color-coded by category
+- Events timeline pulled live from Google Calendar, color-coded by category
 - Executive Board with LinkedIn/website links and founding members section
 - Masonry photo gallery with hover overlays and lightbox
-- Contact form via embedded Google Form
+- Always-visible navigation bar with smooth page transitions
 - Fully responsive (mobile, tablet, desktop)
 - Automatic deployment via GitHub Actions
+- Secrets managed via `.env` file (local) and GitHub repository secrets (deployment)
 
 ## Color Scheme
 
@@ -47,6 +48,7 @@ A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla Ja
 ### Install & Run Locally
 
 ```bash
+cp .env.example .env    # Create .env file, then fill in your secrets
 npm install
 npm run dev
 ```
@@ -63,7 +65,17 @@ The built site will be output to the `dist/` folder.
 
 ## Deployment
 
-The site deploys automatically to GitHub Pages when you push to the `main` branch. See `.github/workflows/` for the GitHub Actions configuration.
+The site deploys automatically to GitHub Pages when you push to the `main` branch. See `.github/workflows/deploy.yml` for the configuration.
+
+### Required: GitHub Repository Secrets
+
+For the deployed site to connect to Google Calendar and the contact form, you must add these as repository secrets in GitHub (**Settings** > **Secrets and variables** > **Actions**):
+
+- `VITE_GOOGLE_CALENDAR_API_KEY`
+- `VITE_GOOGLE_CALENDAR_ID`
+- `VITE_GOOGLE_FORM_EMBED_URL`
+
+These are injected as environment variables during the GitHub Actions build.
 
 ### GitHub Pages Setup
 
@@ -75,17 +87,19 @@ The site deploys automatically to GitHub Pages when you push to the `main` branc
 
 See **[MAINTENANCE.md](MAINTENANCE.md)** for a complete, beginner-friendly guide on how to:
 
-- Update the About section text
-- Add or remove Executive Board members (current, founding, previous)
+- Edit the About section subsections and circle colors
+- Add or remove Partners
+- Add or modify Programs with images and individual activity pages
+- Update the Contact page
+- Add or remove Executive Board members
 - Post Chapter News items
-- Add or modify Ongoing Programs with images and individual activity pages
 - Upload gallery photos
-- Change the hero background image or logo
-- Configure Google Calendar events and event categories
+- Configure Google Calendar events (auto-syncs in real-time)
 - Set up the contact form
-- Update navigation links, social media, and the Parent Organization link
+- Update navigation, social media, and the Parent Organization link
+- Set up `.env` secrets for local development and GitHub deployment
 
-Most changes only require editing a YAML or Markdown file — no coding needed.
+Most changes only require editing a YAML file — no coding needed.
 
 ## Tech Stack
 

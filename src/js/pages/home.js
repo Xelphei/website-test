@@ -28,9 +28,9 @@ export async function renderHome(el, base, siteConfig) {
       </div>
     </div>
 
-    <!-- About Section (5 subsections) -->
+    <!-- About Section (5 subsections with color circles) -->
     <section id="about-section" class="home-section bg-white">
-      <div class="max-w-5xl mx-auto px-4 py-16">
+      <div class="about-section-container">
         <div id="about-content">
           <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
         </div>
@@ -46,16 +46,6 @@ export async function renderHome(el, base, siteConfig) {
         </div>
       </div>
     </section>
-
-    <!-- Contact Section -->
-    <section id="contact-section" class="home-section bg-white">
-      <div class="max-w-4xl mx-auto px-4 py-16">
-        <h2 class="font-heading text-3xl font-bold text-primary-dark text-center mb-8">Contact Us</h2>
-        <div id="contact-content">
-          <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
-        </div>
-      </div>
-    </section>
   `;
 
   // Trigger hero fade-in
@@ -64,13 +54,12 @@ export async function renderHome(el, base, siteConfig) {
     if (hero) hero.classList.add('fade-in-active');
   }, 50);
 
-  // Set up circle-expand transition for Programs button
+  // Set up circle-expand transition for hero buttons with path
   initCircleExpand(el);
 
   // Load sections
   loadAboutSection(base);
   loadPartnersSection(base);
-  loadContactSection(base);
 }
 
 function initCircleExpand(el) {
@@ -98,9 +87,12 @@ function initCircleExpand(el) {
         top: ${y - diameter / 2}px;
         width: ${diameter}px;
         height: ${diameter}px;
-        background-color: ${btn.style.backgroundColor || '#00C2F3'};
+        background-color: transparent;
       `;
       document.body.appendChild(overlay);
+
+      // Signal that next navigation should skip fade
+      window.__skipFadeTransition = true;
 
       setTimeout(() => {
         overlay.remove();
@@ -119,21 +111,15 @@ async function loadAboutSection(base) {
     contentEl.innerHTML = data.subsections
       .map((sub, index) => {
         const isReverse = index % 2 === 1;
+        const circleColor = sub.color || '#18428F';
         const subtitleHtml = sub.subtitle
           ? `<p class="font-body text-sm text-primary-cyan font-semibold mb-2">${escapeHtml(sub.subtitle)}</p>`
           : '';
 
         return `
           <div class="about-subsection ${isReverse ? 'reverse' : ''}">
-            <div class="about-subsection-image">
-              <img
-                src="${base}images/${sub.image}"
-                alt="${escapeHtml(sub.title)}"
-                class="about-circle-image"
-                onerror="this.style.display='none'"
-              />
-            </div>
-            <div class="about-subsection-text">
+            <div class="about-subsection-circle" style="background-color: ${circleColor}"></div>
+            <div class="about-subsection-text-box">
               <h3 class="font-heading text-2xl font-bold text-primary-dark mb-2">${escapeHtml(sub.title)}</h3>
               ${subtitleHtml}
               <p class="font-body text-gray-600 leading-relaxed">${escapeHtml(sub.description)}</p>
@@ -141,7 +127,7 @@ async function loadAboutSection(base) {
           </div>
         `;
       })
-      .join('<hr class="my-2 border-secondary-light">');
+      .join('');
   } catch {
     const el = document.getElementById('about-content');
     if (el) el.innerHTML = '<p class="text-red-500 font-body">Failed to load content.</p>';
@@ -160,11 +146,7 @@ async function loadPartnersSection(base) {
 
     const partnersHtml = (data.partners || [])
       .map((partner) => {
-        const img = `<img src="${base}images/${partner.logo}" alt="${escapeHtml(partner.name)}" class="partner-logo" onerror="this.parentElement.innerHTML='<span class=\\'font-body text-gray-500 text-sm\\'>${escapeHtml(partner.name)}</span>'" />`;
-        if (partner.url) {
-          return `<a href="${partner.url}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(partner.name)}">${img}</a>`;
-        }
-        return `<div title="${escapeHtml(partner.name)}">${img}</div>`;
+        return `<span class="partner-name">${escapeHtml(partner.name)}</span>`;
       })
       .join('');
 
@@ -177,53 +159,6 @@ async function loadPartnersSection(base) {
   } catch {
     const el = document.getElementById('partners-content');
     if (el) el.innerHTML = '<p class="text-red-500 font-body">Failed to load partners.</p>';
-  }
-}
-
-async function loadContactSection(base) {
-  try {
-    const config = await loadYaml(`${base}data/contact.yaml`);
-    const contentEl = document.getElementById('contact-content');
-    if (!contentEl) return;
-
-    // Load embed URL from env var
-    const embedUrl = import.meta.env.VITE_GOOGLE_FORM_EMBED_URL;
-
-    const descriptionHtml = config.description
-      ? `<p class="font-body text-gray-600 mb-8 text-center">${escapeHtml(config.description)}</p>`
-      : '';
-
-    const formSection =
-      embedUrl && !embedUrl.includes('YOUR_FORM_ID')
-        ? `
-      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <iframe
-          src="${embedUrl}"
-          width="100%"
-          height="800"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0"
-          class="w-full"
-          title="Contact Form"
-        >Loading form...</iframe>
-      </div>
-    `
-        : `
-      <div class="border border-secondary-light rounded-lg p-6 text-center" style="background-color: #F8F8F8;">
-        <p class="font-body text-primary-dark font-semibold mb-2">Contact Form Not Configured</p>
-        <p class="font-body text-gray-500 text-sm">
-          To display the contact form, add your Google Form embed URL to your
-          <code class="bg-secondary-light px-1 rounded">.env</code> file.
-          See MAINTENANCE.md for setup instructions.
-        </p>
-      </div>
-    `;
-
-    contentEl.innerHTML = descriptionHtml + formSection;
-  } catch {
-    const el = document.getElementById('contact-content');
-    if (el) el.innerHTML = '<p class="text-red-500 font-body">Failed to load contact information.</p>';
   }
 }
 

@@ -20,19 +20,26 @@ export async function renderPrograms(el, base) {
         const isReverse = index % 2 === 1;
         const itemsHtml = program.items
           .map((item) => {
-            let linkHtml = '';
+            // Build the link for the item name itself
+            let href = '';
+            let attrs = '';
             if (item.link) {
-              linkHtml = `<a href="${item.link}" class="program-page-item-link gradient-text-hover">${escapeHtml(item.name)} &rarr;</a>`;
+              href = item.link;
             } else if (item.scrollTo) {
-              linkHtml = `<a href="#/" data-scroll-to="${item.scrollTo}" class="program-page-item-link gradient-text-hover">${escapeHtml(item.name)} &rarr;</a>`;
+              href = '#/';
+              attrs = `data-scroll-to="${item.scrollTo}"`;
             } else if (item.slug) {
-              linkHtml = `<a href="#/programs/${item.slug}" class="program-page-item-link gradient-text-hover">${escapeHtml(item.name)} &rarr;</a>`;
+              href = `#/programs/${item.slug}`;
             }
+
+            const nameHtml = href
+              ? `<a href="${href}" ${attrs} class="program-item-name-link">${escapeHtml(item.name)}<span class="program-item-arrow"> &rarr;</span></a>`
+              : `<span class="font-body font-semibold text-primary-dark">${escapeHtml(item.name)}</span>`;
+
             return `
               <div class="mb-4">
-                <h4 class="font-body font-semibold text-primary-dark">${escapeHtml(item.name)}</h4>
+                <h4 class="font-body font-semibold text-primary-dark">${nameHtml}</h4>
                 <p class="font-body text-gray-600 text-sm mt-1">${escapeHtml(item.description)}</p>
-                ${linkHtml ? `<div class="mt-2">${linkHtml}</div>` : ''}
               </div>
             `;
           })
