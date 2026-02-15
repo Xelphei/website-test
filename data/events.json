@@ -1,7 +1,19 @@
 {
   "events": [
     {
-      "summary": "Untitled Event",
+      "summary": "[Workshop] Technical Talks Workshop",
+      "description": "",
+      "location": "",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MWZjamhzdWpoY2toYmg1bXIzdGEycnBnOHAgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
+      "start": {
+        "date": "2026-02-26"
+      },
+      "end": {
+        "date": "2026-02-27"
+      }
+    },
+    {
+      "summary": "[Volunteer] Science Demo",
       "description": "",
       "location": "",
       "htmlLink": "https://www.google.com/calendar/event?eid=MmtzNDVtZzNycHUxb244ZTFra3NobGN0MDUgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
@@ -15,7 +27,7 @@
       }
     },
     {
-      "summary": "Untitled Event",
+      "summary": "[Meeting] Monthly Meeting",
       "description": "",
       "location": "",
       "htmlLink": "https://www.google.com/calendar/event?eid=N3RoZmF2b2ZiNmc5cmtmb3B2YXA5N2RzajggY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
@@ -27,7 +39,19 @@
         "dateTime": "2026-03-25T19:00:00-04:00",
         "timeZone": "America/New_York"
       }
+    },
+    {
+      "summary": "[Conference] Regional Symposium",
+      "description": "",
+      "location": "",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MmNvaDMxaGZjZTUxdmduNjh2Zzh2OHFtcTUgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
+      "start": {
+        "date": "2026-03-27"
+      },
+      "end": {
+        "date": "2026-03-30"
+      }
     }
   ],
-  "fetchedAt": "2026-02-15T20:49:41.817Z"
+  "fetchedAt": "2026-02-15T20:52:20.622Z"
 }
