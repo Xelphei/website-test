@@ -27,20 +27,16 @@ function formatEventDate(event) {
   const isAllDay = !event.start.dateTime;
 
   if (isAllDay) {
-    // All-day events use date strings like "2026-03-15" (no time component)
-    // Parse as local date (avoid timezone shift by splitting)
     const startParts = event.start.date.split('-');
     const startDate = new Date(startParts[0], startParts[1] - 1, startParts[2]);
 
     const endParts = event.end.date.split('-');
-    // Google Calendar all-day end dates are exclusive (day after the last day)
     const endDate = new Date(endParts[0], endParts[1] - 1, endParts[2]);
     endDate.setDate(endDate.getDate() - 1);
 
     const fmt = { month: 'short', day: 'numeric', year: 'numeric' };
     const startStr = startDate.toLocaleDateString('en-US', fmt);
 
-    // Check if multi-day
     if (endDate.getTime() > startDate.getTime()) {
       const endStr = endDate.toLocaleDateString('en-US', fmt);
       return { dateStr: `${startStr} – ${endStr}`, timeStr: 'All Day', isAllDay: true };
@@ -49,7 +45,6 @@ function formatEventDate(event) {
     return { dateStr: startStr, timeStr: 'All Day', isAllDay: true };
   }
 
-  // Timed event
   const startDate = new Date(event.start.dateTime);
   const endDate = new Date(event.end.dateTime);
 
@@ -62,7 +57,6 @@ function formatEventDate(event) {
   const timeFmt = { hour: 'numeric', minute: '2-digit' };
   const timeStr = `${startDate.toLocaleTimeString('en-US', timeFmt)} – ${endDate.toLocaleTimeString('en-US', timeFmt)}`;
 
-  // Check if spans multiple days
   const startDay = startDate.toDateString();
   const endDay = endDate.toDateString();
   if (startDay !== endDay) {
@@ -120,14 +114,15 @@ export async function renderEvents(el) {
     const events = data.events;
 
     listEl.innerHTML = `
-      <div class="timeline-container">
+      <p class="font-body text-sm text-gray-400 mb-4">Scroll down to browse events &rarr;</p>
+      <div class="timeline-container" id="timeline-scroll-container">
         <div class="timeline-track">
           ${events
             .map((event) => {
               const title = event.summary || 'Untitled Event';
               const { category, color } = detectCategory(title);
               const cleanTitle = stripCategoryTag(title);
-              const { dateStr, timeStr, isAllDay } = formatEventDate(event);
+              const { dateStr, timeStr } = formatEventDate(event);
 
               const descHtml = event.description
                 ? `<p class="font-body text-sm text-gray-500 mt-2 line-clamp-2">${escapeHtml(event.description)}</p>`
@@ -135,7 +130,6 @@ export async function renderEvents(el) {
 
               return `
                 <div class="timeline-event" style="--event-color: ${color}" onclick="window.location.hash='#/contact'">
-                  <div class="timeline-dot"></div>
                   <div class="timeline-card">
                     <span class="timeline-category">${escapeHtml(category)}</span>
                     <h3 class="font-heading font-semibold text-primary-dark mt-1">${escapeHtml(cleanTitle)}</h3>
@@ -144,6 +138,7 @@ export async function renderEvents(el) {
                     ${descHtml}
                     <p class="font-body text-xs mt-2" style="color: var(--event-color)">Click to contact us about this event</p>
                   </div>
+                  <div class="timeline-dot"></div>
                 </div>
               `;
             })
@@ -152,6 +147,18 @@ export async function renderEvents(el) {
       </div>
       ${data.fetchedAt ? `<p class="text-center text-xs text-gray-300 mt-6 font-body">Last updated: ${new Date(data.fetchedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>` : ''}
     `;
+
+    // Intercept vertical scroll (wheel) and convert to horizontal scroll
+    const scrollContainer = document.getElementById('timeline-scroll-container');
+    if (scrollContainer) {
+      scrollContainer.addEventListener('wheel', (e) => {
+        // Only intercept if there's horizontal overflow
+        if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
+          e.preventDefault();
+          scrollContainer.scrollLeft += e.deltaY;
+        }
+      }, { passive: false });
+    }
   } catch {
     listEl.innerHTML = `
       <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
@@ -167,4 +174,3 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
-

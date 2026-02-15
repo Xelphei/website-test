@@ -9,11 +9,119 @@ programs:
         description: Interactive science demonstrations brought directly to local K-12 classrooms, sparking curiosity and excitement about STEM fields.
         details: Our volunteers visit schools throughout the academic year, bringing hands-on experiments and demonstrations that make science fun and accessible. Topics range from chemistry and physics to environmental science and engineering.
         volunteer: We are always looking for enthusiastic volunteers to help bring science to life in local classrooms. No teaching experience required — just a passion for science and working with kids!
+        experiments:
+          - title: Baking Soda Volcano
+            description: A classic chemistry demonstration showing an acid-base reaction that produces carbon dioxide gas.
+            grade: Grades K-5
+            time: 15 minutes
+            steps:
+              - Build a small volcano shape using clay or paper mache around a plastic bottle
+              - Add 2 tablespoons of baking soda to the bottle
+              - Mix red food coloring with vinegar in a separate cup
+              - Pour the vinegar mixture into the bottle and watch it erupt!
+            teacherNotes: Prepare newspaper or a tray underneath to catch overflow. This is a great introduction to chemical reactions for younger students.
+          - title: Static Electricity Butterfly
+            description: Demonstrate static electricity by making tissue paper butterflies fly using a charged balloon.
+            grade: Grades K-5
+            time: 20 minutes
+            steps:
+              - Cut small butterfly shapes from tissue paper
+              - Inflate a balloon and tie it off
+              - Rub the balloon on your hair or a wool cloth for 15 seconds
+              - Hold the balloon above the tissue paper butterflies and watch them jump up
+            teacherNotes: Works best in low humidity. Have extra balloons on hand. Discuss electron transfer at an age-appropriate level.
+          - title: Density Tower
+            description: Layer different liquids to create a colorful density column, demonstrating that different substances have different densities.
+            grade: Grades 3-8
+            time: 30 minutes
+            steps:
+              - Gather honey, corn syrup, dish soap, water, vegetable oil, and rubbing alcohol
+              - Carefully pour each liquid into a tall clear glass in order from heaviest to lightest
+              - Observe how the liquids form distinct layers
+              - Try dropping small objects (grape, cork, plastic bead) and predict which layer they will float on
+            teacherNotes: Pour slowly along the side of the glass for best results. Have students predict the order before the demonstration. Connects well to physical science standards on properties of matter.
+          - title: Circuit Building Basics
+            description: Students build simple circuits with batteries, wires, and LEDs to understand electrical flow.
+            grade: Grades 6-12
+            time: 45 minutes
+            steps:
+              - Identify the components — battery, wires, LED, and switch
+              - Connect the positive terminal of the battery to one leg of the LED using a wire
+              - Connect the other leg of the LED back to the negative terminal
+              - Add a switch in the circuit and test it
+            teacherNotes: Use low-voltage batteries (3V coin cells) for safety. Provide circuit diagrams as reference. Have extra LEDs since they burn out if connected backwards.
+        roles:
+          - title: Demo Presenter
+            description: Lead science demonstrations in classrooms and at outreach events.
+            responsibilities:
+              - Prepare and practice demos before school visits
+              - Present experiments to students in an engaging, age-appropriate way
+              - Answer student questions about science concepts
+              - Clean up materials after each session
+            perks:
+              - Gain public speaking experience
+              - Receive volunteer recognition certificate
+              - Free chapter event t-shirt
+          - title: Materials Coordinator
+            description: Manage experiment supplies and ensure kits are ready for each school visit.
+            responsibilities:
+              - Inventory and restock experiment supplies
+              - Assemble demo kits before scheduled visits
+              - Track material costs and submit purchase requests
+            perks:
+              - Develop organizational and logistics skills
+              - Receive volunteer recognition certificate
+          - title: School Liaison
+            description: Coordinate with teachers and school administrators to schedule visits.
+            responsibilities:
+              - Reach out to local schools to schedule demo sessions
+              - Confirm logistics (date, time, classroom, grade level)
+              - Send follow-up thank-you notes to host teachers
+            perks:
+              - Build professional networking skills
+              - Receive volunteer recognition certificate
+        faq:
+          - question: How often do volunteers visit schools?
+            answer: We typically visit 2-3 schools per month during the academic year (September through May). Visits are usually scheduled on weekday mornings or early afternoons.
+          - question: Do I need a science background to volunteer?
+            answer: Not at all! We provide training and all the materials you need. Enthusiasm for science and working with kids is what matters most. Each demo comes with step-by-step instructions.
+          - question: What age groups do we work with?
+            answer: Our demos are designed for K-12 students. We have separate experiment sets tailored for elementary (K-5), middle school (6-8), and high school (9-12) audiences.
+          - question: How do I sign up to volunteer?
+            answer: Visit our Contact page and let us know you're interested in Science Demos volunteering. We'll add you to our volunteer list and notify you of upcoming opportunities.
       - name: Science Bowl
         slug: science-bowl
         description: Annual regional science competition for middle and high school students, testing knowledge across multiple scientific disciplines.
         details: The Science Bowl brings together teams from schools across the region for a day of fast-paced academic competition. Events include buzzer rounds, hands-on challenges, and awards for top performers.
         volunteer: Help us organize and run the next Science Bowl! We need judges, moderators, and event coordinators.
+        roles:
+          - title: Question Reader / Moderator
+            description: Read questions aloud and moderate buzzer rounds during the competition.
+            responsibilities:
+              - Arrive early for moderator briefing
+              - Read questions clearly and at a steady pace
+              - Enforce timing and scoring rules
+            perks:
+              - Engaging event-day experience
+              - Complimentary lunch provided
+              - Volunteer recognition certificate
+          - title: Science Judge
+            description: Judge hands-on challenge events and evaluate student projects.
+            responsibilities:
+              - Review judging rubrics before the event
+              - Evaluate student projects or experiments fairly
+              - Provide constructive feedback to participants
+            perks:
+              - Network with educators and professionals
+              - Complimentary lunch provided
+              - Volunteer recognition certificate
+        faq:
+          - question: When is the Science Bowl held?
+            answer: The regional Science Bowl is typically held in late February or early March. The exact date is announced in the fall.
+          - question: How many students participate?
+            answer: We usually host 20-30 teams, with 4-5 students per team, from schools across the Midwest region.
+          - question: Can my company sponsor the Science Bowl?
+            answer: Yes! We welcome corporate sponsors. Sponsorship helps cover venue costs, awards, and materials. Contact us for sponsorship tier details.
 
   - id: professional-development
     title: Professional Development

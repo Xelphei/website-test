@@ -95,9 +95,9 @@ The site is a **single-page application**. The home page contains these sections
 All home page sections fade up into view as the visitor scrolls down.
 
 Other pages are accessible via navigation:
-- **Programs** (`#/programs`) — dedicated page with program cards (images on left). Each program item links to its own page with rich content (details, volunteer callouts, photos, external links).
+- **Programs** (`#/programs`) — dedicated page with program cards (images on left). Each program item links to its own page with rich content (details, volunteer callouts, experiment cards, volunteer role cards, FAQ, photos, external links).
 - **Contact Us** (`#/contact`) — dedicated page with built-in contact form (Name, Email, Subject, Message)
-- **Chapter News**, **Events** (vertical timeline with connected dots; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
+- **Chapter News**, **Events** (horizontal card timeline with connected dots; scrolling down moves cards right, scrolling up moves them left; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
 
 All page transitions use a smooth fade in/out effect.
 
@@ -263,6 +263,27 @@ programs:
           - src: programs/activity-photo.jpg
             alt: Photo description
             caption: Optional caption below the image.
+        faq:
+          - question: How do I get involved?
+            answer: Visit our Contact page and let us know!
+        experiments:
+          - title: Experiment Name
+            description: What the experiment demonstrates.
+            grade: Grades K-5
+            time: 15 minutes
+            steps:
+              - First step
+              - Second step
+            teacherNotes: Setup and safety notes for teachers.
+        roles:
+          - title: Volunteer Role Name
+            description: What this role involves.
+            responsibilities:
+              - First responsibility
+              - Second responsibility
+            perks:
+              - Recognition certificate
+              - Free event t-shirt
 ```
 
 ### Program Item Fields
@@ -275,6 +296,9 @@ programs:
 - **links** (optional) — List of external links/resources, each with `label`, `url`, and optional `description`
 - **images** (optional) — List of photos, each with `src` (relative to `public/images/`), optional `alt`, and optional `caption`
 - **link** (optional) — If set, the item links to this URL instead of generating a dedicated page (e.g., `"#/gallery"`)
+- **faq** (optional) — List of FAQ items displayed as an accordion. Each item has `question` and `answer`
+- **experiments** (optional) — List of experiment cards with filters. Each has `title`, `description`, optional `grade` (e.g., "Grades K-5"), optional `time` (e.g., "15 minutes"), optional `steps` (ordered list of student instructions), and optional `teacherNotes` (setup/safety notes for teachers). Visitors can filter experiments by grade level or time
+- **roles** (optional) — List of volunteer role cards. Each has `title`, optional `description`, optional `responsibilities` (list), and optional `perks` (list displayed with checkmarks)
 
 ---
 
