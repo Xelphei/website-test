@@ -1,0 +1,17 @@
+subsections:
+  - title: About
+    description: "We are a nonprofit professional organization dedicated to advancing our field and supporting our members through education, networking, and community engagement. Our chapter brings together professionals at every career stage to share knowledge, build connections, and make a lasting impact."
+    image: about/about.jpg
+  - title: Maximizing Potential
+    description: "Our chapter provides resources and opportunities for career growth and professional development. From mentorship programs to skill-building workshops, we help our members reach their full potential and become leaders in their field."
+    image: about/potential.jpg
+  - title: Networking
+    description: "Connect with professionals across industries and disciplines. Our events and gatherings create meaningful opportunities to build relationships, exchange ideas, and collaborate on projects that matter."
+    image: about/networking.jpg
+  - title: Making a Difference
+    subtitle: Volunteer and Outreach Activities
+    description: "Our members give back to the community through volunteer initiatives, K-12 outreach programs, and partnerships with local organizations. Together, we make a tangible difference in the lives of those around us."
+    image: about/difference.jpg
+  - title: "Research. Knowledge. Wisdom."
+    description: "Advancing knowledge through research presentations, technical talks, and knowledge-sharing sessions. We foster a culture of intellectual curiosity and continuous learning that drives innovation in our field."
+    image: about/research.jpg

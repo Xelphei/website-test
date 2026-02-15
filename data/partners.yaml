@@ -1,0 +1,5 @@
+intro: "This chapter is thankful for the support provided by our sponsors that makes our programming possible."
+partners:
+  - name: Example Corp
+    logo: partners/example-corp.png
+    url: https://example.com
