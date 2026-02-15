@@ -258,11 +258,12 @@ The tag is automatically removed from the displayed title.
 4. Go to **Credentials** → **Create Credentials** → **API Key**
 5. Restrict the key to **Google Calendar API** only
 
-### Step 2: Make Your Calendar Public
+### Step 2: Make Your Calendar Public (with event details visible)
 1. Open Google Calendar
 2. Go to **Settings** → select your calendar
 3. Under **Access permissions**, check "Make available to public"
-4. Copy the **Calendar ID** from the "Integrate calendar" section
+4. **Important:** Set the sharing level to **"See all event details"** (not just "See only free/busy"). If you only share free/busy, the API will return events without titles, descriptions, or locations — everything will show as "Untitled Event".
+5. Copy the **Calendar ID** from the "Integrate calendar" section
 
 ### Step 3: Update Configuration
 

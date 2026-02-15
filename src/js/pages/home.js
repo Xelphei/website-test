@@ -119,8 +119,8 @@ async function loadAboutSection(base) {
         return `
           <div class="about-subsection ${isReverse ? 'reverse' : ''}">
             <div class="about-subsection-circle" style="background-color: ${circleColor}"></div>
-            <div class="about-subsection-text-box">
-              <h3 class="font-heading text-2xl font-bold text-primary-dark mb-2">${escapeHtml(sub.title)}</h3>
+            <div class="about-subsection-text-box" style="${isReverse ? 'border-right' : 'border-left'}: 4px solid ${circleColor}">
+              <h3 class="font-heading text-2xl font-bold mb-2" style="color: ${circleColor}">${escapeHtml(sub.title)}</h3>
               ${subtitleHtml}
               <p class="font-body text-gray-600 leading-relaxed">${escapeHtml(sub.description)}</p>
             </div>

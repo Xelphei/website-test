@@ -23,6 +23,60 @@ function stripCategoryTag(title) {
   return title.replace(/\[(Volunteer|Meeting|Social|Workshop|Conference)\]\s*/i, '');
 }
 
+function formatEventDate(event) {
+  const isAllDay = !event.start.dateTime;
+
+  if (isAllDay) {
+    // All-day events use date strings like "2026-03-15" (no time component)
+    // Parse as local date (avoid timezone shift by splitting)
+    const startParts = event.start.date.split('-');
+    const startDate = new Date(startParts[0], startParts[1] - 1, startParts[2]);
+
+    const endParts = event.end.date.split('-');
+    // Google Calendar all-day end dates are exclusive (day after the last day)
+    const endDate = new Date(endParts[0], endParts[1] - 1, endParts[2]);
+    endDate.setDate(endDate.getDate() - 1);
+
+    const fmt = { month: 'short', day: 'numeric', year: 'numeric' };
+    const startStr = startDate.toLocaleDateString('en-US', fmt);
+
+    // Check if multi-day
+    if (endDate.getTime() > startDate.getTime()) {
+      const endStr = endDate.toLocaleDateString('en-US', fmt);
+      return { dateStr: `${startStr} – ${endStr}`, timeStr: 'All Day', isAllDay: true };
+    }
+
+    return { dateStr: startStr, timeStr: 'All Day', isAllDay: true };
+  }
+
+  // Timed event
+  const startDate = new Date(event.start.dateTime);
+  const endDate = new Date(event.end.dateTime);
+
+  const dateStr = startDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  const timeFmt = { hour: 'numeric', minute: '2-digit' };
+  const timeStr = `${startDate.toLocaleTimeString('en-US', timeFmt)} – ${endDate.toLocaleTimeString('en-US', timeFmt)}`;
+
+  // Check if spans multiple days
+  const startDay = startDate.toDateString();
+  const endDay = endDate.toDateString();
+  if (startDay !== endDay) {
+    const endDateStr = endDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    return { dateStr: `${dateStr} – ${endDateStr}`, timeStr, isAllDay: false };
+  }
+
+  return { dateStr, timeStr, isAllDay: false };
+}
+
 export async function renderEvents(el) {
   el.innerHTML = `
     <div class="max-w-6xl mx-auto px-4 py-12" style="margin-top: 60px;">
@@ -73,30 +127,30 @@ export async function renderEvents(el) {
               const title = event.summary || 'Untitled Event';
               const { category, color } = detectCategory(title);
               const cleanTitle = stripCategoryTag(title);
+              const { dateStr, timeStr, isAllDay } = formatEventDate(event);
 
-              const start = event.start.dateTime || event.start.date;
-              const startDate = new Date(start);
-              const dateStr = startDate.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              });
+              const locationHtml = event.location
+                ? `<p class="font-body text-sm text-gray-400 mt-1">${escapeHtml(event.location)}</p>`
+                : '';
 
-              let timeStr = '';
-              if (event.start.dateTime) {
-                const end = event.end.dateTime;
-                const endDate = new Date(end);
-                timeStr = `${startDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} - ${endDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
-              }
+              const descHtml = event.description
+                ? `<p class="font-body text-sm text-gray-500 mt-2 line-clamp-2">${escapeHtml(event.description)}</p>`
+                : '';
+
+              const linkAttr = event.htmlLink
+                ? `onclick="window.open('${escapeAttr(event.htmlLink)}', '_blank')" style="--event-color: ${color}; cursor: pointer;"`
+                : `style="--event-color: ${color}"`;
 
               return `
-                <div class="timeline-event" style="--event-color: ${color}">
+                <div class="timeline-event" ${linkAttr}>
                   <div class="timeline-dot"></div>
                   <div class="timeline-card">
                     <span class="timeline-category">${escapeHtml(category)}</span>
                     <h3 class="font-heading font-semibold text-primary-dark mt-1">${escapeHtml(cleanTitle)}</h3>
                     <p class="font-body text-sm text-gray-500 mt-1">${dateStr}</p>
-                    ${timeStr ? `<p class="font-body text-sm text-gray-400">${timeStr}</p>` : ''}
+                    <p class="font-body text-sm text-gray-400">${timeStr}</p>
+                    ${locationHtml}
+                    ${descHtml}
                   </div>
                 </div>
               `;
@@ -121,4 +175,8 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+function escapeAttr(str) {
+  return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }

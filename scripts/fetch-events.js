@@ -79,8 +79,21 @@ async function main() {
   }
 
   const data = await response.json();
+
+  if (data.accessRole === 'freeBusyReader') {
+    console.warn(
+      'WARNING: Calendar access role is "freeBusyReader". Event titles, descriptions, ' +
+      'and locations will NOT be available. To fix this, go to Google Calendar → ' +
+      'Settings → your calendar → Access permissions, and set sharing to ' +
+      '"See all event details" instead of just "See only free/busy".'
+    );
+  }
+
   const items = (data.items || []).map((event) => ({
     summary: event.summary || 'Untitled Event',
+    description: event.description || '',
+    location: event.location || '',
+    htmlLink: event.htmlLink || '',
     start: event.start,
     end: event.end,
   }));
