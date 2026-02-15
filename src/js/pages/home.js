@@ -1,50 +1,47 @@
 import { loadYaml } from '../utils/yaml.js';
-import { renderMarkdown } from '../utils/markdown.js';
 
 export async function renderHome(el, base, siteConfig) {
   const heroSelections = siteConfig.heroSelections || [];
 
   const buttonsHtml = heroSelections
     .map((item) => {
+      const bgColor = item.color || '#18428F';
       if (item.scrollTo) {
-        return `<a href="#/" data-scroll-to="${item.scrollTo}" class="hero-button">${item.label}</a>`;
+        return `<a href="#/" data-scroll-to="${item.scrollTo}" class="hero-bar-button gradient-text-hover" style="background-color: ${bgColor}">${item.label}</a>`;
       }
-      return `<a href="#${item.path}" class="hero-button">${item.label}</a>`;
+      if (item.path) {
+        return `<a href="#${item.path}" class="hero-bar-button gradient-text-hover" data-circle-expand style="background-color: ${bgColor}">${item.label}</a>`;
+      }
+      return `<a href="#/" class="hero-bar-button gradient-text-hover" style="background-color: ${bgColor}">${item.label}</a>`;
     })
     .join('');
 
   el.innerHTML = `
-    <!-- Hero Section -->
+    <!-- Hero Section (half page) -->
     <div class="home-hero" style="background-image: url('${base}images/hero-bg.jpg')">
       <div class="home-hero-overlay"></div>
       <div class="home-hero-content">
         <h1 class="home-hero-title">${siteConfig.name}</h1>
-        <div class="home-hero-buttons">
-          ${buttonsHtml}
-        </div>
       </div>
-      <div class="scroll-indicator">
-        <span>Scroll</span>
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
+      <div class="hero-button-bar">
+        ${buttonsHtml}
       </div>
     </div>
 
-    <!-- About Section -->
+    <!-- About Section (5 subsections) -->
     <section id="about-section" class="home-section bg-white">
-      <div class="max-w-4xl mx-auto px-4 py-16">
-        <div class="prose max-w-none" id="about-content">
+      <div class="max-w-5xl mx-auto px-4 py-16">
+        <div id="about-content">
           <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
         </div>
       </div>
     </section>
 
-    <!-- Programs Section -->
-    <section id="programs-section" class="home-section" style="background-color: #F8F8F8;">
-      <div class="max-w-6xl mx-auto px-4 py-16">
-        <h2 class="font-heading text-3xl font-bold text-primary-dark text-center mb-10">Ongoing Programs</h2>
-        <div id="programs-content">
+    <!-- Partners Section -->
+    <section id="partners-section" class="home-section" style="background-color: #F8F8F8;">
+      <div class="max-w-5xl mx-auto px-4 py-16">
+        <h2 class="font-heading text-3xl font-bold text-primary-dark text-center mb-4">Our Partners</h2>
+        <div id="partners-content">
           <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
         </div>
       </div>
@@ -67,98 +64,119 @@ export async function renderHome(el, base, siteConfig) {
     if (hero) hero.classList.add('fade-in-active');
   }, 50);
 
-  // Load about content
+  // Set up circle-expand transition for Programs button
+  initCircleExpand(el);
+
+  // Load sections
   loadAboutSection(base);
-  // Load programs
-  loadProgramsSection(base);
-  // Load contact
+  loadPartnersSection(base);
   loadContactSection(base);
+}
+
+function initCircleExpand(el) {
+  el.querySelectorAll('[data-circle-expand]').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = btn.getAttribute('href');
+      const rect = btn.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      // Calculate size needed to cover viewport
+      const maxDist = Math.max(
+        Math.hypot(x, y),
+        Math.hypot(window.innerWidth - x, y),
+        Math.hypot(x, window.innerHeight - y),
+        Math.hypot(window.innerWidth - x, window.innerHeight - y)
+      );
+      const diameter = maxDist * 2;
+
+      const overlay = document.createElement('div');
+      overlay.className = 'circle-expand-overlay';
+      overlay.style.cssText = `
+        left: ${x - diameter / 2}px;
+        top: ${y - diameter / 2}px;
+        width: ${diameter}px;
+        height: ${diameter}px;
+        background-color: ${btn.style.backgroundColor || '#00C2F3'};
+      `;
+      document.body.appendChild(overlay);
+
+      setTimeout(() => {
+        overlay.remove();
+        window.location.hash = href;
+      }, 500);
+    });
+  });
 }
 
 async function loadAboutSection(base) {
   try {
-    const html = await renderMarkdown(`${base}content/about.md`);
-    const el = document.getElementById('about-content');
-    if (el) el.innerHTML = html;
+    const data = await loadYaml(`${base}data/about.yaml`);
+    const contentEl = document.getElementById('about-content');
+    if (!contentEl || !data.subsections) return;
+
+    contentEl.innerHTML = data.subsections
+      .map((sub, index) => {
+        const isReverse = index % 2 === 1;
+        const subtitleHtml = sub.subtitle
+          ? `<p class="font-body text-sm text-primary-cyan font-semibold mb-2">${escapeHtml(sub.subtitle)}</p>`
+          : '';
+
+        return `
+          <div class="about-subsection ${isReverse ? 'reverse' : ''}">
+            <div class="about-subsection-image">
+              <img
+                src="${base}images/${sub.image}"
+                alt="${escapeHtml(sub.title)}"
+                class="about-circle-image"
+                onerror="this.style.display='none'"
+              />
+            </div>
+            <div class="about-subsection-text">
+              <h3 class="font-heading text-2xl font-bold text-primary-dark mb-2">${escapeHtml(sub.title)}</h3>
+              ${subtitleHtml}
+              <p class="font-body text-gray-600 leading-relaxed">${escapeHtml(sub.description)}</p>
+            </div>
+          </div>
+        `;
+      })
+      .join('<hr class="my-2 border-secondary-light">');
   } catch {
     const el = document.getElementById('about-content');
     if (el) el.innerHTML = '<p class="text-red-500 font-body">Failed to load content.</p>';
   }
 }
 
-async function loadProgramsSection(base) {
+async function loadPartnersSection(base) {
   try {
-    const data = await loadYaml(`${base}data/programs.yaml`);
-    const contentEl = document.getElementById('programs-content');
+    const data = await loadYaml(`${base}data/partners.yaml`);
+    const contentEl = document.getElementById('partners-content');
     if (!contentEl) return;
 
-    let selectedId = null;
+    const introHtml = data.intro
+      ? `<p class="font-body text-gray-600 text-center mb-8">${escapeHtml(data.intro)}</p>`
+      : '';
 
-    function render() {
-      contentEl.innerHTML = `
-        <div class="programs-horizontal">
-          ${data.programs
-            .map((program) => {
-              const isSelected = selectedId === program.id;
-              return `
-                <div class="program-card ${isSelected ? 'selected' : ''}" data-program-id="${program.id}">
-                  <div class="program-card-image">
-                    <img
-                      src="${base}images/${program.image}"
-                      alt="${escapeHtml(program.title)}"
-                      onerror="this.parentElement.innerHTML='<div class=\\'program-card-image-fallback\\'>${escapeHtml(program.title.charAt(0))}</div>'"
-                    />
-                    <div class="program-card-overlay">
-                      <h3 class="font-heading text-xl font-bold text-white">${escapeHtml(program.title)}</h3>
-                      <p class="font-body text-sm text-gray-200 mt-1">${escapeHtml(program.summary)}</p>
-                    </div>
-                  </div>
-                  <div class="program-card-body">
-                    <h3 class="font-heading text-lg font-bold text-primary-dark">${escapeHtml(program.title)}</h3>
-                    <p class="font-body text-sm text-gray-500 mt-1">${escapeHtml(program.summary)}</p>
-                  </div>
-                  ${isSelected ? `
-                    <div class="program-card-expanded">
-                      ${program.items
-                        .map(
-                          (item) => `
-                        <div class="program-expanded-item">
-                          <h4 class="font-body font-semibold text-primary-dark">${escapeHtml(item.name)}</h4>
-                          <p class="font-body text-gray-600 text-sm mt-1">${escapeHtml(item.description)}</p>
-                          ${item.link
-                            ? `<a href="${item.link}" class="font-body text-primary-cyan hover:text-primary-blue text-sm mt-1 inline-block">Learn more &rarr;</a>`
-                            : item.scrollTo
-                              ? `<a href="#/" data-scroll-to="${item.scrollTo}" class="font-body text-primary-cyan hover:text-primary-blue text-sm mt-1 inline-block">Learn more &rarr;</a>`
-                              : item.slug
-                                ? `<a href="#/programs/${item.slug}" class="font-body text-primary-cyan hover:text-primary-blue text-sm mt-1 inline-block" onclick="event.stopPropagation()">Learn more &rarr;</a>`
-                                : ''}
-                        </div>
-                      `
-                        )
-                        .join('')}
-                    </div>
-                  ` : ''}
-                </div>
-              `;
-            })
-            .join('')}
-        </div>
-      `;
+    const partnersHtml = (data.partners || [])
+      .map((partner) => {
+        const img = `<img src="${base}images/${partner.logo}" alt="${escapeHtml(partner.name)}" class="partner-logo" onerror="this.parentElement.innerHTML='<span class=\\'font-body text-gray-500 text-sm\\'>${escapeHtml(partner.name)}</span>'" />`;
+        if (partner.url) {
+          return `<a href="${partner.url}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(partner.name)}">${img}</a>`;
+        }
+        return `<div title="${escapeHtml(partner.name)}">${img}</div>`;
+      })
+      .join('');
 
-      // Attach click handlers
-      contentEl.querySelectorAll('.program-card').forEach((card) => {
-        card.addEventListener('click', () => {
-          const id = card.dataset.programId;
-          selectedId = selectedId === id ? null : id;
-          render();
-        });
-      });
-    }
-
-    render();
+    contentEl.innerHTML = `
+      ${introHtml}
+      <div class="partners-grid">
+        ${partnersHtml}
+      </div>
+    `;
   } catch {
-    const el = document.getElementById('programs-content');
-    if (el) el.innerHTML = '<p class="text-red-500 font-body">Failed to load programs.</p>';
+    const el = document.getElementById('partners-content');
+    if (el) el.innerHTML = '<p class="text-red-500 font-body">Failed to load partners.</p>';
   }
 }
 
@@ -168,16 +186,19 @@ async function loadContactSection(base) {
     const contentEl = document.getElementById('contact-content');
     if (!contentEl) return;
 
+    // Load embed URL from env var
+    const embedUrl = import.meta.env.VITE_GOOGLE_FORM_EMBED_URL;
+
     const descriptionHtml = config.description
       ? `<p class="font-body text-gray-600 mb-8 text-center">${escapeHtml(config.description)}</p>`
       : '';
 
     const formSection =
-      config.embedUrl && !config.embedUrl.includes('YOUR_FORM_ID')
+      embedUrl && !embedUrl.includes('YOUR_FORM_ID')
         ? `
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <iframe
-          src="${config.embedUrl}"
+          src="${embedUrl}"
           width="100%"
           height="800"
           frameborder="0"
@@ -192,8 +213,8 @@ async function loadContactSection(base) {
       <div class="border border-secondary-light rounded-lg p-6 text-center" style="background-color: #F8F8F8;">
         <p class="font-body text-primary-dark font-semibold mb-2">Contact Form Not Configured</p>
         <p class="font-body text-gray-500 text-sm">
-          To display the contact form, add your Google Form embed URL to
-          <code class="bg-secondary-light px-1 rounded">public/data/contact.yaml</code>.
+          To display the contact form, add your Google Form embed URL to your
+          <code class="bg-secondary-light px-1 rounded">.env</code> file.
           See MAINTENANCE.md for setup instructions.
         </p>
       </div>

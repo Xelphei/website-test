@@ -1,3 +1,6 @@
 node_modules
 dist
 .DS_Store
+.env
+public/data/events.yaml
+public/data/contact.yaml

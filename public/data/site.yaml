@@ -4,10 +4,13 @@ description: A nonprofit professional chapter dedicated to advancing our field a
 heroSelections:
   - label: Our Mission
     scrollTo: about-section
-  - label: Ongoing Programs
-    scrollTo: programs-section
+    color: "#18428F"
+  - label: Programs
+    path: /programs
+    color: "#00C2F3"
   - label: Get Involved
     scrollTo: contact-section
+    color: "#B64B28"
 
 floatingNav:
   - label: Home
@@ -15,7 +18,7 @@ floatingNav:
   - label: About
     scrollTo: about-section
   - label: Programs
-    scrollTo: programs-section
+    path: /programs
   - label: Chapter News
     path: /news
   - label: Events

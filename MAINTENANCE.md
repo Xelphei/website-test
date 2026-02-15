@@ -11,29 +11,61 @@ website-test/
 ├── public/
 │   ├── content/               # Markdown text content
 │   │   ├── home.md            # (kept for reference — not rendered)
-│   │   └── about.md           # About section text (shown on home page)
+│   │   └── about.md           # Legacy about text (no longer used on home page)
 │   ├── data/                  # YAML data files (edit these to change data)
 │   │   ├── site.yaml          # Org name, navigation, socials, footer
 │   │   ├── board.yaml         # Executive board + founding members
 │   │   ├── programs.yaml      # Ongoing programs with images and items
+│   │   ├── about.yaml         # About section subsections (5 cards with images)
+│   │   ├── partners.yaml      # Partner/sponsor organizations
 │   │   ├── news.yaml          # Chapter news / announcements
-│   │   ├── events.yaml        # Google Calendar API config
+│   │   ├── events.yaml        # Google Calendar non-sensitive config
 │   │   ├── gallery.yaml       # Gallery photo entries
-│   │   └── contact.yaml       # Google Form embed config
+│   │   └── contact.yaml       # Contact form description
 │   └── images/
 │       ├── hero-bg.jpg        # Home page hero background image
 │       ├── logo.png           # Organization logo
+│       ├── about/             # About section subsection images (circle-cropped)
 │       ├── board/             # Board member headshots
 │       ├── board/founding/    # Founding member photos
 │       ├── gallery/           # Gallery photos
 │       ├── news/              # News article images
-│       └── programs/          # Program bucket images
+│       ├── partners/          # Partner/sponsor logos
+│       └── programs/          # Program category images
 ├── src/
 │   ├── css/style.css          # Styles
 │   └── js/                    # Application code
+├── .env                       # Environment variables with secrets (NOT committed)
+├── .env.example               # Template for .env file (committed)
 ├── index.html                 # Entry point
 └── .github/workflows/         # Auto-deployment
 ```
+
+---
+
+## Secrets Setup (.env File)
+
+API keys and sensitive URLs are stored in a `.env` file that is **not committed to Git**. You must create this file locally.
+
+### Step 1: Create .env from Template
+
+```bash
+cp .env.example .env
+```
+
+### Step 2: Fill in Your Secrets
+
+Edit `.env` with your actual values:
+
+```
+VITE_GOOGLE_CALENDAR_API_KEY=AIzaSy...your-actual-key
+VITE_GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
+VITE_GOOGLE_FORM_EMBED_URL=https://docs.google.com/forms/d/e/actual-form-id/viewform?embedded=true
+```
+
+### For Deployment
+
+Make sure these environment variables are also set in your deployment environment (e.g., GitHub Actions secrets, Netlify environment variables, etc.).
 
 ---
 
@@ -41,18 +73,23 @@ website-test/
 
 The site is a **single-page application**. The home page is the primary landing page and contains these inline sections:
 
-1. **Hero**: Full-screen background image with the chapter name and three buttons
-2. **About**: Organization information loaded from `about.md`
-3. **Ongoing Programs**: Horizontal program cards loaded from `programs.yaml`
-4. **Contact Us**: Google Form embed loaded from `contact.yaml`
+1. **Hero**: Half-screen background image with the chapter name and a colored button bar at the bottom
+2. **About**: Five alternating subsections with circle-cropped images, loaded from `about.yaml`
+3. **Our Partners**: Partner/sponsor logos loaded from `partners.yaml`
+4. **Contact Us**: Google Form embed (URL loaded from `.env` file)
 
 ### Navigation
 
-The **navigation bar** is always visible at the top and stays fixed when scrolling.
+The **navigation bar** is always visible at the top and stays fixed when scrolling. Hovering over links shows an animated gradient text effect.
 
-- **About**, **Programs**, and **Contact** menu links scroll to their section on the home page (even if you are on a different page — they will redirect you to the home page first, then scroll).
+- **About** and **Contact** menu links scroll to their section on the home page (even if you are on a different page — they will redirect you to the home page first, then scroll).
+- **Programs** navigates to a dedicated programs page showing all program categories.
 - **Chapter News**, **Events**, **Executive Board**, and **Gallery** navigate to separate pages.
 - **"Parent Organization"** is bold and right-aligned, opening the parent org's website in a new tab.
+
+### Programs Page
+
+The **Programs** link navigates to a dedicated page (`#/programs`) showing all program categories as vertical alternating cards with circle-cropped images. Clicking the "Programs" button on the hero triggers a circle-expand animation before navigating.
 
 ### Programs Dropdown Menu
 
@@ -61,6 +98,13 @@ Hovering over **"Programs"** in the navigation reveals a dropdown showing the th
 ### Individual Program Pages
 
 Each program activity (e.g., "Science Bowl", "Midwest Regional Symposium") has its own page at a URL like `#/programs/science-bowl`. These pages are generated automatically from the `slug` field in `programs.yaml`. When you add a new item with a `slug`, a page is automatically created for it.
+
+### Hero Button Bar
+
+The hero section has three colored buttons at the bottom:
+- **Our Mission** (Blue) — scrolls to the About section
+- **Programs** (Cyan) — navigates to the Programs page with a circle-expand animation
+- **Get Involved** (Orange) — scrolls to the Contact section
 
 ### Color Scheme
 
@@ -88,7 +132,10 @@ Each program activity (e.g., "Science Bowl", "Midwest Regional Symposium") has i
 |--------------------------------------|-------------------------------------|
 | Change the organization name         | `public/data/site.yaml` → `name`   |
 | Update navigation links              | `public/data/site.yaml` → `floatingNav` |
-| Change the About section text        | `public/content/about.md`          |
+| Change an About subsection           | `public/data/about.yaml`           |
+| Add/change About subsection images   | Add image to `public/images/about/` + update `about.yaml` |
+| Add/remove a partner                 | `public/data/partners.yaml`        |
+| Add a partner logo                   | Add image to `public/images/partners/` + update `partners.yaml` |
 | Add/remove a board member            | `public/data/board.yaml`           |
 | Add a founding member                | `public/data/board.yaml` → `founding` |
 | Add a new program category           | `public/data/programs.yaml`        |
@@ -98,8 +145,8 @@ Each program activity (e.g., "Science Bowl", "Midwest Regional Symposium") has i
 | Add gallery photos                   | `public/data/gallery.yaml` + image file |
 | Change the hero background image     | Replace `public/images/hero-bg.jpg`|
 | Change the logo                      | Replace `public/images/logo.png`   |
-| Configure events calendar            | `public/data/events.yaml`          |
-| Configure contact form               | `public/data/contact.yaml`         |
+| Configure events calendar            | Set `VITE_GOOGLE_CALENDAR_*` in `.env` |
+| Configure contact form               | Set `VITE_GOOGLE_FORM_EMBED_URL` in `.env` |
 | Update social media links            | `public/data/site.yaml` → `socials`|
 | Change footer tagline                | `public/data/site.yaml` → `footer.tagline` |
 | Change the Parent Organization link  | `public/data/site.yaml` → `floatingNav` (last entry with `external: true`) |
@@ -108,35 +155,76 @@ Each program activity (e.g., "Science Bowl", "Midwest Regional Symposium") has i
 
 ## Editing the About Section
 
-The About section appears on the home page. Edit `public/content/about.md`:
+The About section on the home page now displays **five subsections** with alternating image/text layout, loaded from `public/data/about.yaml`.
 
-```markdown
-# About Us
+### About YAML Structure
 
-Our chapter is dedicated to...
-
-## Our Mission
-
-We aim to...
-
-## Membership
-
-Join us by scrolling down to the contact form!
+```yaml
+subsections:
+  - title: About
+    description: "General organization information..."
+    image: about/about.jpg
+  - title: Maximizing Potential
+    description: "Career and professional growth..."
+    image: about/potential.jpg
+  - title: Networking
+    description: "Connections and community..."
+    image: about/networking.jpg
+  - title: Making a Difference
+    subtitle: Volunteer and Outreach Activities
+    description: "Volunteer work..."
+    image: about/difference.jpg
+  - title: "Research. Knowledge. Wisdom."
+    description: "Research and knowledge sharing..."
+    image: about/research.jpg
 ```
 
-### Markdown Syntax Quick Reference
-- `# Heading 1`, `## Heading 2`, `### Heading 3`
-- `**bold text**`, `*italic text*`
-- `- bullet point`
-- `1. numbered item`
-- `[link text](url)` for external links
-- `[link text](#/gallery)` for internal page links
+### Adding/Editing a Subsection
+
+1. Add a square image (recommended: 400×400 pixels) to `public/images/about/`
+2. Edit the corresponding entry in `about.yaml`
+3. The `subtitle` field is optional — if present, it appears below the title in cyan
+
+### Image Requirements
+
+About images are displayed as **circles** (circle-cropped), so use square images with the subject centered.
+
+---
+
+## Managing Our Partners
+
+Edit `public/data/partners.yaml`. Partners appear with their logos in a row on the home page, between the About and Contact sections.
+
+### Partners YAML Structure
+
+```yaml
+intro: "This chapter is thankful for the support provided by our sponsors..."
+partners:
+  - name: Company Name
+    logo: partners/company-logo.png
+    url: https://company-website.com
+```
+
+### Adding a Partner
+
+1. Add the partner's logo to `public/images/partners/` (recommended: PNG with transparent background, ~200px height)
+2. Add an entry to `partners.yaml`:
+
+```yaml
+  - name: New Partner
+    logo: partners/new-partner.png
+    url: https://new-partner.com    # optional — if provided, logo links to their site
+```
+
+### Removing a Partner
+
+Delete the entire block for that partner.
 
 ---
 
 ## Managing Ongoing Programs
 
-Edit `public/data/programs.yaml`. Programs appear as **horizontal cards with images** on the home page. Clicking a card expands it to show its activities. Each activity also appears in the navigation dropdown and gets its own dedicated page.
+Edit `public/data/programs.yaml`. Programs now have their own dedicated page (`#/programs`) showing vertical alternating cards with circle-cropped images.
 
 ### Understanding the Programs File
 
@@ -146,7 +234,7 @@ Each program has these fields:
 programs:
   - id: unique-id                 # A unique lowercase ID (no spaces)
     title: Program Name           # Displayed in the card and nav dropdown
-    image: programs/my-image.jpg  # Image shown on the card
+    image: programs/my-image.jpg  # Image shown on the card (displayed as circle)
     summary: Short description.   # Shown below the card title
     items:                        # Activities within this program
       - name: Activity Name       # Displayed in the card and nav sub-dropdown
@@ -156,25 +244,13 @@ programs:
 
 ### Adding a New Program Category (Bucket)
 
-1. Add a representative image to `public/images/programs/` (recommended: landscape, ~800×500 pixels)
-2. Add a new entry in `programs.yaml`:
-
-```yaml
-programs:
-  - id: community-service
-    title: Community Service
-    image: programs/community-service.jpg
-    summary: Giving back to our local community through volunteering.
-    items:
-      - name: Park Cleanup Day
-        slug: park-cleanup-day
-        description: Our annual park cleanup brings chapter members together to beautify local green spaces.
-```
+1. Add a representative image to `public/images/programs/` (recommended: square, ~400×400 pixels for best circle cropping)
+2. Add a new entry in `programs.yaml`
 
 The new category will automatically appear:
-- On the home page as a horizontal card
+- On the Programs page as an alternating card
 - In the "Programs" navigation dropdown
-- Each activity will get its own page at `#/programs/park-cleanup-day`
+- Each activity will get its own page at `#/programs/activity-slug`
 
 ### Adding an Activity to an Existing Program
 
@@ -196,23 +272,9 @@ Instead of a `slug` (which creates a dedicated page), you can use these alternat
 - **`link`**: Links to another page (e.g., `link: "#/gallery"` links to the Gallery page)
 - **`scrollTo`**: Scrolls to a section on the home page (e.g., `scrollTo: contact-section`)
 
-Example:
-
-```yaml
-    items:
-      - name: Photo Gallery
-        slug: photo-gallery
-        description: Browse photos from our events.
-        link: "#/gallery"           # Links to Gallery page instead of creating its own page
-      - name: Get in Touch
-        slug: get-in-touch
-        description: Reach out to us!
-        scrollTo: contact-section   # Scrolls to Contact section on home page
-```
-
 ### Changing a Program Image
 
-Replace the image file in `public/images/programs/`. Make sure the filename matches what's in `programs.yaml`.
+Replace the image file in `public/images/programs/`. Make sure the filename matches what's in `programs.yaml`. Images are displayed as circles, so square images work best.
 
 ### Removing a Program or Activity
 
@@ -364,11 +426,10 @@ The tag is automatically removed from the displayed title.
 4. Copy the **Calendar ID** from the "Integrate calendar" section
 
 ### Step 3: Update Configuration
-Edit `public/data/events.yaml`:
-```yaml
-calendarId: your-calendar-id@group.calendar.google.com
-apiKey: AIzaSy...your-api-key
-maxResults: 10
+Add to your `.env` file:
+```
+VITE_GOOGLE_CALENDAR_API_KEY=AIzaSy...your-api-key
+VITE_GOOGLE_CALENDAR_ID=your-calendar-id@group.calendar.google.com
 ```
 
 ---
@@ -388,11 +449,12 @@ The contact form appears at the bottom of the home page.
 3. Copy the `src` URL from the iframe code
 
 ### Step 3: Update Configuration
-Edit `public/data/contact.yaml`:
-```yaml
-embedUrl: https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true
-description: Your description text here.
+Add to your `.env` file:
 ```
+VITE_GOOGLE_FORM_EMBED_URL=https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true
+```
+
+You can also update the description text in `public/data/contact.yaml`.
 
 ---
 
@@ -402,8 +464,8 @@ Edit `public/data/site.yaml`.
 
 ### How Navigation Works
 
-- **About**, **Programs**, and **Contact** menu links scroll to their section on the home page (they use `scrollTo`). If you're on another page, they redirect to the home page first, then scroll.
-- **Programs** has a hover dropdown showing program categories, each with a sub-dropdown of activities linking to their dedicated pages.
+- **About** and **Contact** menu links scroll to their section on the home page (they use `scrollTo`). If you're on another page, they redirect to the home page first, then scroll.
+- **Programs** navigates to the dedicated programs page (uses `path: /programs`). It has a hover dropdown showing program categories.
 - **Chapter News**, **Events**, **Executive Board**, **Gallery** navigate to separate pages (they use `path`).
 - **Parent Organization** opens in a new browser tab (it has `external: true`).
 
@@ -452,8 +514,11 @@ Replace `public/images/logo.png` with your new logo. Recommended: square image, 
 
 The site deploys automatically when you push to the `main` branch via GitHub Actions.
 
+**Important:** Make sure environment variables (`VITE_GOOGLE_CALENDAR_API_KEY`, `VITE_GOOGLE_CALENDAR_ID`, `VITE_GOOGLE_FORM_EMBED_URL`) are configured in your deployment environment (e.g., GitHub repository secrets used in the workflow).
+
 ### Local Development
 ```bash
+cp .env.example .env    # First time only — then fill in your secrets
 npm install
 npm run dev
 ```

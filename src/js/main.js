@@ -6,6 +6,7 @@ import { renderEvents } from './pages/events.js';
 import { renderBoard } from './pages/board.js';
 import { renderGallery } from './pages/gallery.js';
 import { renderProgramItem } from './pages/program-item.js';
+import { renderPrograms } from './pages/programs.js';
 
 const BASE = import.meta.env.BASE_URL;
 
@@ -29,6 +30,7 @@ async function init() {
     '/events': (el) => renderEvents(el, BASE),
     '/board': (el) => renderBoard(el, BASE),
     '/gallery': (el) => renderGallery(el, BASE),
+    '/programs': (el) => renderPrograms(el, BASE),
     '/404': (el) => {
       el.innerHTML = `
         <div class="text-center py-20">
@@ -76,7 +78,7 @@ function buildLayout(config, programs) {
   const regularLinks = regularNavItems
     .map((item) => {
       // Programs gets a special dropdown wrapper
-      if (item.scrollTo === 'programs-section') {
+      if (item.label === 'Programs') {
         return buildProgramsDropdown(item, programs);
       }
       if (item.scrollTo) {
@@ -179,7 +181,7 @@ function buildProgramsDropdown(navItem, programs) {
 
   return `
     <div class="nav-dropdown-wrapper">
-      <a href="#/" data-scroll-to="${navItem.scrollTo}" data-nav-link class="nav-link">${navItem.label}</a>
+      <a href="#${navItem.path}" data-nav-link class="nav-link">${navItem.label}</a>
       <div class="nav-dropdown">
         ${bucketItems}
       </div>
@@ -193,7 +195,7 @@ function buildMobileNav(config, programs) {
       if (item.external) {
         return `<a href="${item.path}" target="_blank" rel="noopener noreferrer" class="block px-4 py-2 font-body font-bold text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>`;
       }
-      if (item.scrollTo === 'programs-section') {
+      if (item.label === 'Programs') {
         // Programs with sub-items in mobile
         const subLinks = programs.programs
           .map((program) => {
@@ -215,7 +217,7 @@ function buildMobileNav(config, programs) {
           })
           .join('');
         return `
-          <a href="#/" data-scroll-to="${item.scrollTo}" data-nav-link class="block px-4 py-2 font-body text-gray-200 hover:text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>
+          <a href="#${item.path}" data-nav-link class="block px-4 py-2 font-body text-gray-200 hover:text-white hover:bg-primary-dark/50 transition-colors">${item.label}</a>
           ${subLinks}
         `;
       }
@@ -250,13 +252,12 @@ function initScrollToLinks() {
   });
 }
 
-// Intercept clicks on old-style links like #/contact, #/about, #/programs
+// Intercept clicks on old-style links like #/contact, #/about
 // that now correspond to home page sections
 function initLinkInterception() {
   const sectionMap = {
     '#/contact': 'contact-section',
     '#/about': 'about-section',
-    '#/programs': 'programs-section',
   };
 
   window.addEventListener('hashchange', () => {

@@ -37,13 +37,17 @@ export async function renderEvents(el, base) {
     const config = await loadYaml(`${base}data/events.yaml`);
     const listEl = document.getElementById('events-list');
 
-    if (!config.apiKey || config.apiKey === 'YOUR_API_KEY') {
+    // Load secrets from environment variables
+    const apiKey = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
+    const calendarId = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
+
+    if (!apiKey || apiKey === 'YOUR_API_KEY') {
       listEl.innerHTML = `
         <div class="rounded-lg p-6 text-center" style="background-color: #F8F8F8; border: 1px solid #E2E1EE;">
           <p class="font-body text-primary-dark font-semibold mb-2">Calendar Not Configured</p>
           <p class="font-body text-gray-500 text-sm">
-            To display events, add your Google Calendar API key and Calendar ID to
-            <code class="px-1 rounded" style="background-color: #E2E1EE;">public/data/events.yaml</code>.
+            To display events, add your Google Calendar API key and Calendar ID to your
+            <code class="px-1 rounded" style="background-color: #E2E1EE;">.env</code> file.
             See MAINTENANCE.md for setup instructions.
           </p>
         </div>
@@ -51,7 +55,7 @@ export async function renderEvents(el, base) {
       return;
     }
 
-    await fetchEvents(config, listEl);
+    await fetchEvents({ ...config, apiKey, calendarId }, listEl);
   } catch {
     document.getElementById('events-list').innerHTML =
       '<p class="text-red-500 font-body">Failed to load events configuration.</p>';
