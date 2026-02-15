@@ -586,47 +586,37 @@
   }
 
   /* ============================================
-     Event Timeline (horizontal with wheel-to-scroll)
+     Event Timeline (scroll-driven horizontal)
      ============================================ */
-  .timeline-container {
-    @apply pb-4;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    /* Hide scrollbar for clean look */
-    scrollbar-width: thin;
-    scrollbar-color: #E2E1EE transparent;
+
+  /* Tall wrapper creates vertical scroll space that maps to horizontal movement */
+  .timeline-scroll-wrapper {
+    position: relative;
+    width: 100%;
   }
 
-  .timeline-container::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .timeline-container::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .timeline-container::-webkit-scrollbar-thumb {
-    background: #E2E1EE;
-    border-radius: 3px;
+  /* Sticky container keeps the timeline visible while scrolling through the wrapper */
+  .timeline-sticky {
+    position: sticky;
+    top: 70px; /* below the fixed nav */
+    overflow: hidden;
+    padding: 1rem 1.5rem 2.5rem;
   }
 
   .timeline-track {
-    @apply flex flex-row items-end;
+    @apply flex flex-row items-start;
     position: relative;
-    padding-bottom: 28px; /* space for dots + line below cards */
-    min-width: max-content;
     gap: 1.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    will-change: transform;
+    /* Pad top for dots, pad bottom for line */
+    padding-top: 28px; /* space for dot row + connecting line */
   }
 
-  /* Horizontal connecting line between dots */
+  /* Horizontal connecting line through the dots */
   .timeline-track::before {
     content: '';
     position: absolute;
-    bottom: 7px; /* center of 16px dot */
+    top: 13px; /* vertically center of 16px dot at top:5px = 5 + 8 = 13 */
     left: 0;
     right: 0;
     height: 2px;
@@ -643,24 +633,27 @@
     width: 260px;
   }
 
+  /* Dot sits at the top, on the connecting line */
   .timeline-dot {
     @apply w-4 h-4 rounded-full flex-shrink-0;
     background-color: var(--event-color);
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 1), 0 0 0 6px rgba(0, 0, 0, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     z-index: 2;
-    margin-top: 12px;
+    position: absolute;
+    top: -22px; /* sits on the connecting line above the card */
   }
 
   .timeline-event:hover .timeline-dot {
-    transform: scale(1.3);
-    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.08);
+    transform: scale(1.4);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 1), 0 0 0 7px rgba(0, 0, 0, 0.1);
   }
 
+  /* Card sits below the dot */
   .timeline-card {
-    @apply bg-white rounded-lg shadow-sm p-4 w-full;
+    @apply bg-white rounded-lg shadow-sm p-5 w-full;
     border: 1px solid #E2E1EE;
-    border-bottom: 4px solid var(--event-color);
+    border-top: 4px solid var(--event-color);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
 

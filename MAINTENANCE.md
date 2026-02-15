@@ -97,7 +97,7 @@ All home page sections fade up into view as the visitor scrolls down.
 Other pages are accessible via navigation:
 - **Programs** (`#/programs`) — dedicated page with program cards (images on left). Each program item links to its own page with rich content (details, volunteer callouts, experiment cards, volunteer role cards, FAQ, photos, external links).
 - **Contact Us** (`#/contact`) — dedicated page with built-in contact form (Name, Email, Subject, Message)
-- **Chapter News**, **Events** (horizontal card timeline with connected dots; scrolling down moves cards right, scrolling up moves them left; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
+- **Chapter News**, **Events** (horizontal card timeline with colored dots connected by a line; the page uses a scroll-driven technique where normal vertical scrolling moves the cards horizontally — scrolling down reveals more events to the right; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
 
 All page transitions use a smooth fade in/out effect.
 
