@@ -6,10 +6,12 @@
       "location": "",
       "htmlLink": "https://www.google.com/calendar/event?eid=MWZjamhzdWpoY2toYmg1bXIzdGEycnBnOHAgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
       "start": {
-        "date": "2026-02-26"
+        "dateTime": "2026-02-26T13:00:00-05:00",
+        "timeZone": "America/New_York"
       },
       "end": {
-        "date": "2026-02-27"
+        "dateTime": "2026-02-26T14:00:00-05:00",
+        "timeZone": "America/New_York"
       }
     },
     {
@@ -29,7 +31,7 @@
     {
       "summary": "[Meeting] Monthly Meeting",
       "description": "",
-      "location": "",
+      "location": "Teams",
       "htmlLink": "https://www.google.com/calendar/event?eid=N3RoZmF2b2ZiNmc5cmtmb3B2YXA5N2RzajggY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
       "start": {
         "dateTime": "2026-03-25T18:00:00-04:00",
@@ -51,7 +53,77 @@
       "end": {
         "date": "2026-03-30"
       }
+    },
+    {
+      "summary": "[Volunteer] Career Talks",
+      "description": "",
+      "location": "",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MHFiY3VwZ2RkZGZlOW44bHFwdmtxMmVmNnYgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
+      "start": {
+        "dateTime": "2026-04-25T09:00:00-04:00",
+        "timeZone": "America/New_York"
+      },
+      "end": {
+        "dateTime": "2026-04-25T12:00:00-04:00",
+        "timeZone": "America/New_York"
+      }
+    },
+    {
+      "summary": "[Meeting] Monthly Meeting",
+      "description": "",
+      "location": "Teams",
+      "htmlLink": "https://www.google.com/calendar/event?eid=N251dmkzMjZlanNwM3N2a2gwazFtdGJycmogY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
+      "start": {
+        "dateTime": "2026-04-29T18:00:00-04:00",
+        "timeZone": "America/New_York"
+      },
+      "end": {
+        "dateTime": "2026-04-29T19:00:00-04:00",
+        "timeZone": "America/New_York"
+      }
+    },
+    {
+      "summary": "[Social] Hike",
+      "description": "",
+      "location": "",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MnZzZTU2NXAzb21mZWo0NHA5cW8wdnNmcGMgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
+      "start": {
+        "dateTime": "2026-05-09T10:00:00-04:00",
+        "timeZone": "America/New_York"
+      },
+      "end": {
+        "dateTime": "2026-05-09T12:00:00-04:00",
+        "timeZone": "America/New_York"
+      }
+    },
+    {
+      "summary": "Monthly Meeting",
+      "description": "",
+      "location": "Teams",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MWdxYnNza3J1Nmc3bzZva2NrZ3BjdmwwdjMgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
+      "start": {
+        "dateTime": "2026-05-27T18:00:00-04:00",
+        "timeZone": "America/New_York"
+      },
+      "end": {
+        "dateTime": "2026-05-27T19:00:00-04:00",
+        "timeZone": "America/New_York"
+      }
+    },
+    {
+      "summary": "Volunteer Technical Talks",
+      "description": "",
+      "location": "",
+      "htmlLink": "https://www.google.com/calendar/event?eid=NDM2amg3M2RzNnRnajkzdDRsOGM2bDNodWIgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
+      "start": {
+        "dateTime": "2026-05-30T17:30:00-04:00",
+        "timeZone": "America/New_York"
+      },
+      "end": {
+        "dateTime": "2026-05-30T18:30:00-04:00",
+        "timeZone": "America/New_York"
+      }
     }
   ],
-  "fetchedAt": "2026-02-15T22:08:46.611Z"
+  "fetchedAt": "2026-02-15T22:16:37.932Z"
 }
