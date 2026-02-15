@@ -204,17 +204,44 @@
   }
 
   .hero-bar-button {
-    @apply flex-1 py-4 md:py-5 text-white font-semibold text-center transition-all duration-300 cursor-pointer;
+    @apply flex-1 py-4 md:py-5 text-white font-semibold text-center cursor-pointer;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1rem;
     text-decoration: none;
+    transition: filter 0.3s ease, transform 0.3s ease;
   }
 
   .hero-bar-button:hover {
     filter: brightness(1.15);
-    /* Keep the background color — do not turn transparent */
-    -webkit-text-fill-color: white;
-    background-clip: padding-box;
+    transform: translateY(-3px);
+  }
+
+  .hero-bar-button-inner {
+    display: inline-flex;
+    align-items: center;
+    transition: background 0.3s ease, -webkit-text-fill-color 0.3s ease;
+  }
+
+  .hero-bar-button:hover .hero-bar-button-inner {
+    background: linear-gradient(90deg, #18428F, #00C2F3, #B64B28, #F26524, #18428F);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 2s linear infinite;
+  }
+
+  .hero-bar-arrow {
+    display: inline-block;
+    opacity: 0;
+    max-width: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-width 0.3s ease;
+  }
+
+  .hero-bar-button:hover .hero-bar-arrow {
+    opacity: 1;
+    max-width: 2em;
   }
 
   /* ============================================
@@ -376,6 +403,18 @@
      ============================================ */
   .home-section {
     scroll-margin-top: 60px;
+  }
+
+  /* Fade-up animation for sections on scroll */
+  .fade-up-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .fade-up-section.fade-up-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* ============================================
@@ -547,63 +586,50 @@
   }
 
   /* ============================================
-     Event Timeline
+     Event Timeline (vertical)
      ============================================ */
   .timeline-container {
-    @apply overflow-x-auto pb-4;
-    scrollbar-width: thin;
-    scrollbar-color: #B64B28 #E2E1EE;
-  }
-
-  .timeline-container::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .timeline-container::-webkit-scrollbar-track {
-    background: #E2E1EE;
-    border-radius: 3px;
-  }
-
-  .timeline-container::-webkit-scrollbar-thumb {
-    background: #B64B28;
-    border-radius: 3px;
+    @apply pb-4;
   }
 
   .timeline-track {
-    @apply flex py-4;
-    min-width: max-content;
+    @apply flex flex-col;
     position: relative;
-    gap: 0;
+    padding-left: 28px;
   }
 
-  /* Connecting line between dots */
+  /* Vertical connecting line between dots */
   .timeline-track::before {
     content: '';
     position: absolute;
-    top: 24px; /* center of dot (py-4=16px + dot-height/2=8px) */
-    left: 140px; /* half of event width */
-    right: 140px;
-    height: 2px;
+    top: 8px;
+    bottom: 8px;
+    left: 7px; /* center of 16px dot */
+    width: 2px;
     background: #E2E1EE;
     z-index: 0;
   }
 
   .timeline-event {
-    @apply flex flex-col items-center;
-    width: 280px;
-    flex-shrink: 0;
+    @apply flex flex-row items-start;
     position: relative;
     z-index: 1;
     cursor: pointer;
-    padding: 0 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .timeline-event:last-child {
+    margin-bottom: 0;
   }
 
   .timeline-dot {
-    @apply w-4 h-4 rounded-full mb-3;
+    @apply w-4 h-4 rounded-full flex-shrink-0;
     background-color: var(--event-color);
     box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
+    position: absolute;
+    left: -28px;
+    top: 16px;
     z-index: 2;
   }
 
@@ -780,6 +806,48 @@
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+  }
+
+  /* ============================================
+     Program Item Page (rich content)
+     ============================================ */
+  .program-item-section {
+    @apply mb-8;
+  }
+
+  .program-item-callout {
+    @apply rounded-lg p-6;
+    background-color: #F8F8F8;
+    border: 1px solid #E2E1EE;
+  }
+
+  .program-item-cta {
+    @apply inline-block mt-4 font-semibold text-sm;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #18428F;
+    transition: color 0.2s ease;
+  }
+
+  .program-item-cta:hover {
+    color: #00C2F3;
+  }
+
+  .program-item-link {
+    @apply font-semibold;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #18428F;
+    transition: color 0.2s ease;
+    text-decoration: none;
+  }
+
+  .program-item-link:hover {
+    color: #00C2F3;
+    text-decoration: underline;
+  }
+
+  .program-item-gallery {
+    @apply grid gap-4;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
 
   /* ============================================

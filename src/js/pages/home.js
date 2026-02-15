@@ -7,12 +7,12 @@ export async function renderHome(el, base, siteConfig) {
     .map((item) => {
       const bgColor = item.color || '#18428F';
       if (item.scrollTo) {
-        return `<a href="#/" data-scroll-to="${item.scrollTo}" class="hero-bar-button" style="background-color: ${bgColor}">${item.label}</a>`;
+        return `<a href="#/" data-scroll-to="${item.scrollTo}" class="hero-bar-button" style="background-color: ${bgColor}"><span class="hero-bar-button-inner">${item.label}<span class="hero-bar-arrow"> &rarr;</span></span></a>`;
       }
       if (item.path) {
-        return `<a href="#${item.path}" class="hero-bar-button" style="background-color: ${bgColor}">${item.label}</a>`;
+        return `<a href="#${item.path}" class="hero-bar-button" style="background-color: ${bgColor}"><span class="hero-bar-button-inner">${item.label}<span class="hero-bar-arrow"> &rarr;</span></span></a>`;
       }
-      return `<a href="#/" class="hero-bar-button" style="background-color: ${bgColor}">${item.label}</a>`;
+      return `<a href="#/" class="hero-bar-button" style="background-color: ${bgColor}"><span class="hero-bar-button-inner">${item.label}<span class="hero-bar-arrow"> &rarr;</span></span></a>`;
     })
     .join('');
 
@@ -29,7 +29,7 @@ export async function renderHome(el, base, siteConfig) {
     </div>
 
     <!-- About Section (5 subsections with color circles) -->
-    <section id="about-section" class="home-section bg-white">
+    <section id="about-section" class="home-section bg-white fade-up-section">
       <div class="about-section-container">
         <div id="about-content">
           <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
@@ -38,7 +38,7 @@ export async function renderHome(el, base, siteConfig) {
     </section>
 
     <!-- Partners Section -->
-    <section id="partners-section" class="home-section" style="background-color: #F8F8F8;">
+    <section id="partners-section" class="home-section fade-up-section" style="background-color: #F8F8F8;">
       <div class="max-w-5xl mx-auto px-4 py-16">
         <h2 class="font-heading text-3xl font-bold text-primary-dark text-center mb-4">Our Partners</h2>
         <div id="partners-content">
@@ -54,9 +54,28 @@ export async function renderHome(el, base, siteConfig) {
     if (hero) hero.classList.add('fade-in-active');
   }, 50);
 
+  // Observe sections for fade-up on scroll
+  initFadeUpObserver(el);
+
   // Load sections
   loadAboutSection(base);
   loadPartnersSection(base);
+}
+
+function initFadeUpObserver(el) {
+  const sections = el.querySelectorAll('.fade-up-section');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-up-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  sections.forEach((s) => observer.observe(s));
 }
 
 async function loadAboutSection(base) {

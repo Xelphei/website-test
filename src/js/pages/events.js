@@ -1,8 +1,8 @@
 const BASE = import.meta.env.BASE_URL;
 
 const CATEGORY_PATTERNS = [
-  { regex: /\[Volunteer\]/i, category: 'Volunteer', color: '#18428F' },
-  { regex: /\[Meeting\]/i, category: 'Meeting', color: '#00C2F3' },
+  { regex: /\[Volunteer\]/i, category: 'Volunteer', color: '#00C2F3' },
+  { regex: /\[Meeting\]/i, category: 'Meeting', color: '#18428F' },
   { regex: /\[Social\]/i, category: 'Social', color: '#F26524' },
   { regex: /\[Workshop\]/i, category: 'Workshop', color: '#19226D' },
   { regex: /\[Conference\]/i, category: 'Conference', color: '#B64B28' },
@@ -150,8 +150,7 @@ export async function renderEvents(el) {
             .join('')}
         </div>
       </div>
-      <p class="text-center text-sm text-gray-400 mt-4 font-body">Scroll horizontally to see more events &rarr;</p>
-      ${data.fetchedAt ? `<p class="text-center text-xs text-gray-300 mt-2 font-body">Last updated: ${new Date(data.fetchedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>` : ''}
+      ${data.fetchedAt ? `<p class="text-center text-xs text-gray-300 mt-6 font-body">Last updated: ${new Date(data.fetchedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>` : ''}
     `;
   } catch {
     listEl.innerHTML = `

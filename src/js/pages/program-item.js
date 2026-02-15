@@ -38,6 +38,68 @@ export async function renderProgramItem(el, base, slug) {
       return;
     }
 
+    // Build optional sections
+    const detailsHtml = foundItem.details
+      ? `
+        <div class="program-item-section">
+          <h2 class="font-heading text-xl font-bold text-primary-dark mb-3">Additional Details</h2>
+          <p class="font-body text-gray-600 leading-relaxed">${escapeHtml(foundItem.details)}</p>
+        </div>
+      `
+      : '';
+
+    const volunteerHtml = foundItem.volunteer
+      ? `
+        <div class="program-item-section program-item-callout">
+          <h2 class="font-heading text-xl font-bold mb-3" style="color: #00C2F3;">Call for Volunteers</h2>
+          <p class="font-body text-gray-600 leading-relaxed">${escapeHtml(foundItem.volunteer)}</p>
+          <a href="#/contact" class="program-item-cta">Get Involved &rarr;</a>
+        </div>
+      `
+      : '';
+
+    const linksHtml =
+      foundItem.links && foundItem.links.length > 0
+        ? `
+        <div class="program-item-section">
+          <h2 class="font-heading text-xl font-bold text-primary-dark mb-3">Links &amp; Resources</h2>
+          <ul class="space-y-2">
+            ${foundItem.links
+              .map(
+                (link) =>
+                  `<li>
+                    <a href="${escapeAttr(link.url)}" target="_blank" rel="noopener noreferrer" class="program-item-link">
+                      ${escapeHtml(link.label || link.url)} <span class="text-xs">&nearr;</span>
+                    </a>
+                    ${link.description ? `<p class="font-body text-gray-500 text-sm mt-0.5">${escapeHtml(link.description)}</p>` : ''}
+                  </li>`
+              )
+              .join('')}
+          </ul>
+        </div>
+      `
+        : '';
+
+    const imagesHtml =
+      foundItem.images && foundItem.images.length > 0
+        ? `
+        <div class="program-item-section">
+          <h2 class="font-heading text-xl font-bold text-primary-dark mb-3">Photos</h2>
+          <div class="program-item-gallery">
+            ${foundItem.images
+              .map(
+                (img) =>
+                  `<div class="program-item-gallery-item">
+                    <img src="${base}images/${escapeAttr(img.src)}" alt="${escapeAttr(img.alt || '')}" class="rounded-lg w-full h-auto" />
+                    ${img.caption ? `<p class="font-body text-sm text-gray-500 mt-1">${escapeHtml(img.caption)}</p>` : ''}
+                  </div>`
+              )
+              .join('')}
+          </div>
+        </div>
+      `
+        : '';
+
     contentEl.innerHTML = `
       <nav class="font-body text-sm text-gray-400 mb-6">
         <a href="#/programs" class="text-primary-cyan hover:text-primary-blue">Ongoing Programs</a>
@@ -50,6 +112,10 @@ export async function renderProgramItem(el, base, slug) {
       <div class="font-body text-gray-600 leading-relaxed text-lg mb-8">
         <p>${escapeHtml(foundItem.description)}</p>
       </div>
+      ${detailsHtml}
+      ${volunteerHtml}
+      ${imagesHtml}
+      ${linksHtml}
       <div class="border-t pt-6 mt-8" style="border-color: #E2E1EE;">
         <p class="font-body text-gray-500 text-sm">
           This program is part of our <strong>${escapeHtml(foundProgram.title)}</strong> initiative.
@@ -67,4 +133,8 @@ function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+function escapeAttr(str) {
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

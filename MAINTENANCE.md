@@ -92,10 +92,12 @@ The site is a **single-page application**. The home page contains these sections
 2. **About**: Five subsections with colored circles and bordered white text boxes in an alternating layout (text box overlaps halfway into the circle, both lift on hover)
 3. **Our Partners**: Partner/sponsor names displayed in orange text
 
+All home page sections fade up into view as the visitor scrolls down.
+
 Other pages are accessible via navigation:
-- **Programs** (`#/programs`) — dedicated page with program cards (images on left)
+- **Programs** (`#/programs`) — dedicated page with program cards (images on left). Each program item links to its own page with rich content (details, volunteer callouts, photos, external links).
 - **Contact Us** (`#/contact`) — dedicated page with built-in contact form (Name, Email, Subject, Message)
-- **Chapter News**, **Events** (horizontal timeline with connected dots; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
+- **Chapter News**, **Events** (vertical timeline with connected dots; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
 
 All page transitions use a smooth fade in/out effect.
 
@@ -250,10 +252,29 @@ programs:
     items:
       - name: Activity Name
         slug: activity-name
-        description: Details...
+        description: Brief overview shown on the Programs page.
+        details: "Additional details shown on the activity's dedicated page."
+        volunteer: "Call for volunteers text (shown in a highlighted callout)."
+        links:
+          - label: External Resource
+            url: https://example.com
+            description: Optional description of the link.
+        images:
+          - src: programs/activity-photo.jpg
+            alt: Photo description
+            caption: Optional caption below the image.
 ```
 
-**Important**: The `slug` must be unique across all programs and should use lowercase letters and hyphens only.
+### Program Item Fields
+
+- **name** — Activity name (required)
+- **slug** — URL-friendly ID, must be unique, lowercase with hyphens only (required)
+- **description** — Brief overview shown on the Programs listing page (required)
+- **details** (optional) — Additional details shown on the activity's own page
+- **volunteer** (optional) — Call for volunteers text, displayed in a highlighted callout box with a "Get Involved" link
+- **links** (optional) — List of external links/resources, each with `label`, `url`, and optional `description`
+- **images** (optional) — List of photos, each with `src` (relative to `public/images/`), optional `alt`, and optional `caption`
+- **link** (optional) — If set, the item links to this URL instead of generating a dedicated page (e.g., `"#/gallery"`)
 
 ---
 
@@ -263,8 +284,8 @@ Events are fetched from Google Calendar. Add a tag in the event title to categor
 
 | Tag in Title       | Category    | Color         |
 |--------------------|-------------|---------------|
-| `[Volunteer] ...`  | Volunteer   | Blue (#18428F)|
-| `[Meeting] ...`    | Meeting     | Cyan (#00C2F3)|
+| `[Volunteer] ...`  | Volunteer   | Cyan (#00C2F3)|
+| `[Meeting] ...`    | Meeting     | Blue (#18428F)|
 | `[Social] ...`     | Social      | Orange (#F26524)|
 | `[Workshop] ...`   | Workshop    | Navy (#19226D)|
 | `[Conference] ...` | Conference  | Burnt Orange (#B64B28)|
