@@ -1,4 +1,4 @@
-import { loadYaml } from '../utils/yaml.js';
+const BASE = import.meta.env.BASE_URL;
 
 const CATEGORY_PATTERNS = [
   { regex: /\[Volunteer\]/i, category: 'Volunteer', color: '#18428F' },
@@ -23,7 +23,7 @@ function stripCategoryTag(title) {
   return title.replace(/\[(Volunteer|Meeting|Social|Workshop|Conference)\]\s*/i, '');
 }
 
-export async function renderEvents(el, base) {
+export async function renderEvents(el) {
   el.innerHTML = `
     <div class="max-w-6xl mx-auto px-4 py-12" style="margin-top: 60px;">
       <h1 class="font-heading text-3xl font-bold text-primary-dark mb-8">Upcoming Events</h1>
@@ -33,46 +33,28 @@ export async function renderEvents(el, base) {
     </div>
   `;
 
+  const listEl = document.getElementById('events-list');
+
   try {
-    const config = await loadYaml(`${base}data/events.yaml`);
-    const listEl = document.getElementById('events-list');
+    const response = await fetch(`${BASE}data/events.json`);
 
-    // Load secrets from environment variables
-    const apiKey = import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY;
-    const calendarId = import.meta.env.VITE_GOOGLE_CALENDAR_ID;
-
-    if (!apiKey || apiKey === 'YOUR_API_KEY') {
+    if (!response.ok) {
       listEl.innerHTML = `
         <div class="rounded-lg p-6 text-center" style="background-color: #F8F8F8; border: 1px solid #E2E1EE;">
-          <p class="font-body text-primary-dark font-semibold mb-2">Calendar Not Configured</p>
+          <p class="font-body text-primary-dark font-semibold mb-2">Events Not Available</p>
           <p class="font-body text-gray-500 text-sm">
-            To display events, add your Google Calendar API key and Calendar ID to your
-            <code class="px-1 rounded" style="background-color: #E2E1EE;">.env</code> file.
-            See MAINTENANCE.md for setup instructions.
+            Event data has not been generated yet. Run
+            <code class="px-1 rounded" style="background-color: #E2E1EE;">npm run fetch-events</code>
+            or push to main to trigger a build.
           </p>
         </div>
       `;
       return;
     }
 
-    await fetchEvents({ ...config, apiKey, calendarId }, listEl);
-  } catch {
-    document.getElementById('events-list').innerHTML =
-      '<p class="text-red-500 font-body">Failed to load events configuration.</p>';
-  }
-}
-
-async function fetchEvents(config, listEl) {
-  const now = new Date().toISOString();
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(config.calendarId)}/events?key=${config.apiKey}&timeMin=${now}&maxResults=${config.maxResults || 10}&singleEvents=true&orderBy=startTime`;
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`API returned ${response.status}`);
-
     const data = await response.json();
 
-    if (!data.items || data.items.length === 0) {
+    if (!data.events || data.events.length === 0) {
       listEl.innerHTML = `
         <div class="text-center py-8">
           <p class="font-body text-gray-500">No upcoming events at this time. Check back soon!</p>
@@ -81,7 +63,7 @@ async function fetchEvents(config, listEl) {
       return;
     }
 
-    const events = data.items.slice(0, 10);
+    const events = data.events;
 
     listEl.innerHTML = `
       <div class="timeline-container">
@@ -123,12 +105,13 @@ async function fetchEvents(config, listEl) {
         </div>
       </div>
       <p class="text-center text-sm text-gray-400 mt-4 font-body">Scroll horizontally to see more events &rarr;</p>
+      ${data.fetchedAt ? `<p class="text-center text-xs text-gray-300 mt-2 font-body">Last updated: ${new Date(data.fetchedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>` : ''}
     `;
   } catch {
     listEl.innerHTML = `
       <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
         <p class="font-body text-red-800 font-semibold mb-2">Unable to Load Events</p>
-        <p class="font-body text-red-600 text-sm">There was an error fetching events from Google Calendar. Please try again later.</p>
+        <p class="font-body text-red-600 text-sm">There was an error loading event data. Please try again later.</p>
       </div>
     `;
   }

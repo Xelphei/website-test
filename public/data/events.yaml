@@ -1,4 +1,0 @@
-# Google Calendar API Configuration
-# Secrets (apiKey, calendarId) are now loaded from environment variables.
-# See .env.example and MAINTENANCE.md for setup instructions.
-maxResults: 10

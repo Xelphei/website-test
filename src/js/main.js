@@ -28,7 +28,7 @@ async function init() {
   const routes = {
     '/': (el) => renderHome(el, BASE, siteConfig),
     '/news': (el) => renderNews(el, BASE),
-    '/events': (el) => renderEvents(el, BASE),
+    '/events': (el) => renderEvents(el),
     '/board': (el) => renderBoard(el, BASE),
     '/gallery': (el) => renderGallery(el, BASE),
     '/programs': (el) => renderPrograms(el, BASE),

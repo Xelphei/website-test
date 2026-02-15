@@ -13,7 +13,7 @@ A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla Ja
 - Programs mega-menu dropdown with category and activity sub-menus
 - Dedicated pages for each program activity (auto-generated from YAML data)
 - Chapter News page with responsive image card gallery
-- Events timeline pulled live from Google Calendar, color-coded by category
+- Events timeline fetched from Google Calendar at build time (API key never exposed to visitors), color-coded by category
 - Executive Board with LinkedIn/website links and founding members section
 - Masonry photo gallery with hover overlays and lightbox
 - Always-visible navigation bar with smooth page transitions
@@ -50,6 +50,7 @@ A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla Ja
 ```bash
 cp .env.example .env    # Create .env file, then fill in your secrets
 npm install
+npm run fetch-events    # Fetch events from Google Calendar (requires API key in .env)
 npm run dev
 ```
 
@@ -65,17 +66,20 @@ The built site will be output to the `dist/` folder.
 
 ## Deployment
 
-The site deploys automatically to GitHub Pages when you push to the `main` branch. See `.github/workflows/deploy.yml` for the configuration.
+The site deploys automatically to GitHub Pages:
+- **On every push** to the `main` branch
+- **Weekly** on Mondays at 6 AM UTC (to refresh event data from Google Calendar)
+- **Manually** via the GitHub Actions "Run workflow" button
+
+See `.github/workflows/deploy.yml` for the configuration.
 
 ### Required: GitHub Repository Secrets
 
-For the deployed site to connect to Google Calendar and the contact form, you must add these as repository secrets in GitHub (**Settings** > **Secrets and variables** > **Actions**):
+Add these as repository secrets in GitHub (**Settings** > **Secrets and variables** > **Actions**):
 
-- `VITE_GOOGLE_CALENDAR_API_KEY`
-- `VITE_GOOGLE_CALENDAR_ID`
-- `VITE_GOOGLE_FORM_EMBED_URL`
-
-These are injected as environment variables during the GitHub Actions build.
+- `GOOGLE_CALENDAR_API_KEY` — used at build time to fetch events (never shipped to client)
+- `GOOGLE_CALENDAR_ID` — identifies which public calendar to fetch
+- `VITE_GOOGLE_FORM_EMBED_URL` — embedded in client code for the contact form iframe
 
 ### GitHub Pages Setup
 
@@ -94,7 +98,7 @@ See **[MAINTENANCE.md](MAINTENANCE.md)** for a complete, beginner-friendly guide
 - Add or remove Executive Board members
 - Post Chapter News items
 - Upload gallery photos
-- Configure Google Calendar events (auto-syncs in real-time)
+- Configure Google Calendar events (fetched at build time, refreshed weekly)
 - Set up the contact form
 - Update navigation, social media, and the Parent Organization link
 - Set up `.env` secrets for local development and GitHub deployment
