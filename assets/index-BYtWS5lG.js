@@ -300,7 +300,7 @@
         <div class="text-center py-8 text-gray-400 font-body">Loading...</div>
       </div>
     </div>
-  `;try{const r=await S(`${n}data/contact.yaml`),t=document.getElementById("contact-content");if(!t)return;const i="",o="",l=r.description?`<p class="font-body text-gray-600 mb-8 text-center">${st(r.description)}</p>`:"";if(!i||i.includes("your-email@example.com")){t.innerHTML=`
+  `;try{const r=await S(`${n}data/contact.yaml`),t=document.getElementById("contact-content");if(!t)return;const i="stkayla@gmail.com",o="",l=r.description?`<p class="font-body text-gray-600 mb-8 text-center">${st(r.description)}</p>`:"";if(!i||i.includes("your-email@example.com")){t.innerHTML=`
         ${l}
         <div class="border border-secondary-light rounded-lg p-6 text-center" style="background-color: #F8F8F8;">
           <p class="font-body text-primary-dark font-semibold mb-2">Contact Form Not Configured</p>
