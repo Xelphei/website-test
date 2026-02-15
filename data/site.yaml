@@ -9,7 +9,7 @@ heroSelections:
     path: /programs
     color: "#00C2F3"
   - label: Get Involved
-    scrollTo: contact-section
+    path: /contact
     color: "#B64B28"
 
 floatingNav:
@@ -27,8 +27,8 @@ floatingNav:
     path: /board
   - label: Gallery
     path: /gallery
-  - label: Contact
-    scrollTo: contact-section
+  - label: Contact Us
+    path: /contact
   - label: Parent Organization
     path: https://parentorg.org
     external: true
