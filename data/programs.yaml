@@ -7,9 +7,13 @@ programs:
       - name: Science Demos
         slug: science-demos
         description: Interactive science demonstrations brought directly to local K-12 classrooms, sparking curiosity and excitement about STEM fields.
+        details: Our volunteers visit schools throughout the academic year, bringing hands-on experiments and demonstrations that make science fun and accessible. Topics range from chemistry and physics to environmental science and engineering.
+        volunteer: We are always looking for enthusiastic volunteers to help bring science to life in local classrooms. No teaching experience required — just a passion for science and working with kids!
       - name: Science Bowl
         slug: science-bowl
         description: Annual regional science competition for middle and high school students, testing knowledge across multiple scientific disciplines.
+        details: The Science Bowl brings together teams from schools across the region for a day of fast-paced academic competition. Events include buzzer rounds, hands-on challenges, and awards for top performers.
+        volunteer: Help us organize and run the next Science Bowl! We need judges, moderators, and event coordinators.
 
   - id: professional-development
     title: Professional Development
@@ -19,9 +23,11 @@ programs:
       - name: Midwest Regional Symposium
         slug: midwest-regional-symposium
         description: Our flagship annual conference bringing together professionals from across the Midwest for keynote talks, panel discussions, and networking opportunities.
+        details: The Midwest Regional Symposium is a multi-day event featuring keynote speakers, breakout sessions, poster presentations, and a networking dinner. Past topics have included emerging technologies, leadership development, and industry trends.
       - name: Professional Development Workshops
         slug: professional-development-workshops
         description: Quarterly hands-on workshops covering emerging technologies, leadership skills, and industry best practices.
+        details: Each workshop is led by experienced professionals and focuses on practical skills you can apply immediately. Recent workshops have covered data analytics, project management, and public speaking.
 
   - id: social
     title: Social & Community
