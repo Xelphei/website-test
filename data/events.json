@@ -2,6 +2,9 @@
   "events": [
     {
       "summary": "Untitled Event",
+      "description": "",
+      "location": "",
+      "htmlLink": "https://www.google.com/calendar/event?eid=MmtzNDVtZzNycHUxb244ZTFra3NobGN0MDUgY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
       "start": {
         "dateTime": "2026-02-28T15:00:00-05:00",
         "timeZone": "America/New_York"
@@ -13,6 +16,9 @@
     },
     {
       "summary": "Untitled Event",
+      "description": "",
+      "location": "",
+      "htmlLink": "https://www.google.com/calendar/event?eid=N3RoZmF2b2ZiNmc5cmtmb3B2YXA5N2RzajggY2MxNjdiMzRiOWU4ODYyMTVjNmY2ZGRhM2VhMjkzM2NhNzA4YjM5OTI4ZmM0YTNjMmY3ZjM3ZWI1YTliOTlmNUBn",
       "start": {
         "dateTime": "2026-03-25T18:00:00-04:00",
         "timeZone": "America/New_York"
@@ -23,5 +29,5 @@
       }
     }
   ],
-  "fetchedAt": "2026-02-15T20:37:03.497Z"
+  "fetchedAt": "2026-02-15T20:49:41.817Z"
 }
