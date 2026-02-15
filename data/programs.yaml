@@ -35,4 +35,4 @@ programs:
       - name: Get in Touch
         slug: get-in-touch
         description: Want to join an event or suggest an activity? Reach out to us!
-        scrollTo: contact-section
+        link: "#/contact"
