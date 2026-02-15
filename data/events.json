@@ -1,1 +1,27 @@
-{"events":[],"fetchedAt":null}
+{
+  "events": [
+    {
+      "summary": "Untitled Event",
+      "start": {
+        "dateTime": "2026-02-28T15:00:00-05:00",
+        "timeZone": "America/New_York"
+      },
+      "end": {
+        "dateTime": "2026-02-28T17:00:00-05:00",
+        "timeZone": "America/New_York"
+      }
+    },
+    {
+      "summary": "Untitled Event",
+      "start": {
+        "dateTime": "2026-03-25T18:00:00-04:00",
+        "timeZone": "America/New_York"
+      },
+      "end": {
+        "dateTime": "2026-03-25T19:00:00-04:00",
+        "timeZone": "America/New_York"
+      }
+    }
+  ],
+  "fetchedAt": "2026-02-15T20:37:03.497Z"
+}
