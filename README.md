@@ -6,11 +6,11 @@ A static nonprofit chapter website built with Vite, Tailwind CSS, and vanilla Ja
 
 - Half-viewport hero with animated title and colored button bar
 - **Home page** with alternating About subsections (colored circles + white text boxes) and Partners section
-- Dedicated **Programs page** with alternating vertical cards and circle-cropped images
-- Dedicated **Contact page** with embedded Google Form
-- Circle-expand page transitions from hero buttons
+- Dedicated **Programs page** with vertical cards and circle-cropped images
+- Dedicated **Contact page** with built-in form (no login/cookies required, powered by FormSubmit.co)
+- Smooth fade in/out page transitions
 - Animated gradient text hover effect on program item links
-- Programs mega-menu dropdown with category and activity sub-menus
+- Programs dropdown showing all categories and activities directly
 - Dedicated pages for each program activity (auto-generated from YAML data)
 - Chapter News page with responsive image card gallery
 - Events timeline fetched from Google Calendar at build time (API key never exposed to visitors), color-coded by category
@@ -79,7 +79,8 @@ Add these as repository secrets in GitHub (**Settings** > **Secrets and variable
 
 - `GOOGLE_CALENDAR_API_KEY` — used at build time to fetch events (never shipped to client)
 - `GOOGLE_CALENDAR_ID` — identifies which public calendar to fetch
-- `VITE_GOOGLE_FORM_EMBED_URL` — embedded in client code for the contact form iframe
+- `VITE_CONTACT_EMAIL` — email address that receives contact form submissions
+- `VITE_CONTACT_CC_EMAILS` — (optional) comma-separated CC email addresses
 
 ### GitHub Pages Setup
 

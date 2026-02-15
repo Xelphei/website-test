@@ -156,26 +156,25 @@ function buildLayout(config, programs) {
 }
 
 function buildProgramsDropdown(navItem, programs) {
-  const bucketItems = programs.programs
+  // Build a flat dropdown with category headers and sub-items visible directly
+  const sections = programs.programs
     .map((program) => {
       const subItems = program.items
         .map((item) => {
           if (item.link) {
-            return `<a href="${item.link}" class="dropdown-sub-item">${item.name}</a>`;
+            return `<a href="${item.link}" class="dropdown-flat-item">${item.name}</a>`;
           }
           if (item.scrollTo) {
-            return `<a href="#/" data-scroll-to="${item.scrollTo}" class="dropdown-sub-item">${item.name}</a>`;
+            return `<a href="#/" data-scroll-to="${item.scrollTo}" class="dropdown-flat-item">${item.name}</a>`;
           }
-          return `<a href="#/programs/${item.slug}" class="dropdown-sub-item">${item.name}</a>`;
+          return `<a href="#/programs/${item.slug}" class="dropdown-flat-item">${item.name}</a>`;
         })
         .join('');
 
       return `
-        <div class="dropdown-bucket">
-          <div class="dropdown-bucket-label">${program.title}</div>
-          <div class="dropdown-sub-menu">
-            ${subItems}
-          </div>
+        <div class="dropdown-section">
+          <div class="dropdown-section-label">${program.title}</div>
+          ${subItems}
         </div>
       `;
     })
@@ -184,8 +183,10 @@ function buildProgramsDropdown(navItem, programs) {
   return `
     <div class="nav-dropdown-wrapper">
       <a href="#${navItem.path}" data-nav-link class="nav-link">${navItem.label}</a>
-      <div class="nav-dropdown">
-        ${bucketItems}
+      <div class="nav-dropdown-flat">
+        <a href="#${navItem.path}" class="dropdown-flat-item dropdown-flat-view-all">View All Programs</a>
+        <div class="dropdown-flat-divider"></div>
+        ${sections}
       </div>
     </div>
   `;

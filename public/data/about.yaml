@@ -4,14 +4,14 @@ subsections:
     color: "#18428F"
   - title: Maximizing Potential
     description: "Our chapter provides resources and opportunities for career growth and professional development. From mentorship programs to skill-building workshops, we help our members reach their full potential and become leaders in their field."
-    color: "#00C2F3"
+    color: "#F26524"
   - title: Networking
     description: "Connect with professionals across industries and disciplines. Our events and gatherings create meaningful opportunities to build relationships, exchange ideas, and collaborate on projects that matter."
-    color: "#B64B28"
+    color: "#00C2F3"
   - title: Making a Difference
     subtitle: Volunteer and Outreach Activities
     description: "Our members give back to the community through volunteer initiatives, K-12 outreach programs, and partnerships with local organizations. Together, we make a tangible difference in the lives of those around us."
-    color: "#F26524"
+    color: "#B64B28"
   - title: "Research. Knowledge. Wisdom."
     description: "Advancing knowledge through research presentations, technical talks, and knowledge-sharing sessions. We foster a culture of intellectual curiosity and continuous learning that drives innovation in our field."
     color: "#19226D"

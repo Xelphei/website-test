@@ -15,8 +15,6 @@ heroSelections:
 floatingNav:
   - label: Home
     path: /
-  - label: About
-    scrollTo: about-section
   - label: Programs
     path: /programs
   - label: Chapter News

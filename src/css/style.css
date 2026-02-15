@@ -58,84 +58,59 @@
   }
 
   /* ============================================
-     Programs Mega-Menu Dropdown
+     Programs Mega-Menu Dropdown (flat layout)
      ============================================ */
   .nav-dropdown-wrapper {
     @apply relative;
   }
 
-  .nav-dropdown {
+  .nav-dropdown-flat {
     @apply absolute top-full left-1/2 hidden;
     transform: translateX(-50%);
-    min-width: 200px;
+    min-width: 260px;
     padding-top: 0.5rem;
     z-index: 100;
+    background: rgba(24, 66, 143, 0.98);
+    border-radius: 0.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    padding-bottom: 0.5rem;
   }
 
-  .nav-dropdown-wrapper:hover .nav-dropdown {
+  .nav-dropdown-wrapper:hover .nav-dropdown-flat {
     @apply block;
   }
 
-  .nav-dropdown > .dropdown-bucket:first-child {
-    border-radius: 0.5rem 0.5rem 0 0;
+  .dropdown-section {
+    padding: 0.25rem 0;
   }
 
-  .nav-dropdown > .dropdown-bucket:last-child {
-    border-radius: 0 0 0.5rem 0.5rem;
-  }
-
-  .dropdown-bucket {
-    @apply relative;
-    background: rgba(24, 66, 143, 0.98);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .dropdown-bucket:last-child {
-    border-bottom: none;
-  }
-
-  .dropdown-bucket-label {
-    @apply px-4 py-3 text-gray-200 text-sm cursor-default;
+  .dropdown-section-label {
+    @apply px-4 py-2 text-xs font-bold uppercase tracking-wider;
     font-family: Arial, Helvetica, sans-serif;
-    font-weight: 600;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    color: #00C2F3;
   }
 
-  .dropdown-bucket:hover .dropdown-bucket-label {
+  .dropdown-flat-item {
+    @apply block px-4 py-2 text-gray-200 text-sm;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    text-decoration: none;
+  }
+
+  .dropdown-flat-item:hover {
     @apply text-white;
     background: rgba(0, 194, 243, 0.15);
   }
 
-  .dropdown-sub-menu {
-    @apply absolute top-0 left-full hidden;
-    min-width: 220px;
-    background: rgba(25, 34, 109, 0.98);
-    border-radius: 0 0.5rem 0.5rem 0;
-    box-shadow: 4px 4px 16px rgba(0, 0, 0, 0.3);
+  .dropdown-flat-view-all {
+    font-weight: 600;
+    color: white;
   }
 
-  .dropdown-bucket:hover .dropdown-sub-menu {
-    @apply block;
-  }
-
-  .dropdown-sub-item {
-    @apply block px-4 py-2.5 text-gray-200 text-sm;
-    font-family: Arial, Helvetica, sans-serif;
-    transition: background-color 0.15s ease, color 0.15s ease;
-    white-space: nowrap;
-  }
-
-  .dropdown-sub-item:first-child {
-    border-radius: 0 0.5rem 0 0;
-  }
-
-  .dropdown-sub-item:last-child {
-    border-radius: 0 0 0.5rem 0;
-  }
-
-  .dropdown-sub-item:hover {
-    @apply text-white;
-    background: rgba(0, 194, 243, 0.2);
+  .dropdown-flat-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0.25rem 0.75rem;
   }
 
   /* ============================================
@@ -232,45 +207,23 @@
     @apply flex-1 py-4 md:py-5 text-white font-semibold text-center transition-all duration-300 cursor-pointer;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1rem;
+    text-decoration: none;
   }
 
   .hero-bar-button:hover {
     filter: brightness(1.15);
-  }
-
-  /* ============================================
-     Circle-Expand Page Transition
-     Uses a ring that expands from the click point to reveal the new page.
-     ============================================ */
-  .circle-expand-overlay {
-    position: fixed;
-    z-index: 9999;
-    border-radius: 50%;
-    pointer-events: none;
-    transform: scale(0);
-    animation: circleExpand 0.5s ease-in-out forwards;
-    border: 3px solid rgba(0, 194, 243, 0.35);
-    box-shadow: 0 0 40px rgba(0, 194, 243, 0.15);
-  }
-
-  @keyframes circleExpand {
-    0% { transform: scale(0); opacity: 1; }
-    80% { opacity: 1; }
-    100% { transform: scale(1); opacity: 0; }
+    /* Keep the background color — do not turn transparent */
+    -webkit-text-fill-color: white;
+    background-clip: padding-box;
   }
 
   /* ============================================
      About Section (color circles + white text box)
      ============================================ */
   .about-section-container {
-    @apply w-full;
-    padding: 3rem 1.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .about-section-container {
-      padding: 3rem 3rem;
-    }
+    @apply max-w-5xl mx-auto px-4;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
 
   .about-subsection {
@@ -827,5 +780,71 @@
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+  }
+
+  /* ============================================
+     Contact Form (FormSubmit.co)
+     ============================================ */
+  .contact-form {
+    @apply space-y-6;
+  }
+
+  .contact-form-group {
+    @apply flex flex-col;
+  }
+
+  .contact-form-label {
+    @apply mb-1.5 font-semibold text-sm;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #41434C;
+  }
+
+  .contact-form-input {
+    @apply w-full px-4 py-3 rounded-lg text-sm;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid #E2E1EE;
+    background: white;
+    color: #41434C;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .contact-form-input:focus {
+    outline: none;
+    border-color: #00C2F3;
+    box-shadow: 0 0 0 3px rgba(0, 194, 243, 0.15);
+  }
+
+  .contact-form-textarea {
+    @apply w-full px-4 py-3 rounded-lg text-sm;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid #E2E1EE;
+    background: white;
+    color: #41434C;
+    resize: vertical;
+    min-height: 120px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .contact-form-textarea:focus {
+    outline: none;
+    border-color: #00C2F3;
+    box-shadow: 0 0 0 3px rgba(0, 194, 243, 0.15);
+  }
+
+  .contact-form-button {
+    @apply w-full py-3 rounded-lg text-white font-semibold text-sm cursor-pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #18428F;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .contact-form-button:hover {
+    background-color: #19226D;
+    transform: translateY(-1px);
+  }
+
+  .contact-form-button:active {
+    transform: translateY(0);
   }
 }

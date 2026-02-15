@@ -1,4 +1,5 @@
-# Google Form Embed Configuration
-# The embed URL is now loaded from the VITE_GOOGLE_FORM_EMBED_URL environment variable.
-# See .env.example and MAINTENANCE.md for setup instructions.
+# Contact Form Configuration
+# Submissions are sent via FormSubmit.co to the email(s) configured below.
+# The primary email receives submissions directly. CC emails receive copies.
+# Set these values in your .env file (see .env.example).
 description: Have a question or want to get involved? Fill out the form below and we'll get back to you.

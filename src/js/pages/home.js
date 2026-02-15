@@ -7,12 +7,12 @@ export async function renderHome(el, base, siteConfig) {
     .map((item) => {
       const bgColor = item.color || '#18428F';
       if (item.scrollTo) {
-        return `<a href="#/" data-scroll-to="${item.scrollTo}" class="hero-bar-button gradient-text-hover" style="background-color: ${bgColor}">${item.label}</a>`;
+        return `<a href="#/" data-scroll-to="${item.scrollTo}" class="hero-bar-button" style="background-color: ${bgColor}">${item.label}</a>`;
       }
       if (item.path) {
-        return `<a href="#${item.path}" class="hero-bar-button gradient-text-hover" data-circle-expand style="background-color: ${bgColor}">${item.label}</a>`;
+        return `<a href="#${item.path}" class="hero-bar-button" style="background-color: ${bgColor}">${item.label}</a>`;
       }
-      return `<a href="#/" class="hero-bar-button gradient-text-hover" style="background-color: ${bgColor}">${item.label}</a>`;
+      return `<a href="#/" class="hero-bar-button" style="background-color: ${bgColor}">${item.label}</a>`;
     })
     .join('');
 
@@ -54,50 +54,9 @@ export async function renderHome(el, base, siteConfig) {
     if (hero) hero.classList.add('fade-in-active');
   }, 50);
 
-  // Set up circle-expand transition for hero buttons with path
-  initCircleExpand(el);
-
   // Load sections
   loadAboutSection(base);
   loadPartnersSection(base);
-}
-
-function initCircleExpand(el) {
-  el.querySelectorAll('[data-circle-expand]').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const href = btn.getAttribute('href');
-      const rect = btn.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-
-      // Calculate size needed to cover viewport
-      const maxDist = Math.max(
-        Math.hypot(x, y),
-        Math.hypot(window.innerWidth - x, y),
-        Math.hypot(x, window.innerHeight - y),
-        Math.hypot(window.innerWidth - x, window.innerHeight - y)
-      );
-      const diameter = maxDist * 2;
-
-      const overlay = document.createElement('div');
-      overlay.className = 'circle-expand-overlay';
-      overlay.style.cssText = `
-        left: ${x - diameter / 2}px;
-        top: ${y - diameter / 2}px;
-        width: ${diameter}px;
-        height: ${diameter}px;
-      `;
-      document.body.appendChild(overlay);
-
-      // Navigate immediately — the circle clip-path reveals the new page as it expands
-      window.__skipFadeTransition = true;
-      window.location.hash = href;
-
-      // Remove overlay after animation completes
-      overlay.addEventListener('animationend', () => overlay.remove());
-    });
-  });
 }
 
 async function loadAboutSection(base) {

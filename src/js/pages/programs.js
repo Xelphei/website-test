@@ -17,7 +17,7 @@ export async function renderPrograms(el, base) {
 
     contentEl.innerHTML = data.programs
       .map((program, index) => {
-        const isReverse = index % 2 === 1;
+        const isReverse = false; // All images on left
         const itemsHtml = program.items
           .map((item) => {
             // Build the link for the item name itself
