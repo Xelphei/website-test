@@ -628,7 +628,7 @@
   .timeline-track::before {
     content: '';
     position: absolute;
-    top: 25px; /* vertically center the line through the dots */
+    top: 26px; /* vertically center the line through the dots */
     left: 0;
     right: 0;
     height: 2px;
@@ -653,7 +653,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     z-index: 2;
     position: absolute;
-    top: -10px; /* sits on the connecting line above the card */
+    top: -22px; /* sits on the connecting line above the card */
   }
 
   .timeline-event:hover .timeline-dot {
