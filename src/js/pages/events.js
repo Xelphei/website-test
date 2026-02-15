@@ -73,11 +73,9 @@ function formatEventDate(event) {
 
 export async function renderEvents(el) {
   el.innerHTML = `
-    <div style="margin-top: 60px;">
-      <div class="max-w-6xl mx-auto px-4 pt-12 pb-4">
-        <h1 class="font-heading text-3xl font-bold text-primary-dark mb-2">Upcoming Events</h1>
-        <p class="font-body text-sm text-gray-400 mb-0">Scroll down to browse events</p>
-      </div>
+    <div class="max-w-6xl mx-auto px-4 py-12" style="margin-top: 60px;">
+      <h1 class="font-heading text-3xl font-bold text-primary-dark mb-2">Upcoming Events</h1>
+      <p class="font-body text-sm text-gray-400 mb-6">Scroll to browse events</p>
       <div id="events-list">
         <div class="text-center py-8 text-gray-400 font-body">Loading events...</div>
       </div>
@@ -91,15 +89,13 @@ export async function renderEvents(el) {
 
     if (!response.ok) {
       listEl.innerHTML = `
-        <div class="max-w-6xl mx-auto px-4 pb-12">
-          <div class="rounded-lg p-6 text-center" style="background-color: #F8F8F8; border: 1px solid #E2E1EE;">
-            <p class="font-body text-primary-dark font-semibold mb-2">Events Not Available</p>
-            <p class="font-body text-gray-500 text-sm">
-              Event data has not been generated yet. Run
-              <code class="px-1 rounded" style="background-color: #E2E1EE;">npm run fetch-events</code>
-              or push to main to trigger a build.
-            </p>
-          </div>
+        <div class="rounded-lg p-6 text-center" style="background-color: #F8F8F8; border: 1px solid #E2E1EE;">
+          <p class="font-body text-primary-dark font-semibold mb-2">Events Not Available</p>
+          <p class="font-body text-gray-500 text-sm">
+            Event data has not been generated yet. Run
+            <code class="px-1 rounded" style="background-color: #E2E1EE;">npm run fetch-events</code>
+            or push to main to trigger a build.
+          </p>
         </div>
       `;
       return;
@@ -109,10 +105,8 @@ export async function renderEvents(el) {
 
     if (!data.events || data.events.length === 0) {
       listEl.innerHTML = `
-        <div class="max-w-6xl mx-auto px-4 pb-12">
-          <div class="text-center py-8">
-            <p class="font-body text-gray-500">No upcoming events at this time. Check back soon!</p>
-          </div>
+        <div class="text-center py-8">
+          <p class="font-body text-gray-500">No upcoming events at this time. Check back soon!</p>
         </div>
       `;
       return;
@@ -121,126 +115,94 @@ export async function renderEvents(el) {
     const events = data.events;
 
     listEl.innerHTML = `
-      <div class="timeline-scroll-wrapper" id="timeline-wrapper">
-        <div class="timeline-sticky" id="timeline-sticky">
-          <div class="timeline-track" id="timeline-track">
-            ${events
-              .map((event) => {
-                const title = event.summary || 'Untitled Event';
-                const { category, color } = detectCategory(title);
-                const cleanTitle = stripCategoryTag(title);
-                const { dateStr, timeStr } = formatEventDate(event);
+      <div class="timeline-container" id="timeline-scroll-container">
+        <div class="timeline-track">
+          ${events
+            .map((event) => {
+              const title = event.summary || 'Untitled Event';
+              const { category, color } = detectCategory(title);
+              const cleanTitle = stripCategoryTag(title);
+              const { dateStr, timeStr } = formatEventDate(event);
 
-                const descHtml = event.description
-                  ? `<p class="font-body text-sm text-gray-500 mt-2 line-clamp-2">${escapeHtml(event.description)}</p>`
-                  : '';
+              const descHtml = event.description
+                ? `<p class="font-body text-sm text-gray-500 mt-2 line-clamp-3">${escapeHtml(event.description)}</p>`
+                : '';
 
-                return `
-                  <div class="timeline-event" style="--event-color: ${color}" onclick="window.location.hash='#/contact'">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-card">
-                      <span class="timeline-category">${escapeHtml(category)}</span>
-                      <h3 class="font-heading font-semibold text-primary-dark mt-1">${escapeHtml(cleanTitle)}</h3>
-                      <p class="font-body text-sm text-gray-500 mt-1">${dateStr}</p>
-                      <p class="font-body text-sm text-gray-400">${timeStr}</p>
-                      ${descHtml}
-                      <p class="font-body text-xs mt-3" style="color: var(--event-color)">Click to contact us about this event &rarr;</p>
-                    </div>
+              return `
+                <div class="timeline-event" style="--event-color: ${color}" onclick="window.location.hash='#/contact'">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-card">
+                    <span class="timeline-category">${escapeHtml(category)}</span>
+                    <h3 class="font-heading text-lg font-semibold text-primary-dark mt-1">${escapeHtml(cleanTitle)}</h3>
+                    <p class="font-body text-sm text-gray-500 mt-2">${dateStr}</p>
+                    <p class="font-body text-sm text-gray-400">${timeStr}</p>
+                    ${descHtml}
+                    <p class="font-body text-xs mt-3" style="color: var(--event-color)">Click to contact us about this event &rarr;</p>
                   </div>
-                `;
-              })
-              .join('')}
-          </div>
+                </div>
+              `;
+            })
+            .join('')}
         </div>
       </div>
-      ${data.fetchedAt ? `<div class="max-w-6xl mx-auto px-4"><p class="text-center text-xs text-gray-300 mt-6 mb-8 font-body">Last updated: ${new Date(data.fetchedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p></div>` : ''}
+      ${data.fetchedAt ? `<p class="text-center text-xs text-gray-300 mt-4 font-body">Last updated: ${new Date(data.fetchedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>` : ''}
     `;
 
-    initScrollDrivenTimeline();
+    initWheelToScroll();
   } catch {
     listEl.innerHTML = `
-      <div class="max-w-6xl mx-auto px-4 pb-12">
-        <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-          <p class="font-body text-red-800 font-semibold mb-2">Unable to Load Events</p>
-          <p class="font-body text-red-600 text-sm">There was an error loading event data. Please try again later.</p>
-        </div>
+      <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+        <p class="font-body text-red-800 font-semibold mb-2">Unable to Load Events</p>
+        <p class="font-body text-red-600 text-sm">There was an error loading event data. Please try again later.</p>
       </div>
     `;
   }
 }
 
 /**
- * Scroll-driven horizontal timeline.
+ * Wheel-to-horizontal-scroll for the timeline container.
  *
- * Instead of intercepting wheel events (which is unreliable across devices
- * and natural-scrolling settings), this creates a tall wrapper that gives the
- * page extra vertical scroll space. A sticky inner container keeps the timeline
- * visible while the user scrolls. As the user scrolls down through the wrapper,
- * the track translates left — revealing more event cards to the right.
+ * Intercepts vertical wheel/trackpad gestures over the timeline and converts
+ * them into horizontal scroll. Uses requestAnimationFrame for smooth updates
+ * and a multiplier for responsive feel.
  *
- * Scroll down = cards move left (browse forward in time).
- * Scroll up   = cards move right (browse backward).
+ * Scrolling down (positive deltaY) increases scrollLeft → cards scroll to the
+ * left, revealing more events to the right.
  */
-function initScrollDrivenTimeline() {
-  const wrapper = document.getElementById('timeline-wrapper');
-  const sticky = document.getElementById('timeline-sticky');
-  const track = document.getElementById('timeline-track');
-  if (!wrapper || !sticky || !track) return;
+function initWheelToScroll() {
+  const container = document.getElementById('timeline-scroll-container');
+  if (!container) return;
 
-  const NAV_HEIGHT = 70; // fixed nav height + a little buffer
+  const SCROLL_MULTIPLIER = 2.5;
+  let pendingDelta = 0;
+  let rafId = null;
 
-  function setup() {
-    // Reset any previous inline height so we can measure naturally
-    wrapper.style.height = '';
-    track.style.transform = '';
+  function applyScroll() {
+    container.scrollLeft += pendingDelta;
+    pendingDelta = 0;
+    rafId = null;
+  }
 
-    const trackWidth = track.scrollWidth;
-    const viewportWidth = sticky.clientWidth;
-    const overflow = trackWidth - viewportWidth;
+  function onWheel(e) {
+    // Only intercept if there is horizontal overflow
+    if (container.scrollWidth <= container.clientWidth) return;
 
-    if (overflow <= 0) {
-      // Everything fits — no scroll trick needed
-      wrapper.style.height = '';
-      return;
+    e.preventDefault();
+
+    // Accumulate delta and apply via rAF for smooth performance
+    pendingDelta += e.deltaY * SCROLL_MULTIPLIER;
+    if (!rafId) {
+      rafId = requestAnimationFrame(applyScroll);
     }
-
-    // The wrapper height determines how much vertical scrolling maps to
-    // horizontal translation. Add viewport height so the sticky section
-    // stays visible for the full scroll range.
-    const scrollRange = overflow;
-    wrapper.style.height = (scrollRange + window.innerHeight) + 'px';
   }
 
-  function onScroll() {
-    const trackWidth = track.scrollWidth;
-    const viewportWidth = sticky.clientWidth;
-    const overflow = trackWidth - viewportWidth;
-    if (overflow <= 0) return;
-
-    const wrapperRect = wrapper.getBoundingClientRect();
-    const scrollRange = overflow;
-
-    // How far into the wrapper the viewport top has scrolled (accounting for nav)
-    const scrolled = -(wrapperRect.top - NAV_HEIGHT);
-    const maxScrolled = wrapper.offsetHeight - window.innerHeight;
-    const progress = Math.max(0, Math.min(1, scrolled / maxScrolled));
-
-    track.style.transform = `translateX(${-progress * scrollRange}px)`;
-  }
-
-  setup();
-  onScroll(); // set initial position
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', () => {
-    setup();
-    onScroll();
-  });
+  container.addEventListener('wheel', onWheel, { passive: false });
 
   // Clean up when navigating away (SPA)
   const observer = new MutationObserver(() => {
-    if (!document.getElementById('timeline-wrapper')) {
-      window.removeEventListener('scroll', onScroll);
+    if (!document.getElementById('timeline-scroll-container')) {
+      container.removeEventListener('wheel', onWheel);
+      if (rafId) cancelAnimationFrame(rafId);
       observer.disconnect();
     }
   });

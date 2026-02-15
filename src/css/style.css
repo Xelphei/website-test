@@ -213,13 +213,13 @@
 
   .hero-bar-button:hover {
     filter: brightness(1.15);
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.04);
   }
 
   .hero-bar-button-inner {
     display: inline-flex;
     align-items: center;
-    transition: background 0.3s ease, -webkit-text-fill-color 0.3s ease;
+    transition: background 0.3s ease, -webkit-text-fill-color 0.3s ease, -webkit-text-stroke 0.3s ease;
   }
 
   .hero-bar-button:hover .hero-bar-button-inner {
@@ -228,6 +228,8 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    -webkit-text-stroke: 0.6px rgba(255, 255, 255, 0.85);
+    paint-order: stroke fill;
     animation: gradientShift 2s linear infinite;
   }
 
@@ -586,37 +588,49 @@
   }
 
   /* ============================================
-     Event Timeline (scroll-driven horizontal)
+     Event Timeline (horizontal scroll container)
      ============================================ */
-
-  /* Tall wrapper creates vertical scroll space that maps to horizontal movement */
-  .timeline-scroll-wrapper {
-    position: relative;
-    width: 100%;
+  .timeline-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+    /* Styled scrollbar */
+    scrollbar-width: auto;
+    scrollbar-color: #B8B8CC #F0F0F5;
   }
 
-  /* Sticky container keeps the timeline visible while scrolling through the wrapper */
-  .timeline-sticky {
-    position: sticky;
-    top: 70px; /* below the fixed nav */
-    overflow: hidden;
-    padding: 1rem 1.5rem 2.5rem;
+  .timeline-container::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  .timeline-container::-webkit-scrollbar-track {
+    background: #F0F0F5;
+    border-radius: 5px;
+  }
+
+  .timeline-container::-webkit-scrollbar-thumb {
+    background: #B8B8CC;
+    border-radius: 5px;
+  }
+
+  .timeline-container::-webkit-scrollbar-thumb:hover {
+    background: #9090A8;
   }
 
   .timeline-track {
     @apply flex flex-row items-start;
     position: relative;
+    min-width: max-content;
     gap: 1.5rem;
-    will-change: transform;
-    /* Pad top for dots, pad bottom for line */
-    padding-top: 28px; /* space for dot row + connecting line */
+    padding: 28px 0.5rem 0.75rem; /* top space for dot row + connecting line */
   }
 
   /* Horizontal connecting line through the dots */
   .timeline-track::before {
     content: '';
     position: absolute;
-    top: 13px; /* vertically center of 16px dot at top:5px = 5 + 8 = 13 */
+    top: 13px; /* vertically center the line through 16px dots at top: 5px → 5+8=13 */
     left: 0;
     right: 0;
     height: 2px;
@@ -630,7 +644,7 @@
     z-index: 1;
     cursor: pointer;
     flex-shrink: 0;
-    width: 260px;
+    width: 320px;
   }
 
   /* Dot sits at the top, on the connecting line */
@@ -655,6 +669,7 @@
     border: 1px solid #E2E1EE;
     border-top: 4px solid var(--event-color);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    min-height: 200px;
   }
 
   .timeline-event:hover .timeline-card {
@@ -662,9 +677,9 @@
     transform: translateY(-4px);
   }
 
-  .line-clamp-2 {
+  .line-clamp-3 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }

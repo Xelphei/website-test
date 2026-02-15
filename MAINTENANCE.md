@@ -97,7 +97,7 @@ All home page sections fade up into view as the visitor scrolls down.
 Other pages are accessible via navigation:
 - **Programs** (`#/programs`) — dedicated page with program cards (images on left). Each program item links to its own page with rich content (details, volunteer callouts, experiment cards, volunteer role cards, FAQ, photos, external links).
 - **Contact Us** (`#/contact`) — dedicated page with built-in contact form (Name, Email, Subject, Message)
-- **Chapter News**, **Events** (horizontal card timeline with colored dots connected by a line; the page uses a scroll-driven technique where normal vertical scrolling moves the cards horizontally — scrolling down reveals more events to the right; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
+- **Chapter News**, **Events** (horizontal card timeline with colored dots connected by a line above the cards; scroll bar visible below the cards; vertical scroll over the timeline is converted to horizontal scroll for convenience; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
 
 All page transitions use a smooth fade in/out effect.
 
@@ -113,7 +113,7 @@ The **navigation bar** is always visible at the top and stays fixed when scrolli
 
 ### Hero Button Bar
 
-The hero has three colored buttons at the bottom. Buttons keep their background color on hover.
+The hero has three colored buttons at the bottom. Buttons keep their background color on hover, grow slightly, show an animated gradient text effect with a white outline for readability, and a right arrow slides in.
 - **Our Mission** (Blue) — scrolls to the About section
 - **Programs** (Cyan) — navigates to Programs page
 - **Get Involved** (Orange) — navigates to Contact page
