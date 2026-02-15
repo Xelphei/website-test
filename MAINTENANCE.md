@@ -88,13 +88,13 @@ The GitHub Actions workflow uses these during the build process.
 The site is a **single-page application**. The home page contains these sections:
 
 1. **Hero**: Half-screen background image with the chapter name and a colored button bar
-2. **About**: Five alternating subsections with colored circles and white text boxes
+2. **About**: Five alternating subsections with colored circles and bordered white text boxes (text box overlaps halfway into the circle, both lift on hover)
 3. **Our Partners**: Partner/sponsor names displayed in orange text
 
 Other pages are accessible via navigation:
 - **Programs** (`#/programs`) — dedicated page with alternating program cards
 - **Contact Us** (`#/contact`) — dedicated page with Google Form embed
-- **Chapter News**, **Events**, **Executive Board**, **Gallery** — separate pages
+- **Chapter News**, **Events** (horizontal timeline with connected dots; clicking an event redirects to Contact Us), **Executive Board**, **Gallery** — separate pages
 
 ### Navigation
 
@@ -110,8 +110,8 @@ The **navigation bar** is always visible at the top and stays fixed when scrolli
 
 The hero has three colored buttons at the bottom:
 - **Our Mission** (Blue) — scrolls to the About section
-- **Programs** (Cyan) — navigates to Programs page with a circle-expand transition
-- **Get Involved** (Orange) — navigates to Contact page with a circle-expand transition
+- **Programs** (Cyan) — navigates to Programs page with a seamless circle-expand reveal
+- **Get Involved** (Orange) — navigates to Contact page with a seamless circle-expand reveal
 
 ### How Events / Calendar Sync Works
 

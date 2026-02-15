@@ -239,7 +239,8 @@
   }
 
   /* ============================================
-     Circle-Expand Page Transition (transparent)
+     Circle-Expand Page Transition
+     Uses a ring that expands from the click point to reveal the new page.
      ============================================ */
   .circle-expand-overlay {
     position: fixed;
@@ -247,13 +248,15 @@
     border-radius: 50%;
     pointer-events: none;
     transform: scale(0);
-    animation: circleExpand 0.5s ease-out forwards;
-    border: 3px solid rgba(0, 194, 243, 0.4);
+    animation: circleExpand 0.5s ease-in-out forwards;
+    border: 3px solid rgba(0, 194, 243, 0.35);
+    box-shadow: 0 0 40px rgba(0, 194, 243, 0.15);
   }
 
   @keyframes circleExpand {
-    0% { transform: scale(0); }
-    100% { transform: scale(1); }
+    0% { transform: scale(0); opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: scale(1); opacity: 0; }
   }
 
   /* ============================================
@@ -261,11 +264,23 @@
      ============================================ */
   .about-section-container {
     @apply w-full;
+    padding: 3rem 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .about-section-container {
+      padding: 3rem 3rem;
+    }
   }
 
   .about-subsection {
     @apply relative flex flex-col md:flex-row items-center;
     min-height: 280px;
+    margin-bottom: 2rem;
+  }
+
+  .about-subsection:last-child {
+    margin-bottom: 0;
   }
 
   .about-subsection.reverse {
@@ -277,52 +292,55 @@
     width: 220px;
     height: 220px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    z-index: 1;
+    z-index: 3;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   .about-subsection-text-box {
     @apply bg-white py-8 px-8 md:px-12 flex-1;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
-    border: 1px solid #E2E1EE;
     z-index: 2;
-    /* Overlap the circle slightly */
-    margin-left: -40px;
+    /* Overlap halfway into the circle (110px = half of 220px) */
+    margin-left: -110px;
+    /* Pad left so text doesn't sit behind the circle */
+    padding-left: 130px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
 
-  .about-subsection-text-box:hover {
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
-    transform: translateY(-2px);
+  /* Hover lift on entire subsection — both circle and text box rise */
+  .about-subsection:hover .about-subsection-circle {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .about-subsection:hover .about-subsection-text-box {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+    transform: translateY(-4px);
   }
 
   .about-subsection.reverse .about-subsection-text-box {
     margin-left: 0;
-    margin-right: -40px;
-    border-left: none;
+    margin-right: -110px;
+    padding-left: 2rem;
+    padding-right: 130px;
   }
 
-  /* On mobile, stack vertically */
+  /* On mobile, stack vertically with overlap on top */
   @media (max-width: 767px) {
     .about-subsection-text-box {
       margin-left: 0;
-      margin-top: -30px;
+      margin-top: -60px;
+      padding-left: 2rem;
+      padding-top: 80px;
     }
 
     .about-subsection.reverse .about-subsection-text-box {
       margin-right: 0;
-      margin-top: -30px;
-      border-left: 4px solid;
+      margin-top: -60px;
+      padding-right: 2rem;
+      padding-top: 80px;
     }
-  }
-
-  /* Vertical offset for alternating sections */
-  .about-subsection:nth-child(even) .about-subsection-circle {
-    transform: translateY(-15px);
-  }
-
-  .about-subsection:nth-child(odd) .about-subsection-circle {
-    transform: translateY(15px);
   }
 
   /* ============================================
@@ -599,32 +617,58 @@
   }
 
   .timeline-track {
-    @apply flex gap-6 py-4;
+    @apply flex py-4;
     min-width: max-content;
+    position: relative;
+    gap: 0;
+  }
+
+  /* Connecting line between dots */
+  .timeline-track::before {
+    content: '';
+    position: absolute;
+    top: 24px; /* center of dot (py-4=16px + dot-height/2=8px) */
+    left: 140px; /* half of event width */
+    right: 140px;
+    height: 2px;
+    background: #E2E1EE;
+    z-index: 0;
   }
 
   .timeline-event {
     @apply flex flex-col items-center;
     width: 280px;
     flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    padding: 0 12px;
   }
 
   .timeline-dot {
     @apply w-4 h-4 rounded-full mb-3;
     background-color: var(--event-color);
     box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    z-index: 2;
+  }
+
+  .timeline-event:hover .timeline-dot {
+    transform: scale(1.3);
+    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.08);
   }
 
   .timeline-card {
     @apply bg-white rounded-lg shadow-sm p-4 w-full;
     border: 1px solid #E2E1EE;
     border-left: 4px solid var(--event-color);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
 
   .timeline-event:hover .timeline-card {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
   }
 
   .line-clamp-2 {

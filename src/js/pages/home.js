@@ -87,17 +87,15 @@ function initCircleExpand(el) {
         top: ${y - diameter / 2}px;
         width: ${diameter}px;
         height: ${diameter}px;
-        background-color: transparent;
       `;
       document.body.appendChild(overlay);
 
-      // Signal that next navigation should skip fade
+      // Navigate immediately — the circle clip-path reveals the new page as it expands
       window.__skipFadeTransition = true;
+      window.location.hash = href;
 
-      setTimeout(() => {
-        overlay.remove();
-        window.location.hash = href;
-      }, 500);
+      // Remove overlay after animation completes
+      overlay.addEventListener('animationend', () => overlay.remove());
     });
   });
 }
@@ -119,7 +117,7 @@ async function loadAboutSection(base) {
         return `
           <div class="about-subsection ${isReverse ? 'reverse' : ''}">
             <div class="about-subsection-circle" style="background-color: ${circleColor}"></div>
-            <div class="about-subsection-text-box" style="${isReverse ? 'border-right' : 'border-left'}: 4px solid ${circleColor}">
+            <div class="about-subsection-text-box" style="border: 2px solid ${circleColor}">
               <h3 class="font-heading text-2xl font-bold mb-2" style="color: ${circleColor}">${escapeHtml(sub.title)}</h3>
               ${subtitleHtml}
               <p class="font-body text-gray-600 leading-relaxed">${escapeHtml(sub.description)}</p>

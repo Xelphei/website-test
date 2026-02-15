@@ -129,28 +129,20 @@ export async function renderEvents(el) {
               const cleanTitle = stripCategoryTag(title);
               const { dateStr, timeStr, isAllDay } = formatEventDate(event);
 
-              const locationHtml = event.location
-                ? `<p class="font-body text-sm text-gray-400 mt-1">${escapeHtml(event.location)}</p>`
-                : '';
-
               const descHtml = event.description
                 ? `<p class="font-body text-sm text-gray-500 mt-2 line-clamp-2">${escapeHtml(event.description)}</p>`
                 : '';
 
-              const linkAttr = event.htmlLink
-                ? `onclick="window.open('${escapeAttr(event.htmlLink)}', '_blank')" style="--event-color: ${color}; cursor: pointer;"`
-                : `style="--event-color: ${color}"`;
-
               return `
-                <div class="timeline-event" ${linkAttr}>
+                <div class="timeline-event" style="--event-color: ${color}" onclick="window.location.hash='#/contact'">
                   <div class="timeline-dot"></div>
                   <div class="timeline-card">
                     <span class="timeline-category">${escapeHtml(category)}</span>
                     <h3 class="font-heading font-semibold text-primary-dark mt-1">${escapeHtml(cleanTitle)}</h3>
                     <p class="font-body text-sm text-gray-500 mt-1">${dateStr}</p>
                     <p class="font-body text-sm text-gray-400">${timeStr}</p>
-                    ${locationHtml}
                     ${descHtml}
+                    <p class="font-body text-xs mt-2" style="color: var(--event-color)">Click to contact us about this event</p>
                   </div>
                 </div>
               `;
@@ -177,6 +169,3 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-function escapeAttr(str) {
-  return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-}
